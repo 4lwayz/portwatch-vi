@@ -667,15 +667,16 @@
       "tier": "tracked",
       "approach": "Static recompilation",
       "target": "Any Xbox Series game",
-      "summary": "Research into lifting Xbox x64 machine code to C++ and rebuilding it for Windows. It has the largest community testing on real GPUs.",
+      "summary": "Static recompilation research that turns Xbox Series x64 code and gfx1013 shaders into Windows C++ and DXIL. More than 60 contributors add source-built tests. Running the game's own code is unverified.",
       "highlights": [
-        "The FidelityFX upscaler provider from the package, recompiled, creates its resources on RTX and WARP",
+        "851 of 12,101 package pixel shaders compile and match controlled output on RTX 4060 Laptop and WARP",
         "A source-built EXE runs end-to-end through translated code and DLL imports",
         "Native wave64 BVH test passes on 19 Radeon models plus many NVIDIA cards"
       ],
       "blockers": [
         "Running the game's own CPU code, full startup and frame rate are unverified",
-        "Only selected pixel shaders translate so far"
+        "The main executable was absent from the inspected package",
+        "Instruction coverage is partial: 224 of 1,968 gfx1013 shader forms and 370 of 948 x64 forms tested"
       ],
       "groundwork": {
         "loader": 0.4,
