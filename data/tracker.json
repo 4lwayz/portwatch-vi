@@ -876,20 +876,22 @@
       "name": "PercyScarlett",
       "repo": "rpatty-dev/PercyScarlett",
       "branch": "main",
-      "tier": "watchlist",
+      "tier": "tracked",
       "approach": "Compatibility layer",
       "target": "Any Xbox Series game",
-      "summary": "Pure-Rust PE32+/GDK inspection toolkit and early translation layer, from the author of the PercyStar archive explorer.",
+      "summary": "Clean-room Rust translation layer and 8-crate GDK shim suite for running Xbox Series executables on Windows x64, with RDNA2-to-HLSL/DXBC shader lifting and D3D12.X wrapping.",
       "highlights": [
-        "Scanned the 16 shipped DLLs: all native x64, most resolve against plain Windows"
+        "8 compiled cdylib shim DLLs (kernelx, d3d12_xs, xmem, xgameruntime, dstorage, gameinput, xg_xs, winrt_xs); 15/15 tests passing",
+        "6/6 shipped sidecar DLLs live-loaded on Win11; E2E PE32+ guest executes against all 8 shims",
+        "Clean-room RDNA2 -> HLSL -> live DXBC compilation via d3dcompiler_47 with disk cache and ID3D12DeviceX wrapper"
       ],
       "blockers": [
-        "Inspection only so far"
+        "Not yet tested on a retail Xbox Series game or main executable"
       ],
       "groundwork": {
-        "loader": 0.15,
-        "shaders": 0,
-        "graphics": 0,
+        "loader": 0.65,
+        "shaders": 0.55,
+        "graphics": 0.4,
         "proven": 0
       },
       "provenOn": null,
@@ -912,7 +914,7 @@
         "archived": false,
         "missing": false
       },
-      "assessedAt": "2026-11-21",
+      "assessedAt": "2026-11-22",
       "assessedBy": "manual",
       "readmeSha": "3055d2b0a16af246b71f256d5f6f717013aa5e89b8ba98ac35c07d54b31e6228",
       "claims": [],
