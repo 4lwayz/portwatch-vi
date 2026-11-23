@@ -27,6 +27,7 @@ create or replace function public.claim_admin() returns boolean
 language plpgsql security definer set search_path = '' as $$
 begin
   if auth.uid() is null then return false; end if;
+  perform pg_advisory_xact_lock(hashtext('public.claim_admin')); -- serialize concurrent claims, closing the TOCTOU race
   if exists (select 1 from public.admins) then return public.is_admin(); end if;
   insert into public.admins (user_id) values (auth.uid());
   return true;
