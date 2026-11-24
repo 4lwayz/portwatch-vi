@@ -466,8 +466,8 @@ html:not([lang="en"]) .nav-links a { padding-inline: 9px; }
   font-size: 12.5px; font-weight: 600; color: var(--muted);
   white-space: nowrap;
 }
-.mega-label:first-child { transform: none; text-align: left; }
-.mega-label:last-child { transform: translateX(-100%); text-align: right; }
+.mega-label:first-of-type { transform: none; text-align: left; }
+.mega-label:last-of-type { transform: translateX(-100%); text-align: right; }
 .mega-label b { display: block; font-size: 11px; font-weight: 700; color: var(--faint); letter-spacing: .02em; }
 .mega-label.is-reached { color: var(--ink); }
 .mega-label.is-reached b { color: var(--pink); }
@@ -563,14 +563,39 @@ html:not([lang="en"]) .nav-links a { padding-inline: 9px; }
 .bar-track { position: relative; height: 14px; border-radius: 999px; background: var(--soft-2); overflow: hidden; }
 .bar-fill { transition: clip-path 1.4s cubic-bezier(.2, .85, .2, 1); }
 .bar-ticks i { width: 2px; }
-.ladder { display: grid; grid-template-columns: 25fr 15fr 15fr 15fr 15fr 15fr; margin-top: 8px; font-size: 11.5px; color: var(--faint); font-weight: 600; }
-.ladder > div { display: flex; justify-content: space-between; gap: 8px; min-width: 0; }
+.ladder { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; font-size: 11.5px; color: var(--faint); font-weight: 600; }
 .ladder span { display: flex; align-items: center; gap: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ladder span::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--line); flex: none; }
 .ladder .is-reached { color: var(--ink); }
 .ladder .is-reached::before { background: var(--pink); }
 .ladder .is-partial { color: var(--ink-2); }
 .ladder .is-partial::before { background: linear-gradient(90deg, var(--pink) 50%, var(--line) 50%); }
+
+/* Past Playable: four tracks side by side, each with its own small bar */
+.tracks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 18px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.tracks.is-locked { opacity: .45; }
+.trk { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "label val" "bar bar"; gap: 4px 8px; align-items: baseline; min-width: 0; font-size: 11.5px; }
+.trk-label { grid-area: label; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+.trk-val { grid-area: val; min-width: 0; text-align: right; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.trk-bar { grid-area: bar; height: 5px; border-radius: 999px; background: var(--soft-2); overflow: hidden; }
+.trk-bar i { display: block; height: 100%; width: var(--p, 0); border-radius: inherit; background: var(--grad); transition: width 1.2s cubic-bezier(.2, .85, .2, 1); }
+.mega-zone { position: absolute; left: 57%; right: 11%; top: 14px; margin: 0; text-align: center; font-size: 12px; font-weight: 600; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: help; }
+.ladder-explain li.le-tracks { grid-template-columns: 84px 1fr; align-items: start; }
+.ladder-explain .le-tracks > .le-at { font-size: 20px; padding-top: 2px; }
+.ladder-explain .le-tracks ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; }
+.ladder-explain .le-tracks ul li { display: block; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; font-size: 13px; color: var(--muted); }
+.ladder-explain .le-tracks ul li b { display: flex; justify-content: space-between; gap: 10px; color: var(--ink); font-size: 14px; }
+.ladder-explain .le-tracks ul li b span { color: var(--fg-pink); font-weight: 700; font-size: 12.5px; }
+.ladder-explain .le-tracks small { display: block; margin-top: 3px; font-size: 12px; color: var(--faint); }
+@media (max-width: 760px) { .mega-zone { display: none; } }
+/* The steps to Playable sit 10% apart: each label starts at its tick (its dot on the tick) instead of centring on it. */
+.mega-label:not(:last-of-type) { transform: translateX(-4px); text-align: left; }
+.mega-label:first-of-type { transform: none; }
+/* Below desktop width every other label also drops to a second row. */
+@media (max-width: 1180px) and (min-width: 761px) {
+  .mega-labels { height: 66px; }
+  .mega-label:nth-of-type(even) { top: 28px; }
+}
 
 /* Private builds: no public code, so listed under the race without a rank */
 .pb-lock {
@@ -591,7 +616,7 @@ html:not([lang="en"]) .nav-links a { padding-inline: 9px; }
 .pb-stage b { display: block; font-family: var(--display); font-size: 18px; font-weight: 900; line-height: 1.1; }
 .pb-stage small { font-size: 11.5px; font-weight: 600; color: var(--muted); }
 .pb .e-summary { font-size: 14px; }
-.pb-ladder { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 12px; }
+.pb-ladder { margin-top: 12px; }
 .pb-more { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--fg-pink); text-decoration: none; }
 .pb-more:hover { text-decoration: underline; }
 .tag-based { background: rgba(122, 92, 255, .1); color: var(--fg-violet); }
@@ -604,7 +629,7 @@ html:not([lang="en"]) .nav-links a { padding-inline: 9px; }
   position: absolute; bottom: 0; display: flex; flex-direction: column; align-items: center; text-decoration: none;
   transform: translateX(-50%); animation: bp-float 3.4s ease-in-out infinite; animation-delay: calc(var(--i) * -1.3s);
 }
-.bp:nth-child(even) { bottom: 6px; }
+
 .bp-bubble {
   position: relative; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
   font-size: 12px; font-weight: 800; color: #fff; text-transform: lowercase;
@@ -617,7 +642,7 @@ html:not([lang="en"]) .nav-links a { padding-inline: 9px; }
 .bp:hover .bp-bubble, .bp:focus-visible .bp-bubble { transform: scale(1.12); }
 .bp-lock { position: absolute; right: -5px; bottom: -3px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; box-shadow: 0 1px 4px rgba(0, 0, 0, .2); }
 .bp-lock .pb-lock { width: 9px; height: 9px; color: var(--fg-violet); }
-.bp-stem { width: 2px; height: 9px; border-radius: 2px; background: linear-gradient(#ff2e7e, rgba(255, 46, 126, .15)); }
+.bp-stem { width: 2px; height: calc(9px + var(--lift, 0px)); border-radius: 2px; background: linear-gradient(#ff2e7e, rgba(255, 46, 126, .15)); }
 @keyframes bp-float { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-5px); } }
 @keyframes bp-ring { 0% { transform: scale(.92); opacity: .9; } 100% { transform: scale(1.4); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .bp, .bp-bubble::after { animation: none; } }
@@ -896,12 +921,12 @@ a.tag { text-decoration: none; }
   .ov-stats { grid-template-columns: repeat(2, 1fr); width: 100%; }
   .mega-label { font-size: 10.5px; }
   .mega-label b { display: none; }
-  .mega-label:nth-child(even) { top: 22px; }
+  .mega-label:nth-of-type(even) { top: 22px; }
   .effort { grid-template-columns: 1fr; padding: 18px; }
   .e-rank { text-align: left; font-size: 22px; }
   .e-top { flex-wrap: wrap; }
   .notes { grid-template-columns: 1fr; }
-  .ladder { grid-template-columns: repeat(3, 1fr); row-gap: 4px; }
+  .tracks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .w-row { grid-template-columns: 1fr 100px; }
   .w-row > :nth-child(2), .w-row > :nth-child(4), .w-row > :nth-child(5) { display: none; }
   .flags { grid-template-columns: 1fr; }

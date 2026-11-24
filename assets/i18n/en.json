@@ -33,7 +33,7 @@
   "hero.followX": "Follow on X",
   "hero.starGh": "Star on GitHub",
   "hero.title": "Does GTA VI run on PC yet?",
-  "hero.lede": "Every serious attempt to recompile, emulate or port the leaked Xbox Series build to PC, scored on one ladder from groundwork to a stable 30 FPS.",
+  "hero.lede": "Every serious attempt to recompile, emulate or port the leaked Xbox Series build to PC, scored on one scale from groundwork to a game you can play to the end.",
 
   "answer.notYet": "Not yet.",
   "answer.sortOf": "Sort of.",
@@ -192,9 +192,13 @@
 
   "method.kicker": "Methodology",
   "method.title": "How the progress bar works",
-  "method.sub": "One ladder for every project. Groundwork fills the first 25%: the parts that can be built before the executable exists. After that, a project only moves by reaching real milestones in GTA VI itself.",
+  "method.sub": "One scale for every project, in two parts. Getting in is a ladder to 50%: groundwork fills the first 10%, then each step needs the one before it, up to Playable. Playing well fills the rest: how far you can play, how right it looks, how fast it runs and how long it keeps running. 100% is the whole game, finished.",
   "method.gwTitle": "Groundwork, weighted",
-  "method.fine1": "Past \"In-game\", the last 30 points split between frame rate (average FPS ÷ 30) and stability (from crashes often up to stable). Partial milestones, such as a menu that renders but is broken, count half.",
+  "method.fine1": "Partial steps, such as a menu that renders but is broken, count half. The four tracks only count once a build is Playable: you can't judge how well a game plays before you can play it.",
+  "method.tracksTitle": "Playing well: four tracks",
+  "method.tracksSub": "Past Playable, the last 50 points come from four tracks side by side. Story and rendering follow the written steps below.",
+  "track.unmeasured": "Not measured",
+  "track.locked": "These count once a build is Playable",
   "method.fine2": "Maintain a project and think it's mis-scored? Open an issue with a link to your evidence.",
   "method.pts": "{n} pts",
 

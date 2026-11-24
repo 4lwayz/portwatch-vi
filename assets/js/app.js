@@ -1,4 +1,4 @@
-import { MILESTONES, GROUNDWORK, STABILITY, scoreEffort, overall, ladderValue, byStars, isPrivateBuild } from './scoring.js';
+import { MILESTONES, GROUNDWORK, STABILITY, TRACKS, scoreEffort, overall, ladderValue, byStars, isPrivateBuild, trackStep } from './scoring.js';
 import { getLiveViewers, trackView } from './backend.js';
 import { coverHtml, articlePath } from './news-shared.js';
 import { fillPinned } from './pinned.js';
@@ -29,6 +29,16 @@ const gwLabel = (g) => tr(`gw.${g.key}.label`, g.label);
 const gwDesc = (g) => tr(`gw.${g.key}.desc`, g.desc);
 const stabLabel = (key) => tr(`stab.${key}`, (STABILITY[key] || STABILITY.unknown).label);
 const catLabel = (cat) => tr(`cat.${cat}`, cat);
+const trackLabel = (tk) => tr(`track.${tk.key}.label`, tk.label);
+const trackDesc = (tk) => tr(`track.${tk.key}.desc`, tk.desc);
+const stepLabel = (key, step) => tr(`track.${key}.step.${step.v}`, step.label);
+// README claims name a milestone or a track; older ones use the previous scale's keys.
+const OLD_CLAIM = { ingame: 'playable', fps30: 'perf', stable: 'stability' };
+const claimLabel = (key) => {
+  const k = OLD_CLAIM[key] || key;
+  const tk = TRACKS.find((x) => x.key === k);
+  return tk ? trackLabel(tk) : MILESTONES.some((m) => m.key === k) ? msLabel(k) : k;
+};
 
 function ago(iso) {
   const ms = Date.parse(iso);
@@ -189,8 +199,9 @@ function renderOverall(data) {
   $('#ov-boot').textContent = `${booted} / ${all.length}`;
   $('#ov-count').textContent = `${all.length}`;
 
-  const answer = { groundwork: 'notYet', loads: 'notYet', boots: 'notYet', menu: 'notYet', ingame: 'sortOf', fps30: 'mostly', stable: 'yes' };
-  $('#answer').textContent = t(`answer.${answer[ov.furthest.key]}`);
+  // "Does GTA VI run on PC yet?": not until someone can play it; mostly once it plays well; yes when it's complete.
+  const answer = ov.furthest.key === 'complete' ? 'yes' : ov.score >= 75 ? 'mostly' : ov.furthest.key === 'playable' ? 'sortOf' : 'notYet';
+  $('#answer').textContent = t(`answer.${answer}`);
 
   // Ticks + labels
   const furthestIdx = MILESTONES.findIndex((m) => m.key === ov.furthest.key);
@@ -198,7 +209,9 @@ function renderOverall(data) {
   $('#mega-labels').innerHTML = MILESTONES.map((m, i) => {
     const cls = i <= furthestIdx ? 'is-reached' : i === furthestIdx + 1 ? 'is-next' : '';
     return `<div class="mega-label ${cls}" style="left:${m.at}%" data-tip="${esc(msDesc(m))}" data-tip-title="${esc(msLabel(m.key))}"><b>${m.at}%</b><span class="dot"></span>${esc(msLabel(m.key))}</div>`;
-  }).join('');
+  }).join('') +
+    // Between Playable and Complete there's no single next step: the four tracks fill it side by side.
+    `<p class="mega-zone" data-tip="${esc(t('method.tracksSub'))}" data-tip-title="${esc(t('method.tracksTitle'))}">${TRACKS.map((tk) => esc(trackLabel(tk))).join(' · ')}</p>`;
   $('#mega-fill').dataset.width = ov.score;
 
   const top = ov.ranked.slice(0, 6);
@@ -325,8 +338,6 @@ function renderPrivateBuilds() {
 
 // No score or rank: the stage it reports, how we know, and the public projects it builds on.
 function privateCard(e) {
-  const g = e.gta || {};
-  const st = (v) => (v >= 1 ? 'is-reached' : v > 0 ? 'is-partial' : '');
   const url = effortUrl(e);
   const src = effortAvatar(e);
   const bases = (e.basedOn || []).map((id) => `<a href="#effort-${esc(id)}">${esc(effortName(id))}</a>`).join(` ${esc(t('private.and'))} `);
@@ -346,9 +357,7 @@ function privateCard(e) {
       <span class="tag tag-stale">${esc(t('private.noCode'))}</span>
     </div>
     <p class="e-summary">${esc(e.summary)}</p>
-    <div class="ladder pb-ladder">
-      ${['loads', 'boots', 'menu', 'ingame'].map((k) => `<span class="${st(ladderValue(g[k]))}">${esc(msLabel(k))}</span>`).join('')}
-    </div>
+    <div class="pb-ladder">${ladderCells(e)}</div>
     ${url ? `<a class="pb-more" href="${esc(url)}">${esc(t('private.article'))} →</a>` : ''}
   </li>`;
 }
@@ -362,13 +371,22 @@ const buildFace = (p) => {
 };
 
 // Floating bubbles over the card's bar, each where that private build would score.
+// Bubbles closer than 6% of the bar would overlap, so each one rises a level above the ones near it.
 function buildPins(kids) {
-  return `<div class="bp-layer">${kids.map((p, i) => `
-    <a class="bp" href="#effort-${esc(p.id)}" style="left:${Math.min(97, Math.max(3, p._s.score))}%;--i:${i}"
+  const placed = [];
+  const pins = kids.map((p, i) => {
+    const x = Math.min(97, Math.max(3, p._s.score));
+    const level = placed.filter((q) => Math.abs(q - x) < 6).length;
+    placed.push(x);
+    return { p, i, x, level };
+  });
+  const maxLevel = Math.max(0, ...pins.map((q) => q.level));
+  return { maxLevel, html: `<div class="bp-layer">${pins.map(({ p, i, x, level }) => `
+    <a class="bp" href="#effort-${esc(p.id)}" style="left:${x}%;--i:${i};--lift:${level * 46}px"
        data-tip-title="${esc(p.name)} · ${pct(p._s.score)}%" data-tip="${esc(t('private.pinTip', { stage: msLabel(p._s.reached) }))}">
       <span class="bp-bubble">${buildFace(p)}<span class="bp-lock"><span class="pb-lock" aria-hidden="true"></span></span></span>
       <span class="bp-stem" aria-hidden="true"></span>
-    </a>`).join('')}</div>`;
+    </a>`).join('')}</div>` };
 }
 
 // A small ranking inside the card: this repo and the private builds on its code, side by side.
@@ -391,28 +409,49 @@ function onThisCode(e, kids) {
   </div>`;
 }
 
+// The six steps to Playable, then the four tracks (greyed out until Playable, when they start to count).
 function ladderCells(e) {
   const g = e.gta || {};
   const gw = e._s.groundwork;
   const st = (v) => (v >= 1 ? 'is-reached' : v > 0 ? 'is-partial' : '');
-  const fpsV = Math.min(1, (+g.fps || 0) / 30);
-  const stabV = (STABILITY[g.stability] || STABILITY.unknown).value;
-  const fpsLabel = t('effort.fps', { n: g.fps ? Math.round(g.fps) : 30 });
-  const stab = g.stability && g.stability !== 'unknown' && STABILITY[g.stability] ? stabLabel(g.stability) : msLabel('stable');
   // Past "Exe runs" the score no longer depends on groundwork, so that step reads as done.
   const pastGroundwork = ladderValue(g.loads) >= 1;
-  return `
-    <span class="${pastGroundwork ? 'is-reached' : st(gw)}" title="${esc(msDesc(MILESTONES[0]))}">${esc(pastGroundwork ? msLabel('groundwork') : t('effort.groundworkPct', { n: Math.round(gw * 100) }))}</span>
-    <span class="${st(ladderValue(g.loads))}">${esc(msLabel('loads'))}</span>
-    <span class="${st(ladderValue(g.boots))}">${esc(msLabel('boots'))}</span>
-    <span class="${st(ladderValue(g.menu))}">${esc(msLabel('menu'))}</span>
-    <span class="${st(ladderValue(g.ingame))}">${esc(msLabel('ingame'))}</span>
-    <div><span class="${st(fpsV)}">${esc(fpsLabel)}</span><span class="${st(stabV)}">${esc(stab)}</span></div>`;
+  const steps = ['loads', 'boots', 'menu', 'world', 'playable'].map((k) =>
+    `<span class="${st(ladderValue(g[k]))}" title="${esc(msDesc(MILESTONES.find((m) => m.key === k)))}">${esc(msLabel(k))}</span>`).join('');
+  return `<div class="ladder">
+      <span class="${pastGroundwork ? 'is-reached' : st(gw)}" title="${esc(msDesc(MILESTONES[0]))}">${esc(pastGroundwork ? msLabel('groundwork') : t('effort.groundworkPct', { n: Math.round(gw * 100) }))}</span>
+      ${steps}
+    </div>
+    ${trackRow(e)}`;
+}
+
+// What each track reads as, in words: a written step, a frame rate or a stability label.
+function trackText(key, g, v) {
+  if (key === 'perf') return g.fps ? t('effort.fps', { n: Math.round(g.fps) }) : t('track.unmeasured');
+  if (key === 'stability') return stabLabel(g.stability && STABILITY[g.stability] ? g.stability : 'unknown');
+  const step = trackStep(key, v);
+  return step ? stepLabel(key, step) : '';
+}
+
+function trackRow(e) {
+  const g = e.gta || {};
+  const on = e._s.playable;
+  return `<div class="tracks${on ? '' : ' is-locked'}" ${on ? '' : `title="${esc(t('track.locked'))}"`}>
+    ${TRACKS.map((tr) => {
+      const v = e._s.tracks[tr.key];
+      return `<div class="trk" title="${esc(trackDesc(tr))}">
+        <span class="trk-label">${esc(trackLabel(tr))}</span>
+        <span class="trk-bar"><i data-width="${on ? v * 100 : 0}"></i></span>
+        <span class="trk-val">${esc(on ? trackText(tr.key, g, v) : '–')}</span>
+      </div>`;
+    }).join('')}
+  </div>`;
 }
 
 function effortCard(e, rank, open, overallRank = null) {
   const s = e._s;
   const kids = privateKids(e);
+  const pins = kids.length ? buildPins(kids) : null;
   const st = e.stats || {};
   const ticks = MILESTONES.slice(1, -1).map((m) => `<i style="left:${m.at}%"></i>`).join('');
   const stale = st.pushedAt && daysSince(st.pushedAt) > 3;
@@ -431,7 +470,7 @@ function effortCard(e, rank, open, overallRank = null) {
     const v = Math.max(0, Math.min(1, +(e.groundwork?.[g.key]) || 0));
     return `<div class="gw-row" title="${esc(gwDesc(g))}"><span>${esc(gwLabel(g))}</span><b>${Math.round(v * 100)}%</b><div class="gw-bar"><i data-width="${v * 100}"></i></div></div>`;
   }).join('');
-  const claims = (e.claims || []).slice(0, 2).map((c) => `<div class="claim"><b>${esc(t('effort.claim'))}</b> “${esc(c.text)}”, ${esc(t('effort.mayMean'))} <em>${esc(MILESTONES.some((m) => m.key === c.milestone) ? msLabel(c.milestone) : c.milestone)}</em>. ${esc(t('effort.awaiting'))}</div>`).join('');
+  const claims = (e.claims || []).slice(0, 2).map((c) => `<div class="claim"><b>${esc(t('effort.claim'))}</b> “${esc(c.text)}”, ${esc(t('effort.mayMean'))} <em>${esc(claimLabel(c.milestone))}</em>. ${esc(t('effort.awaiting'))}</div>`).join('');
   const src = effortAvatar(e);
   const url = effortUrl(e);
   const external = hasRepo(e) ? ' target="_blank" rel="noopener"' : '';
@@ -451,10 +490,10 @@ function effortCard(e, rank, open, overallRank = null) {
       <div class="tags">${tags}</div>
       <p class="e-summary">${esc(e.summary)}</p>
       ${onThisCode(e, kids)}
-      <div class="bar${kids.length ? ' has-pins' : ''}" aria-label="${esc(t('effort.progressLabel', { name: e.name, n: pct(s.score) }))}">
-        ${kids.length ? buildPins(kids) : ''}
+      <div class="bar${pins ? ' has-pins' : ''}"${pins?.maxLevel ? ` style="margin-top:${50 + pins.maxLevel * 46}px"` : ''} aria-label="${esc(t('effort.progressLabel', { name: e.name, n: pct(s.score) }))}">
+        ${pins ? pins.html : ''}
         <div class="bar-track"><div class="bar-fill" data-width="${s.score}"></div><div class="bar-ticks">${ticks}</div></div>
-        <div class="ladder">${ladderCells(e)}</div>
+        ${ladderCells(e)}
       </div>
       ${claims}
       <div class="e-details" ${open ? '' : 'hidden'}>
@@ -605,9 +644,15 @@ function renderFlags(flags) {
 
 /* ---------- Method ---------- */
 function renderMethod() {
-  $('#ladder-explain').innerHTML = MILESTONES.map((m, i) => `
-    <li><span class="le-at">${i === 0 ? '0–25' : m.at}</span><div><h4>${esc(msLabel(m.key))}</h4><p>${esc(msDesc(m))}</p></div></li>`).join('');
-  $('#gw-explain').innerHTML = GROUNDWORK.map((g) => `<li><b>${esc(gwLabel(g))}<span>${esc(t('method.pts', { n: Math.round(g.weight * 25 * 10) / 10 }))}</span></b>${esc(gwDesc(g))}</li>`).join('');
+  const gwShare = MILESTONES[1].at;
+  const playAt = MILESTONES.find((m) => m.key === 'playable').at;
+  const span = MILESTONES[MILESTONES.length - 1].at - playAt;
+  $('#ladder-explain').innerHTML = MILESTONES.filter((m) => m.key !== 'complete').map((m, i) => `
+    <li><span class="le-at">${i === 0 ? `0–${gwShare}` : m.at}</span><div><h4>${esc(msLabel(m.key))}</h4><p>${esc(msDesc(m))}</p></div></li>`).join('') +
+    `<li class="le-tracks"><span class="le-at">${playAt}–100</span><div><h4>${esc(t('method.tracksTitle'))}</h4><p>${esc(t('method.tracksSub'))}</p>
+      <ul>${TRACKS.map((tk) => `<li><b>${esc(trackLabel(tk))}<span>${esc(t('method.pts', { n: Math.round(tk.weight * span * 10) / 10 }))}</span></b>${esc(trackDesc(tk))}${
+        tk.steps ? `<small>${tk.steps.map((s) => esc(stepLabel(tk.key, s))).join(' → ')}</small>` : ''}</li>`).join('')}</ul></div></li>`;
+  $('#gw-explain').innerHTML = GROUNDWORK.map((g) => `<li><b>${esc(gwLabel(g))}<span>${esc(t('method.pts', { n: Math.round(g.weight * gwShare * 10) / 10 }))}</span></b>${esc(gwDesc(g))}</li>`).join('');
 }
 
 /* ---------- Interaction ---------- */
