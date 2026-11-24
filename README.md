@@ -36,11 +36,81 @@ From then on, `Scout` runs every 3 hours (00:17, 03:17, 06:17 … UTC) on GitHub
 | Secret | What it enables |
 |---|---|
 | `ANTHROPIC_API_KEY` | **Claude review.** When a tracked README changes, or a new candidate shows up, Claude (`claude-opus-5-5`) reads the README and recent commits and re-scores the effort. It also promotes or rejects candidates automatically. Guardrails clamp the output: a GTA VI milestone only counts if Claude quotes text that really appears in the repo, and groundwork can rise at most 0.3 per run. Reviews are capped at 12 per run. Each costs very roughly $0.05–0.20, depending on README size. |
-| `GEMINI_API_KEY` | **Content translations** for every language marked `data: true` (see `assets/i18n/README.md`), with a free Google AI Studio key. All new text for all languages goes into one request per run, so the free tier's small daily quota is enough. When a model's quota runs out the next one takes over: the newest Gemini Hydrogen, then each Flash model from newest to oldest. A repository variable `GEMINI_MODELS` (comma-separated model ids) replaces that order. Takes precedence over `ANTHROPIC_API_KEY` for translations only. On the free tier Google may use prompts to improve its products (the text is public anyway); check Google's Gemini API terms if you're in the EEA, UK or Switzerland. |
+| `GEMINI_API_KEY` | **Content translations** (project summaries, news and so on) for every language marked `data: true`, with a **free-tier** Google AI Studio key. ⚠️ Use only a key from a Google Cloud project **without billing**, or translations can be charged. Setup, cost and key safety: [Content translations with a free Gemini key](#content-translations-with-a-free-gemini-key). Takes precedence over `ANTHROPIC_API_KEY` for translations only. |
 | `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` | Reddit search. Reddit blocks anonymous API and RSS access, so Reddit is skipped without these. The API is free for small non-commercial use, but since late 2025 every new app needs Reddit's manual approval. Create a "script" app at reddit.com/prefs/apps, request access, and paste the client ID and secret here once approved. |
 | `X_BEARER_TOKEN` | X recent search. This needs a paid X API tier. |
 
 Without any secrets the scout still runs on every keyless source, and new finds wait in *New candidates* for review.
+
+### Content translations with a free Gemini key
+
+Languages marked `data: true` in `assets/js/i18n.js` (Simplified and Traditional Chinese so far) also show the
+tracker's content in that language: project summaries, what works and what's blocking, the change log, news,
+headlines, the toolkit and the fake-download warnings. `data/i18n/<code>.json` maps each English text to its
+translation, and only new or changed text needs translating. With a `GEMINI_API_KEY` secret, each scout run sends
+that new text, for every language at once, to Gemini in a single request (none when nothing is new). Without the
+secret, nothing is sent and the daily editor fills the gaps (EDITOR.md, step 6b); the page shows English meanwhile.
+
+> [!WARNING]
+> **Use a free-tier key only, from a Google Cloud project with no billing account.** On such a project Google
+> can't charge anything: when a model's free daily quota is used up, Google refuses further requests (HTTP 429)
+> and the translator moves to the next model or waits for the next run. Once billing is enabled on the project,
+> it is on the paid tier and every translation request is billed. So don't reuse a key from a project that has
+> billing, and don't enable billing on this project later. If billing can't be avoided, set a budget alert in
+> Google Cloud Billing; an alert warns you, it doesn't stop spending.
+
+**Limits the translator keeps to.** At most 3 quota-using requests per run, and the scout runs 8 times a day. A
+normal run uses one request, or none. The step's log ends with the number used, for example
+`Gemini: 1 of at most 3 quota-using requests this run`. Free-tier quotas are small (about 20 requests a day has
+been reported for recent models) and are counted per model, so when a model's daily quota runs out, the next one
+takes over: the newest Gemini Hydrogen first, then each Flash model from the newest to the oldest, as the API lists them
+at run time. A model reporting "high demand" gets one more try after 20 seconds. Translation stops starting new
+requests after 12 minutes, so the scout still commits its data.
+
+**Setup**
+
+1. In [Google AI Studio](https://aistudio.google.com/), create an API key in a new project that has no billing
+   account. A project just for this site keeps its quota and its risk separate.
+2. Recommended: in the Google Cloud console (APIs & Services → Credentials), restrict the key to the
+   *Generative Language API*. A leaked key then can't be used for any other Google service.
+3. In this repository: **Settings → Secrets and variables → Actions → Secrets → New repository secret**, name
+   `GEMINI_API_KEY`. Use a *secret*, never a *variable*: variables are stored and shown in plain text.
+4. Optional: a repository *variable* `GEMINI_MODELS` (for example `gemini-4-hydrogen,gemini-3.8-flash`) replaces
+   the automatic model order. Only `gemini-…` model ids are accepted. Never put the key there.
+5. Run **Actions → Scout → Run workflow** and read the *Translate content (Gemini)* step's log.
+
+**How the key is kept safe**
+
+- The key reaches one workflow step only, *Translate content (Gemini)*, which runs `scripts/translate-data.mjs`.
+  That step runs nothing but this repository's code: the translator uses Node's built-in `fetch`, so no npm
+  package ever sees the key. The scout step, which reads untrusted READMEs, posts and news, gets only a yes/no
+  flag (`GEMINI_TRANSLATES`) saying that the key exists.
+- It goes only to `generativelanguage.googleapis.com`, in the `x-goog-api-key` request header, never in a URL.
+  The host is fixed in the code; `GEMINI_MODELS` can only name a model.
+- It's never logged. Error text from Google passes through a filter that removes keys and project numbers before
+  it reaches the log, since the Actions logs of a public repository are public. GitHub also masks secrets in logs.
+- The workflows that see secrets run on a schedule, by hand, or on pushes to `main`, never on pull requests, so
+  forks and pull requests can't read the key. Keep it that way: don't add `pull_request_target` to a workflow that
+  uses `GEMINI_API_KEY`, and don't pass the key to any other step.
+- Only public site text is sent to Gemini. On the free tier Google may use prompts and replies to improve its
+  products. If you're in the EEA, the UK or Switzerland, check Google's Gemini API terms for the free tier first.
+- If the key ever leaks: delete it in AI Studio or the Cloud console at once, create a new one, and update the
+  secret.
+
+**Running it on your own computer** (the daily editor, or a first full translation). Keep the key in the current
+terminal session only, never in a file in the repository, and remove it when done:
+
+```powershell
+$env:GEMINI_API_KEY = Read-Host -MaskInput 'Gemini API key'   # PowerShell 7; the input isn't shown
+node scripts/translate-data.mjs
+Remove-Item Env:GEMINI_API_KEY
+```
+
+```sh
+read -rs -p 'Gemini API key: ' GEMINI_API_KEY && export GEMINI_API_KEY   # bash; the input isn't shown
+node scripts/translate-data.mjs
+unset GEMINI_API_KEY
+```
 
 ### Daily Claude editor (alternative to an API key)
 

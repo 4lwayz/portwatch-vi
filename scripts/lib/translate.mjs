@@ -266,6 +266,18 @@ export function geminiFailure(status, body) {
   return { kind: 'next', message }; // 404 (model gone), other 5xx, network errors
 }
 
+// Scrubs anything that could reveal the key or the Google project from text bound for a log. The Actions logs of a
+// public repository are public, and Google's error messages can name the project.
+export function redact(text, apiKey = '') {
+  let s = String(text);
+  if (apiKey) s = s.split(apiKey).join('[key]');
+  return s
+    .replace(/AIza[0-9A-Za-z_-]{20,}/g, '[key]')
+    .replace(/([?&](?:key|api_key)=)[^&\s]+/gi, '$1[key]')
+    .replace(/projects\/\d+/g, 'projects/[id]')
+    .replace(/\b\d{9,}\b/g, '[id]');
+}
+
 // Rough reply size per item: Chinese runs about half a token per English character, plus a little JSON per field.
 const estimate = (text, langs) => Math.ceil(text.length * 0.5 * langs) + 12 * langs + 8;
 const field = (code) => code.replace(/[^A-Za-z0-9]/g, '_');
@@ -339,19 +351,23 @@ export function makeGeminiTranslator({ apiKey, models = '', fetch: fetchImpl = g
       const r = await call(`${GEMINI_API}/models?pageSize=1000${page ? `&pageToken=${encodeURIComponent(page)}` : ''}`);
       if (!r.ok) {
         const f = geminiFailure(r.status, r.json);
-        throw new Error(f.kind === 'auth' ? 'GEMINI_API_KEY was rejected' : `Gemini model list failed: ${f.message}`);
+        throw new Error(f.kind === 'auth' ? 'GEMINI_API_KEY was rejected' : redact(`Gemini model list failed: ${f.message}`, apiKey));
       }
       listed.push(...(r.json.models || []));
       page = r.json.nextPageToken || '';
     } while (page);
-    const wanted = String(models || '').split(',').map((s) => s.trim()).filter(Boolean);
+    // Only gemini-… model ids, and an entry that isn't one is never echoed (it could be a key pasted in by mistake).
+    const entries = String(models || '').split(',').map((s) => s.trim()).filter(Boolean);
+    const wanted = entries.filter((id) => /^gemini-[a-z0-9.-]+$/i.test(id));
+    if (wanted.length < entries.length) log(`  ! GEMINI_MODELS: ignored ${entries.length - wanted.length} entries that aren't gemini-… model ids`);
     if (!wanted.length) return geminiChain(listed);
     const limits = new Map(listed.map((m) => [String(m.name).replace(/^models\//, ''), m.outputTokenLimit]));
     for (const id of wanted) if (!limits.has(id)) log(`  ! GEMINI_MODELS: ${id} isn't in the model list; trying it anyway`);
     return wanted.map((id) => ({ id, out: limits.get(id) || 65536 }));
   }
 
-  return async function translate({ jobs, log = console.log }) {
+  return async function translate({ jobs, log: rawLog = console.log }) {
+    const log = (s) => rawLog(redact(s, apiKey)); // every line below goes through here
     const out = Object.fromEntries(jobs.map((j) => [j.code, {}]));
     const langs = jobs.map(({ code, name }) => `${name} (${code})`).join(', ');
     // Every text any language still needs, once. Each item is translated into every language in the same reply.
@@ -405,7 +421,7 @@ Reply with a JSON array holding one object per item: its "id", and its translati
       if (!r.ok) {
         const f = geminiFailure(r.status, r.json);
         if (f.kind === 'auth') throw new Error('GEMINI_API_KEY was rejected');
-        if (f.kind === 'fatal') throw new Error(`Gemini API: ${f.message}`);
+        if (f.kind === 'fatal') throw new Error(redact(`Gemini API: ${f.message}`, apiKey));
         if (f.kind === 'minute' && !tried.has(`${model.id}:minute`)) {
           tried.add(`${model.id}:minute`);
           log(`  ${model.id}: per-minute limit, waiting ${Math.round(f.retryMs / 1000)} s`);
@@ -457,6 +473,7 @@ Reply with a JSON array holding one object per item: its "id", and its translati
       queue = queue.filter((it) => !sent.has(it.id));
     }
     if (queue.length) log(`  ${queue.length} texts wait for the next run`);
+    log(`  Gemini: ${used} of at most ${GEMINI_MAX_REQUESTS} quota-using requests this run`);
     return out;
   };
 }

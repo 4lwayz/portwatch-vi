@@ -1,7 +1,7 @@
 // node --test scripts/lib/translate.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { collectTexts, safe, syncTranslations, geminiChain, geminiFailure, makeGeminiTranslator } from './translate.mjs';
+import { collectTexts, safe, syncTranslations, geminiChain, geminiFailure, makeGeminiTranslator, redact } from './translate.mjs';
 
 const data = {
   changes: [{ text: 'Scout spotted a/b (possible effort, substance 5).' }, { text: 'Alpha joins the race.' }],
@@ -172,6 +172,49 @@ test('retries a cut-off reply, and stops after three quota-using requests', asyn
 test('a rejected key stops the run', async () => {
   const fetch = async () => ({ status: 400, ok: false, json: async () => ({ error: { details: [{ reason: 'API_KEY_INVALID' }] } }) });
   await assert.rejects(makeGeminiTranslator({ apiKey: 'k', fetch })({ jobs, log: quiet }), /GEMINI_API_KEY was rejected/);
+});
+
+const KEY = 'AIzaSyTEST_not_a_real_key_0123456789abc';
+
+test('scrubs keys and project numbers from log text', () => {
+  assert.equal(redact(`bad key ${KEY} for projects/123456789012`, KEY), 'bad key [key] for projects/[id]');
+  assert.equal(redact('GET /v1beta/models?key=AIzaSyOTHER_key_abcdefghijklmnop&pageSize=1'), 'GET /v1beta/models?key=[key]&pageSize=1');
+  assert.equal(redact('consumer project_number:987654321098 over quota'), 'consumer project_number:[id] over quota');
+  assert.equal(redact('331 translations for 331 texts'), '331 translations for 331 texts');
+});
+
+test('the key and the project never reach the log, even when an error message carries them', async () => {
+  const leaky = { status: 500, json: { error: { status: 'INTERNAL', message: `Internal error for key ${KEY} in projects/123456789012` } } };
+  const { fetch, posts } = fakeApi({ 'gemini-4-hydrogen': [leaky], 'gemini-3.8-flash': [answer] });
+  const logs = [];
+  await makeGeminiTranslator({ apiKey: KEY, fetch })({ jobs, log: (s) => logs.push(s) });
+  assert.equal(posts.length, 2);
+  const all = logs.join('\n');
+  assert.ok(!all.includes(KEY) && !all.includes('AIza') && !all.includes('123456789012'), all);
+  assert.match(all, /\[key\]/);
+  assert.match(all, /Gemini: 1 of at most 3 quota-using requests this run/);
+});
+
+test('the key goes in a header, never in a URL', async () => {
+  const seen = [];
+  const { fetch: inner } = fakeApi({ 'gemini-4-hydrogen': [answer] });
+  const fetch = (url, opts) => { seen.push({ url, key: opts.headers['x-goog-api-key'] }); return inner(url, opts); };
+  await makeGeminiTranslator({ apiKey: KEY, fetch })({ jobs, log: quiet });
+  assert.ok(seen.length >= 2);
+  for (const s of seen) {
+    assert.ok(s.url.startsWith('https://generativelanguage.googleapis.com/'));
+    assert.ok(!s.url.includes(KEY));
+    assert.equal(s.key, KEY);
+  }
+});
+
+test('GEMINI_MODELS skips entries that aren\'t gemini model ids without echoing them', async () => {
+  const { fetch, posts } = fakeApi({ 'gemini-3.8-flash': [answer] });
+  const logs = [];
+  await makeGeminiTranslator({ apiKey: KEY, fetch, models: `${KEY}, ../../evil, gemini-3.8-flash` })({ jobs, log: (s) => logs.push(s) });
+  assert.deepEqual(posts.map((p) => p.model), ['gemini-3.8-flash']);
+  assert.ok(logs.some((s) => /ignored 2 entries/.test(s)));
+  assert.ok(!logs.join('\n').includes(KEY) && !logs.join('\n').includes('evil'));
 });
 
 test('GEMINI_MODELS replaces the automatic order', async () => {

@@ -52,7 +52,11 @@ if (env.ANTHROPIC_API_KEY && newsDue) {
 }
 // Content translations (data/i18n): with GEMINI_API_KEY (free tier) Gemini translates new text the page shows, else
 // Claude with ANTHROPIC_API_KEY. Without either, the daily editor fills them in (EDITOR.md).
-if ((env.GEMINI_API_KEY || env.ANTHROPIC_API_KEY) && !dryRun) {
+// In GitHub Actions the Gemini key never reaches this process: the workflow's own "Translate content (Gemini)" step
+// runs scripts/translate-data.mjs with it, and GEMINI_TRANSLATES tells this run to leave translation to that step.
+if (env.GEMINI_TRANSLATES) {
+  console.log('Content translations: left to the Gemini step.');
+} else if ((env.GEMINI_API_KEY || env.ANTHROPIC_API_KEY) && !dryRun) {
   console.log('Translating content…');
   try {
     const { syncTranslations, translatorFromEnv } = await import('./lib/translate.mjs');
