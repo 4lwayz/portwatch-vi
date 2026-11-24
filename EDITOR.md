@@ -56,11 +56,12 @@ The GitHub Actions scout (every 3 hours) does the mechanical work: stats, discov
    ```
 
    The `id` becomes the article's public URL (`news/<id>.html`, built at deploy and listed in the sitemap), so use only lowercase letters, digits and hyphens, and never change an id once it's published. For `image`, use the main source's `og:image`. Fetch the page with `curl -sL -A "Mozilla/5.0"` and read `<meta property="og:image">`; use `null` if there isn't one. Add new articles to the front of `news` and keep at most 40.
+6b. **Translate.** Run `node scripts/translate-data.mjs`. It brings `data/i18n/zh-CN.json` in step with `data/tracker.json` and reports how many values are empty. Each key is an English text the homepage shows; give every empty value its Simplified Chinese translation, following "Content translations" in `assets/i18n/README.md`, and never change a key. Run the script again: it must report 0 empty.
 7. **Finish.**
    - Set `scout.lastEditorRun` and `updated` to the current UTC time in ISO format.
    - Validate the JSON: `powershell -NoProfile -Command "Get-Content -Raw data/tracker.json | ConvertFrom-Json | Out-Null"`. It must succeed.
-   - Run `git add data/tracker.json` and `git commit -m "editor: daily review <YYYY-MM-DD>"`.
-   - Run `git pull --rebase origin main`, then `git push origin main`. The scout may have committed in between. If the rebase conflicts, run `git rebase --abort`, keep a copy of your edited file, run `git fetch origin` and `git reset --hard origin/main`, re-apply your edits to the fresh file, then commit and push again.
+   - Run `git add data/tracker.json data/i18n` and `git commit -m "editor: daily review <YYYY-MM-DD>"`.
+   - Run `git pull --rebase origin main`, then `git push origin main`. The scout may have committed in between. If the rebase conflicts, run `git rebase --abort`, keep a copy of your edited files, run `git fetch origin` and `git reset --hard origin/main`, re-apply your edits to the fresh files, then commit and push again.
    - End with a short summary: what changed, what was verified, what was skipped and why.
 
 ## Owner decisions

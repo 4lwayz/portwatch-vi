@@ -50,6 +50,18 @@ if (env.ANTHROPIC_API_KEY && newsDue) {
     console.log(`  ! News desk failed: ${err.message}`);
   }
 }
+// Content translations (data/i18n): with ANTHROPIC_API_KEY, Claude translates new text the page shows.
+// Without it, the daily editor fills them in (EDITOR.md).
+if (env.ANTHROPIC_API_KEY && !dryRun) {
+  console.log('Translating content…');
+  try {
+    const { syncTranslations, makeTranslator } = await import('./lib/translate.mjs');
+    const translate = await makeTranslator({ apiKey: env.ANTHROPIC_API_KEY });
+    for (const r of await syncTranslations({ data, translate })) console.log(`  ${r.file}: ${r.missing.length} of ${r.total} texts still empty`);
+  } catch (err) {
+    console.log(`  ! Translation failed: ${err.message}`);
+  }
+}
 console.log(`\nDone in ${Math.round((Date.now() - started) / 1000)}s: ${data.scout.lastSummary}`);
 console.log(JSON.stringify({ ...summary, mentions: undefined }, null, 2));
 
