@@ -33,6 +33,8 @@
   "hero.followX": "在 X 上关注",
   "hero.starGh": "在 GitHub 上加星标",
   "hero.joinDc": "加入我们的 Discord",
+  "hero.dcPaused": "Discord 邀请已暂停",
+  "hero.dcPausedTitle": "Discord 限制了我们的服务器，所以暂时不接受新成员。",
   "hero.title": "GTA VI 能在 PC 上运行了吗？",
   "hero.lede": "追踪每一个把泄露的 Xbox Series 版本重编译、模拟或移植到 PC 的认真尝试，并用同一套标准打分：从基础工作一直到稳定 30 FPS。",
 
