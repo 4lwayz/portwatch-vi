@@ -2024,6 +2024,63 @@
       "assessedBy": "claude",
       "claims": [],
       "readmeSha": "f91db6e4b85965a0562e01ded85a75c1c9a35dfe5415e4d94a458e9897c361f2"
+    },
+    {
+      "id": "xenora",
+      "name": "Xenora",
+      "repo": "ranveersoni98/Xenora",
+      "branch": "main",
+      "tier": "watchlist",
+      "approach": "Native ARM64 DBT + Metal",
+      "target": "Xbox Series X|S on Apple Silicon",
+      "summary": "Native Apple Silicon compatibility runtime written in Rust, with native ARM64 DBT, PE32+ loading, automated import generation and RDNA2-to-Metal translation. 271 workspace tests and 51 GPU-suite tests passed on Apple M5. Commercial game execution remains unsupported.",
+      "highlights": [
+        "Native ARM64 DBT with precise fault handling",
+        "PE32+ loading, relocations, TLS and imported runtime services",
+        "1,465 identified RDNA2 forms and 46 semantic forms",
+        "1,895 SOP2 and 252 VOPC native Metal conformance programs",
+        "Guest-driven rendering with translated vertex and pixel shaders",
+        "Native BC1-BC5 textures and all eight CPU BC7 modes",
+        "30 verified depth rendering cases",
+        "91 verified GPU threadgroup configurations",
+        "271 workspace and 51 GPU-suite tests passed at 077a215",
+        "No Rosetta, Wine or Vulkan runtime"
+      ],
+      "blockers": [
+        "Commercial Xbox game execution remains unsupported",
+        "Authentic Xbox executable loading remains unsupported",
+        "Incomplete CPU, runtime and shader semantics coverage",
+        "Expanded RDNA2 and runtime codegen in development"
+      ],
+      "groundwork": {
+        "loader": 0,
+        "shaders": 0,
+        "graphics": 0,
+        "proven": 0
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 0,
+        "boots": 0,
+        "menu": 0,
+        "ingame": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "stars": 57,
+        "forks": 1,
+        "openIssues": 1,
+        "createdAt": "2026-11-22T03:52:19Z",
+        "pushedAt": "2026-11-24T05:20:59Z",
+        "commits7d": 34,
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-24",
+      "assessedBy": "manual",
+      "claims": []
     }
   ],
   "tools": [
