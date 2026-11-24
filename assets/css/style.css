@@ -226,6 +226,10 @@ html:not([lang="en"]) .nav-links a { padding-inline: 9px; }
 .join-dc { border-color: rgba(255, 255, 255, .35); background: #5865f2; box-shadow: 0 6px 22px rgba(88, 101, 242, .45); }
 .join-dc svg { padding: 6px; border-radius: 50%; background: #fff; fill: #5865f2; }
 .join-dc:hover { border-color: #fff; box-shadow: 0 10px 30px rgba(88, 101, 242, .7); }
+/* Invites paused: a muted sign, not a button (no hover lift). */
+.join-dc.is-paused { border: 2px dashed rgba(255, 255, 255, .45); background: rgba(88, 101, 242, .28); box-shadow: none; color: rgba(255, 255, 255, .9); cursor: help; }
+.join-dc.is-paused svg { background: rgba(255, 255, 255, .7); fill: #5865f2; opacity: .75; }
+.join-dc.is-paused:hover { border-color: rgba(255, 255, 255, .45); box-shadow: none; transform: none; }
 .follow-x:hover, .star-gh:hover, .join-dc:hover { transform: translateY(-2px); }
 .follow-x:active, .star-gh:active, .join-dc:active { transform: none; }
 .follow-x:focus-visible, .star-gh:focus-visible, .join-dc:focus-visible { outline: 3px solid #fff; outline-offset: 3px; border-radius: 999px; }

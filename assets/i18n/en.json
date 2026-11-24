@@ -33,6 +33,8 @@
   "hero.followX": "Follow on X",
   "hero.starGh": "Star on GitHub",
   "hero.joinDc": "Join our Discord",
+  "hero.dcPaused": "Discord invites paused",
+  "hero.dcPausedTitle": "Discord has limited our server, so it isn't taking new members for now.",
   "hero.title": "Does GTA VI run on PC yet?",
   "hero.lede": "Every serious attempt to recompile, emulate or port the leaked Xbox Series build to PC, scored on one ladder from groundwork to a stable 30 FPS.",
 
