@@ -56,7 +56,7 @@ The GitHub Actions scout (every 3 hours) does the mechanical work: stats, discov
    ```
 
    The `id` becomes the article's public URL (`news/<id>.html`, built at deploy and listed in the sitemap), so use only lowercase letters, digits and hyphens, and never change an id once it's published. For `image`, use the main source's `og:image`. Fetch the page with `curl -sL -A "Mozilla/5.0"` and read `<meta property="og:image">`; use `null` if there isn't one. Add new articles to the front of `news` and keep at most 40.
-6b. **Translate.** Run `node scripts/translate-data.mjs`. It brings `data/i18n/zh-CN.json` in step with `data/tracker.json` and reports how many values are empty. Each key is an English text the homepage shows; give every empty value its Simplified Chinese translation, following "Content translations" in `assets/i18n/README.md`, and never change a key. Run the script again: it must report 0 empty.
+6b. **Translate.** Run `node scripts/translate-data.mjs`. It brings each `data/i18n/<code>.json` (`zh-CN`, `zh-TW`) in step with `data/tracker.json` and reports how many values are empty; when the scout has a `GEMINI_API_KEY`, most are already filled. Each key is an English text the homepage shows; give every empty value its translation into that file's language (Simplified Chinese for `zh-CN`, Traditional Chinese as written in Taiwan for `zh-TW`), following "Content translations" in `assets/i18n/README.md`, and never change a key. Run the script again: it must report 0 empty.
 7. **Finish.**
    - Set `scout.lastEditorRun` and `updated` to the current UTC time in ISO format.
    - Validate the JSON: `powershell -NoProfile -Command "Get-Content -Raw data/tracker.json | ConvertFrom-Json | Out-Null"`. It must succeed.
