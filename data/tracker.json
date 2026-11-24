@@ -2023,6 +2023,55 @@
       "assessedBy": "claude",
       "claims": [],
       "readmeSha": "f91db6e4b85965a0562e01ded85a75c1c9a35dfe5415e4d94a458e9897c361f2"
+    },
+    {
+      "id": "xenora",
+      "name": "Xenora",
+      "repo": "ranveersoni98/Xenora",
+      "branch": "main",
+      "tier": "watchlist",
+      "approach": "Native ARM64 DBT + Metal",
+      "target": "Xbox Series X|S on Apple Silicon",
+      "summary": "Rust-based native Apple Silicon compatibility runtime with x86-64 dynamic binary translation, automated import generation and RDNA2-to-Metal translation. Synthetic guest rendering verified on Apple M5; commercial game execution remains unsupported.",
+      "highlights": [
+        "Custom native ARM64 DBT and PE32+ loader",
+        "X18 automated import generation and metadata ingestion",
+        "Guest-driven native Metal rendering on Apple M5"
+      ],
+      "blockers": [
+        "Commercial game execution remains unsupported",
+        "Incomplete CPU and system-service coverage",
+        "Advanced GPU translation remains incomplete"
+      ],
+      "groundwork": {
+        "loader": 0,
+        "shaders": 0,
+        "graphics": 0,
+        "proven": 0
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 0,
+        "boots": 0,
+        "menu": 0,
+        "ingame": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "stars": 57,
+        "forks": 1,
+        "openIssues": 1,
+        "createdAt": "2026-11-22T03:52:19Z",
+        "pushedAt": "2026-11-24T05:20:59Z",
+        "commits7d": 34,
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-24",
+      "assessedBy": "manual",
+      "claims": []
     }
   ],
   "tools": [
