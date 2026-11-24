@@ -2101,6 +2101,130 @@
       "claims": [],
       "readmeSha": "6882b81383210c06a620fe985f75f4097c82ffcca4599ebd5357756a9144ddc6",
       "readmeChangedAt": "2026-11-24"
+    },
+    {
+      "id": "leonida-reforge",
+      "name": "LeonidaReforge",
+      "repo": "LeonidaReforge/Leonida",
+      "branch": "main",
+      "tier": "watchlist",
+      "approach": "Static recompilation",
+      "target": "GTA VI only",
+      "summary": "Independent community continuation of Leonida with inherited history and active upstream PRs. Separate Windows build and GPU test reports exist; the graphics results use fixtures and it does not claim verified GTA VI gameplay.",
+      "highlights": [
+        "Independent Windows build and GPU test reports in its PR 112 thread",
+        "Public coordination board in issue 99 and a separate loader test report"
+      ],
+      "blockers": [
+        "Graphics results use test fixtures, not GTA VI",
+        "No verified GTA VI gameplay claimed"
+      ],
+      "groundwork": {
+        "loader": 0.4,
+        "shaders": 0.3,
+        "graphics": 0.3,
+        "proven": 0.1
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 0,
+        "boots": 0,
+        "menu": 0,
+        "ingame": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-24",
+      "assessedBy": "manual",
+      "claims": []
+    },
+    {
+      "id": "vilkan",
+      "name": "VIlkan",
+      "repo": "SebSilent/vilkan",
+      "branch": "main",
+      "tier": "watchlist",
+      "approach": "Compatibility layer",
+      "target": "Xbox Series X runtime (Linux)",
+      "summary": "Xbox Series X runtime for Linux built on VIctory, aiming at a native Vulkan path. It adds wave64-on-wave32 emulation so it runs on NVIDIA, a Linux/Proton bootstrap and validated Vulkan compute dispatch. Its supported title is a different game, not GTA VI. GPL-3.0-or-later.",
+      "highlights": [
+        "Wave64-on-wave32 emulation lets it run on NVIDIA",
+        "Native Vulkan compute path with numerically validated dispatch"
+      ],
+      "blockers": [
+        "World renders dark: mesh and indirect draw path not translated yet",
+        "No native Vulkan graphics path yet",
+        "No GTA VI run reported"
+      ],
+      "groundwork": {
+        "loader": 0.4,
+        "shaders": 0.3,
+        "graphics": 0.1,
+        "proven": 0
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 0,
+        "boots": 0,
+        "menu": 0,
+        "ingame": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-24",
+      "assessedBy": "manual",
+      "claims": []
+    },
+    {
+      "id": "kestrelx",
+      "name": "KestrelX",
+      "repo": "Batushn/KestrelX",
+      "branch": "main",
+      "tier": "watchlist",
+      "approach": "Compatibility layer + shader recompiler",
+      "target": "Xbox Series X|S compatibility",
+      "summary": "Clean-room Xbox Series X|S compatibility layer for Windows with a dual-wave RDNA2 shader recompiler. v0.10.0 lifted 412 of 412 GFX10.3 instructions from 12 external AMD RGA kernels and compiled all 12 to DXIL; 70 tests pass. No commercial Xbox title has been booted. MIT.",
+      "highlights": [
+        "12 of 12 external gfx1030 kernels decoded and compiled to DXIL",
+        "70 tests pass, CI green, hardware checks on RTX 4060 and Radeon 780M"
+      ],
+      "blockers": [
+        "No Xbox Series title or GTA VI run yet",
+        "Shader results come from independently compiled test kernels, not GTA VI shaders"
+      ],
+      "groundwork": {
+        "loader": 0.3,
+        "shaders": 0.4,
+        "graphics": 0.2,
+        "proven": 0.1
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 0,
+        "boots": 0,
+        "menu": 0,
+        "ingame": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-24",
+      "assessedBy": "manual",
+      "claims": []
     }
   ],
   "tools": [
@@ -3046,11 +3170,6 @@
     {
       "repo": "Naz1r/lucy-nazir-gta6-research",
       "reason": "Research notes on synthetic tests; no source released yet",
-      "seenAt": "2026-11-24"
-    },
-    {
-      "repo": "Batushn/KestrelX",
-      "reason": "Shader recompiler tested only on its own synthetic shaders; no Xbox Series title or GTA VI shaders run yet",
       "seenAt": "2026-11-24"
     },
     {
