@@ -1,3 +1,5 @@
+import { icon } from './icons.js';
+
 // Interface translations for the public pages (index.html, board.html).
 // UI strings live in assets/i18n/<code>.json; en.json is the fallback for any key a language lacks.
 // Tracker data (project summaries, news, changes) stays in English, so the scout needs no changes.
@@ -90,7 +92,6 @@ export function applyStatic(root = document) {
   }
 }
 
-const GLOBE = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.8 8h12.4M8 1.6c1.8 1.9 2.6 4 2.6 6.4S9.8 12.5 8 14.4M8 1.6C6.2 3.5 5.4 5.6 5.4 8s.8 4.5 2.6 6.4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
 const escText = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 // Language menu in the nav bar, next to the theme menu and styled like it. Choosing a language saves it and reloads.
@@ -102,7 +103,7 @@ function mountPicker() {
   const wrap = document.createElement('div');
   wrap.className = 'lang-pick';
   wrap.innerHTML =
-    `<button type="button" class="lang-btn" aria-haspopup="true" aria-expanded="false" aria-label="${escText(label)}" title="${escText(label)}">${GLOBE}<span>${cur.short}</span></button>` +
+    `<button type="button" class="lang-btn" aria-haspopup="true" aria-expanded="false" aria-label="${escText(label)}" title="${escText(label)}">${icon('world')}<span>${cur.short}</span></button>` +
     '<div class="theme-menu lang-menu" role="menu" hidden>' +
     LANGS.map((l) => `<button type="button" role="menuitemradio" lang="${l.code}" data-lang="${l.code}" aria-checked="${l.code === lang}"><span>${escText(l.name)}</span></button>`).join('') +
     `<p class="lang-note">${escText(t('lang.note'))}</p></div>`;

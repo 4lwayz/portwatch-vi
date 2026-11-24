@@ -4,6 +4,7 @@
 // scripts/build-site.mjs does the file I/O in GitHub Actions.
 
 import { esc, NEWS_ID_RE, articlePath, coverHtml } from '../../assets/js/news-shared.js';
+import { icon } from '../../assets/js/icons.js';
 
 export const SITE_URL = 'https://portwatch-vi.xyz/';
 const SITE_NAME = 'PortWatch VI';
@@ -65,17 +66,21 @@ function shell({ title, description, canonical, ogType = 'website', image, image
   <script src="../assets/js/theme.js"></script>${head}
 </head>
 <body class="page-news">
-  <header class="nav is-scrolled">
+  <header class="nav nav--pill is-scrolled">
     <div class="wrap nav-inner">
       <a class="brand" href="../" aria-label="PortWatch VI home">
         ${BRAND}
         <span>PortWatch<b>VI</b></span>
       </a>
-      <nav class="nav-links" aria-label="Sections">
-        <a href="../#race">Race</a>
-        <a href="./" class="is-current">News</a>
-        <a href="../#method">Scoring</a>
-        <a href="../#safety" class="nav-warn">Fake downloads</a>
+      <button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Sections" hidden>
+        <svg class="tabler-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/img/tabler.svg#menu-2"/></svg>
+        <svg class="tabler-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/img/tabler.svg#x"/></svg>
+      </button>
+      <nav class="nav-links" id="nav-links" aria-label="Sections">
+        <a href="../#race">${icon('activity', '../')}<span>Race</span></a>
+        <a href="./" class="is-current">${icon('news', '../')}<span>News</span></a>
+        <a href="../#method">${icon('chart-bar', '../')}<span>Scoring</span></a>
+        <a href="../#safety" class="nav-warn">${icon('alert-triangle', '../')}<span>Fake downloads</span></a>
       </nav>
     </div>
   </header>
