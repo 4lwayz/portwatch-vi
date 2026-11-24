@@ -776,6 +776,55 @@
       "readmeChangedAt": "2026-11-24"
     },
     {
+      "id": "palmwave",
+      "name": "Palmwave",
+      "repo": "fablinoo/palmwave",
+      "branch": "main",
+      "tier": "tracked",
+      "approach": "Compatibility layer",
+      "target": "Any Xbox Series game",
+      "summary": "Rust offshoot of XCL with its own D3D12 and memory work. Its README says GTA VI reaches the first mission and its world geometry is drawn, but the picture shown is one flat colour. Unverified.",
+      "highlights": [
+        "Says GTA VI reaches its first mission, with street geometry in the depth buffer and G-buffer",
+        "Intro and first screens at 30 fps; runs stayed in the world up to 3 minutes",
+        "Builds the world compute pipelines ahead of time on background threads"
+      ],
+      "blockers": [
+        "The world is not lit: the presented frame is a flat colour",
+        "A world frame takes 12 to 19 seconds; GPU heaps sit in host memory",
+        "Needs 15 to 20 GB of video memory and byte patches to the game"
+      ],
+      "groundwork": {
+        "loader": 0.9,
+        "shaders": 0.9,
+        "graphics": 0.85,
+        "proven": 0.9
+      },
+      "provenOn": "Inherited from XCL (Minecraft Preview, Unicorn Overlord)",
+      "gta": {
+        "loads": 1,
+        "boots": 1,
+        "menu": 1,
+        "ingame": 0.5,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "stars": 48,
+        "forks": 3,
+        "openIssues": 2,
+        "createdAt": "2026-11-23T18:24:29Z",
+        "pushedAt": "2026-11-24T15:43:47Z",
+        "commits7d": 100,
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-24",
+      "assessedBy": "manual",
+      "claims": []
+    },
+    {
       "id": "scarlettx",
       "name": "ScarlettX",
       "repo": "Freminet/ScarlettX",
@@ -2761,7 +2810,7 @@
       "id": "copies",
       "pattern": "Re-uploads of tracked projects under other accounts",
       "label": "",
-      "count": 51,
+      "count": 50,
       "reason": "Copies can be quietly modified to bundle malware. Only use the original repositories linked in the race above.",
       "members": [
         "FaelSemW/RafaVI",
@@ -2778,7 +2827,6 @@
         "ZuanCrisp/Leonida",
         "VictorMinister/leonida-pc-recompiler",
         "T-Crypt/bathyal",
-        "fablinoo/palmwave",
         "Marsietiss/xcl-frontier",
         "Caliiu/DedSec",
         "ubiquitarianism/leonida",
@@ -5158,6 +5206,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "kind": "up",
+      "text": "Palmwave, an offshoot of XCL, joins the race at In-game (partial): its README says GTA VI reaches the first mission, with the world drawn but not lit."
+    },
     {
       "date": "2026-11-24",
       "kind": "removed",
