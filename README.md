@@ -54,6 +54,8 @@ Everything lives in `data/tracker.json`:
 - `candidates[]`: move one into `efforts` to promote it, or into `ignored` to dismiss it.
 - `site.heroImage` / `site.heroCredit`: hero artwork (see below).
 
+Translations of this text for the homepage live in `data/i18n/` (see [assets/i18n/README.md](assets/i18n/README.md)).
+
 Scoring is in `assets/js/scoring.js`, shared by the site and the scout. Groundwork fills 0–25%. After that, milestones sit at Exe runs 25, First frame 40, Main menu 55, In-game 70, 30 FPS 85 and Stable 100.
 
 ## Hero artwork

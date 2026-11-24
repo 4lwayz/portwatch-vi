@@ -1,6 +1,7 @@
 // Interface translations for the public pages (index.html, board.html).
 // UI strings live in assets/i18n/<code>.json; en.json is the fallback for any key a language lacks.
-// Tracker data (project summaries, news, changes) stays in English, so the scout needs no changes.
+// Tracker data (project summaries, news, changes) is written in English. Languages marked `data: true` also load
+// data/i18n/<code>.json, which maps each English text to its translation (see td() and scripts/translate-data.mjs).
 // Milestone, groundwork and stability names come from scoring.js in English and are translated under
 // the ms.*, gw.* and stab.* keys of each non-English file. See assets/i18n/README.md.
 
@@ -8,7 +9,7 @@ export const LANGS = [
   { code: 'en', name: 'English', short: 'EN' },
   { code: 'pt-BR', name: 'Português (Brasil)', short: 'PT' },
   { code: 'es', name: 'Español', short: 'ES' },
-  { code: 'zh-CN', name: '简体中文', short: '中' },
+  { code: 'zh-CN', name: '简体中文', short: '中', data: true },
 ];
 const KEY = 'pw-lang';
 const CODES = LANGS.map((l) => l.code);
@@ -16,6 +17,7 @@ const CODES = LANGS.map((l) => l.code);
 let lang = 'en';
 let dict = {};
 let en = {};
+let content = {};
 
 export const getLang = () => lang;
 // For dates and numbers. English keeps the browser's own locale (en-GB, en-US…), as before.
@@ -46,16 +48,26 @@ async function load(code) {
   return res.json();
 }
 
+// Same per-minute cache-buster as data/tracker.json in app.js, so both come from the same scout run.
+async function loadContent(code) {
+  const res = await fetch(new URL(`../../data/i18n/${code}.json?ts=${Math.floor(Date.now() / 6e4)}`, import.meta.url), { cache: 'no-cache' });
+  if (!res.ok) throw new Error(`data/i18n/${code}.json: HTTP ${res.status}`);
+  return res.json();
+}
+
 // Never throws: if a language file can't load, the page stays in English.
 export async function initI18n() {
   lang = pickLang();
-  const [base, own] = await Promise.all([
+  const withContent = LANGS.some((l) => l.code === lang && l.data);
+  const [base, own, data] = await Promise.all([
     load('en').catch(() => ({})),
     lang === 'en' ? null : load(lang).catch(() => null),
+    withContent ? loadContent(lang).catch(() => ({})) : {},
   ]);
   en = base;
   if (lang !== 'en' && !own) lang = 'en';
   dict = lang === 'en' ? en : own;
+  content = lang === 'en' ? {} : data;
   document.documentElement.lang = lang;
   if (lang !== 'en') applyStatic();
   if (typeof window.pwSetThemeLabels === 'function') {
@@ -79,6 +91,49 @@ export function tr(key, english, vars) {
 // Counted strings: key_one for exactly 1, key_other otherwise (right for en, pt-BR and es; zh-CN uses the same text for both).
 export function tn(key, n, vars) {
   return t(`${key}_${n === 1 ? 'one' : 'other'}`, { n, ...vars });
+}
+
+// Tracker text (summaries, news, changes…) in the active language: its data/i18n entry, else a scout template
+// below, else the English. An empty entry means "not translated yet".
+export function td(s) {
+  if (lang === 'en' || typeof s !== 'string') return s;
+  return (Object.hasOwn(content, s) && content[s]) || auto(s) || s;
+}
+
+// Text the scout builds from fixed templates (scripts/lib/pipeline.mjs, core.mjs). A language that defines the
+// auto.* key gets it translated at once, without waiting for data/i18n. {1}, {2}… are the groups; a third entry
+// names the group that holds a milestone key (shown with that language's ms.*.label).
+export const AUTO = [
+  ['auto.spotted', /^Scout spotted (\S+) \(possible effort, substance (\d+)\)\.$/],
+  ['auto.spottedTool', /^Scout spotted (\S+) \(tool, substance (\d+)\)\.$/],
+  ['auto.spottedGitlab', /^Scout spotted (\S+) \(substance (\d+)\)\.$/],
+  ['auto.gone', /^(.+) is no longer reachable on GitHub \(HTTP (\d+)\)\.$/],
+  ['auto.goneBlocked', /^(.+) is no longer reachable on GitHub \(HTTP (\d+), blocked\)\.$/],
+  ['auto.moved', /^(.+) moved to (\S+\/\S+)\.$/],
+  ['auto.claim', /^(.+)'s README may claim a new milestone \((\w+)\): “([\s\S]*)”$/, 2],
+  ['auto.dmcaNamed', /^(.+) is named in a new DMCA notice \(([\d-]+)\)\.$/],
+  ['auto.dmcaNew', /^New (Rockstar|Take-Two) DMCA notice on GitHub \((\d+) repos\)\.$/],
+  ['auto.dmcaNewGta', /^New (Rockstar|Take-Two) DMCA notice on GitHub \((\d+) repos, mentions GTA VI\)\.$/],
+  ['auto.rose', /^(.+) rose ([\d.]+) pts to ([\d.]+)%\.$/],
+  ['auto.fell', /^(.+) fell ([\d.]+) pts to ([\d.]+)%\.$/],
+  ['auto.lead', /^(.+) takes the lead at ([\d.]+)%\.$/],
+  ['auto.summary', /^(\d+) refreshed, (\d+) READMEs changed, (\d+) new candidates, (\d+) flagged\.$/],
+  ['auto.summaryErrors', /^(\d+) refreshed, (\d+) READMEs changed, (\d+) new candidates, (\d+) flagged, (\d+) errors\.$/],
+  ['auto.terms', /^(\d+) technical terms$/],
+  ['auto.statusTable', /^status table$/],
+  ['auto.tests', /^tests$/],
+  ['auto.commits', /^(\d+\+?) commits\/7d$/],
+];
+export const autoKey = (s) => AUTO.find(([, re]) => re.test(s))?.[0] ?? null;
+
+function auto(s) {
+  for (const [key, re, ms] of AUTO) {
+    const m = typeof dict[key] === 'string' ? re.exec(s) : null;
+    if (!m) continue;
+    if (ms && typeof dict[`ms.${m[ms]}.label`] === 'string') m[ms] = dict[`ms.${m[ms]}.label`];
+    return fill(dict[key], m);
+  }
+  return null;
 }
 
 // Static markup: data-i18n="key" sets the text; data-i18n-attr="title:key;aria-label:key2" sets attributes.
