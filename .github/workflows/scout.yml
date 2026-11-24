@@ -33,15 +33,31 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Whether a Gemini key exists, never the key itself: the next step translates with it.
+          GEMINI_TRANSLATES: ${{ secrets.GEMINI_API_KEY != '' && 'yes' || '' }}
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+
+      # The Gemini key lives in this step only. It runs nothing but this repository's code (no npm package: the
+      # translator uses Node's built-in fetch) and reads no untrusted input beyond data/tracker.json. Keep it that way:
+      # don't pass GEMINI_API_KEY to other steps, and never run a workflow that sees it on pull_request_target.
+      # Use a key from a Google Cloud project without billing, so it can't cost money (README, "Content translations").
+      # A failure here never blocks the data commit below.
+      - name: Translate content (Gemini)
+        continue-on-error: true
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then echo "No GEMINI_API_KEY secret; skipped."; exit 0; fi
+          node scripts/translate-data.mjs
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODELS: ${{ vars.GEMINI_MODELS }}
 
       - name: Commit updated data
         run: |
           git config user.name "portwatch-scout[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/tracker.json
+          git add data/tracker.json data/i18n
           if git diff --cached --quiet; then
             echo "No changes."
           else
