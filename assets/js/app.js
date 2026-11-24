@@ -98,8 +98,14 @@ function renderMeta(data) {
 function renderHeroArt(site) {
   if (!site.heroImage) return;
   const img = new Image();
+  // Same srcset and sizes as the preload in index.html, so the browser picks (and reuses) the same file.
+  const pre = document.getElementById('hero-preload');
+  if (pre?.getAttribute('href') === site.heroImage && pre.getAttribute('imagesrcset')) {
+    img.sizes = pre.getAttribute('imagesizes') || '100vw';
+    img.srcset = pre.getAttribute('imagesrcset');
+  }
   img.onload = () => {
-    $('#hero-photo').style.backgroundImage = `url("${encodeURI(site.heroImage)}")`;
+    $('#hero-photo').style.backgroundImage = `url("${encodeURI(img.currentSrc || site.heroImage)}")`;
     $('#top').classList.add('has-photo');
     if (site.heroCredit) $('#art-credit').textContent = site.heroCredit;
   };
