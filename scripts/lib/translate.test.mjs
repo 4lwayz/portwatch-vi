@@ -39,7 +39,8 @@ test('skips scout templates, keeps safe translations, fills the rest, all langua
   assert.deepEqual(tw.missing, ['Runs the exe.']);
 });
 
-// Gemini: a fake API that answers GET /models and POST :generateContent from a script of replies per model.
+// Gemini: a fake API that answers GET /models and POST :streamGenerateContent (as server-sent events) from a script of
+// replies per model.
 const MODELS = [
   { name: 'models/gemini-4-hydrogen', outputTokenLimit: 65536, supportedGenerationMethods: ['generateContent'] },
   { name: 'models/gemini-3.8-flash', outputTokenLimit: 65536, supportedGenerationMethods: ['generateContent'] },
@@ -49,8 +50,17 @@ const rows = (body, f = (s, code) => `${code}:${s}`) => {
   const fields = body.generationConfig.responseSchema.items.required.filter((k) => k !== 'id');
   return items.map(({ id, text }) => ({ id, ...Object.fromEntries(fields.map((k) => [k, f(text, k)])) }));
 };
-const ok = (json) => ({ status: 200, json });
-const answer = (body) => ok({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify(rows(body)) }] } }] });
+const sse = (...chunks) => ({ status: 200, sse: chunks });
+// The answer arrives in two chunks after a thought part, which must not end up in the JSON.
+const answer = (body) => {
+  const t = JSON.stringify(rows(body));
+  const half = Math.floor(t.length / 2);
+  return sse(
+    { candidates: [{ content: { parts: [{ text: 'Thinking about terms…', thought: true }, { text: t.slice(0, half) }] } }] },
+    { candidates: [{ finishReason: 'STOP', content: { parts: [{ text: t.slice(half) }] } }] },
+  );
+};
+const busy = { status: 503, json: { error: { code: 503, status: 'UNAVAILABLE', message: 'This model is currently experiencing high demand.' } } };
 const quota = (quotaId, retryDelay) => ({
   status: 429,
   json: { error: { status: 'RESOURCE_EXHAUSTED', message: 'quota', details: [
@@ -62,15 +72,17 @@ function fakeApi(script, models = MODELS) {
   const posts = [];
   const fetch = async (url, opts) => {
     let r;
-    if (opts.method === 'GET') r = ok({ models });
+    if (opts.method === 'GET') r = { status: 200, json: { models } };
     else {
-      const model = decodeURIComponent(/models\/([^:]+):generateContent/.exec(url)[1]);
+      assert.match(url, /:streamGenerateContent\?alt=sse$/);
+      const model = decodeURIComponent(/models\/([^:]+):/.exec(url)[1]);
       const body = JSON.parse(opts.body);
       posts.push({ model, body });
       const next = script[model]?.shift();
       r = typeof next === 'function' ? next(body) : next || quota('GenerateRequestsPerDayPerProjectPerModel-FreeTier');
     }
-    return { status: r.status, ok: r.status < 300, json: async () => r.json };
+    if (r.sse) return new Response(r.sse.map((c) => `data: ${JSON.stringify(c)}\r\n\r\n`).join(''), { status: 200, headers: { 'content-type': 'text/event-stream' } });
+    return new Response(JSON.stringify(r.json), { status: r.status, headers: { 'content-type': 'application/json' } });
   };
   return { fetch, posts };
 }
@@ -118,6 +130,27 @@ test('waits out a per-minute limit once, on the same model', async () => {
   assert.equal(Object.keys(out['zh-CN']).length, 2);
 });
 
+test('gives a busy model one more try after a pause, then moves on', async () => {
+  const waits = [];
+  const sleep = async (ms) => { waits.push(ms); };
+  const once = fakeApi({ 'gemini-4-hydrogen': [busy, answer] });
+  const out = await makeGeminiTranslator({ apiKey: 'k', fetch: once.fetch, sleep })({ jobs, log: quiet });
+  assert.deepEqual(once.posts.map((p) => p.model), ['gemini-4-hydrogen', 'gemini-4-hydrogen']);
+  assert.equal(Object.keys(out['zh-TW']).length, 2);
+
+  const twice = fakeApi({ 'gemini-4-hydrogen': [busy, busy], 'gemini-3.8-flash': [answer] });
+  await makeGeminiTranslator({ apiKey: 'k', fetch: twice.fetch, sleep })({ jobs, log: quiet });
+  assert.deepEqual(twice.posts.map((p) => p.model), ['gemini-4-hydrogen', 'gemini-4-hydrogen', 'gemini-3.8-flash']);
+  assert.deepEqual(waits, [20000, 20000]);
+});
+
+test('sends thinkingLevel medium to Gemini 3 and later, a budget to 2.5, never both', async () => {
+  const { fetch, posts } = fakeApi({ 'gemini-4-hydrogen': [], 'gemini-2.5-flash': [answer] },
+    ['gemini-4-hydrogen', 'gemini-2.5-flash'].map((id) => ({ name: `models/${id}`, outputTokenLimit: 65536 })));
+  await makeGeminiTranslator({ apiKey: 'k', fetch })({ jobs, log: quiet });
+  assert.deepEqual(posts.map((p) => p.body.generationConfig.thinkingConfig), [{ thinkingLevel: 'medium' }, { thinkingBudget: 2048 }]);
+});
+
 test('retries without the thinking setting when a model rejects it', async () => {
   const bad = { status: 400, json: { error: { status: 'INVALID_ARGUMENT', message: 'thinking_level is not supported' } } };
   const { fetch, posts } = fakeApi({ 'gemini-4-hydrogen': [bad, answer] });
@@ -127,7 +160,7 @@ test('retries without the thinking setting when a model rejects it', async () =>
 });
 
 test('retries a cut-off reply, and stops after three quota-using requests', async () => {
-  const cut = ok({ candidates: [{ finishReason: 'MAX_TOKENS', content: { parts: [{ text: '[{"id":0,' }] } }] });
+  const cut = sse({ candidates: [{ finishReason: 'MAX_TOKENS', content: { parts: [{ text: '[{"id":0,' }] } }] });
   const { fetch, posts } = fakeApi({ 'gemini-4-hydrogen': [cut, cut, cut, answer] });
   const logs = [];
   const out = await makeGeminiTranslator({ apiKey: 'k', fetch })({ jobs, log: (s) => logs.push(s) });

@@ -216,8 +216,10 @@ export async function makeTranslator({ apiKey } = {}) {
 const GEMINI_API = 'https://generativelanguage.googleapis.com/v1beta';
 const GEMINI_MAX_REQUESTS = 3; // requests per run that can use up quota
 const GEMINI_MIN_OUTPUT = 32768; // models with a smaller reply limit can't take a whole run in one request
-const GEMINI_TIMEOUT_MS = 240_000;
+const GEMINI_RUN_MS = 12 * 60_000; // no new request after this, so the scout job (25 min) still commits its data
+const GEMINI_BUSY_WAIT_MS = 20_000; // a model "experiencing high demand" gets one more try after this
 const GEMINI_REPLY_SHARE = 0.7; // part of a model's reply limit planned for translations; the rest is for thinking
+const GEMINI_THINKING = 'medium'; // thinkingLevel for Gemini 3 and later (Hydrogen and every 3.x Flash accept it)
 
 // Dotted versions compared number by number, so 3.10 > 3.8 > 3.
 function cmpVersion(a, b) {
@@ -260,7 +262,8 @@ export function geminiFailure(status, body) {
     return { kind: perMinute && retryMs != null && retryMs <= 65_000 ? 'minute' : 'quota', retryMs, message };
   }
   if (status === 400) return { kind: 'invalid', message };
-  return { kind: 'next', message }; // 404 (model gone), 5xx (overloaded)
+  if (status === 503 || err.status === 'UNAVAILABLE') return { kind: 'busy', message };
+  return { kind: 'next', message }; // 404 (model gone), other 5xx, network errors
 }
 
 // Rough reply size per item: Chinese runs about half a token per English character, plus a little JSON per field.
@@ -270,10 +273,64 @@ const field = (code) => code.replace(/[^A-Za-z0-9]/g, '_');
 export function makeGeminiTranslator({ apiKey, models = '', fetch: fetchImpl = globalThis.fetch, sleep = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
   if (!apiKey) throw new Error('GEMINI_API_KEY is not set');
   const headers = { 'content-type': 'application/json', 'x-goog-api-key': apiKey };
-  const call = async (url, body) => {
-    const res = await fetchImpl(url, { method: body ? 'POST' : 'GET', headers, body: body && JSON.stringify(body), signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS) });
+  const call = async (url) => {
+    const res = await fetchImpl(url, { method: 'GET', headers, signal: AbortSignal.timeout(60_000) });
     return { status: res.status, ok: res.ok, json: await res.json().catch(() => ({})) };
   };
+
+  // POST :streamGenerateContent (server-sent events), so a reply of several minutes keeps the connection busy and the
+  // log shows it's alive. Gives { ok: false, status, json } for an HTTP error, else the chunks joined:
+  // { ok: true, text, finish, block, error } (error: the stream broke or sent an error chunk).
+  async function generate(model, body, log, deadline) {
+    const url = `${GEMINI_API}/models/${encodeURIComponent(model.id)}:streamGenerateContent?alt=sse`;
+    const reply = { ok: true, text: '', finish: null, block: null, error: null };
+    // The model may think for minutes before the first byte (even the headers), so the clock starts with the request.
+    const started = Date.now();
+    const timer = setInterval(() => log(`    ${model.id}: ${Math.round((Date.now() - started) / 1000)} s, ${reply.text.length} characters so far`), 30_000);
+    try {
+      return await receive();
+    } finally {
+      clearInterval(timer);
+    }
+
+    async function receive() {
+      let res;
+      try {
+        res = await fetchImpl(url, { method: 'POST', headers, body: JSON.stringify(body), signal: AbortSignal.timeout(Math.max(60_000, deadline - Date.now())) });
+      } catch (err) {
+        return { ok: false, status: 0, json: { error: { message: err.message } } };
+      }
+      if (!res.ok || !res.body) return { ok: false, status: res.status, json: await res.json().catch(() => ({})) };
+      try {
+        const reader = res.body.getReader();
+        const dec = new TextDecoder();
+        let buf = '';
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (value) buf += dec.decode(value, { stream: true });
+          let i;
+          while ((i = buf.indexOf('\n')) >= 0) { take(buf.slice(0, i).trim()); buf = buf.slice(i + 1); }
+          if (done) break;
+        }
+        take(buf.trim());
+      } catch (err) {
+        reply.error = { message: err.message };
+      }
+      return reply;
+    }
+
+    // One `data:` line of the stream: answer text (thoughts left out), finish reason, block reason or error.
+    function take(line) {
+      if (!line.startsWith('data:')) return;
+      let c;
+      try { c = JSON.parse(line.slice(5)); } catch { return; }
+      if (c.error) reply.error = c.error;
+      if (c.promptFeedback?.blockReason) reply.block = c.promptFeedback.blockReason;
+      const cand = c.candidates?.[0];
+      for (const p of cand?.content?.parts || []) if (!p.thought && typeof p.text === 'string') reply.text += p.text;
+      if (cand?.finishReason) reply.finish = cand.finishReason;
+    }
+  }
 
   async function chain(log) {
     const listed = [];
@@ -321,9 +378,10 @@ Reply with a JSON array holding one object per item: its "id", and its translati
     let queue = items;
     let m = 0;
     let used = 0;
+    const deadline = Date.now() + GEMINI_RUN_MS;
     const share = new Map(); // part of a model's reply limit given to translations; halves after a cut-off reply
-    const tried = new Set(); // per-model one-off retries: `${id}:minute`, `${id}:plain`
-    while (queue.length && m < list.length && used < GEMINI_MAX_REQUESTS) {
+    const tried = new Set(); // per-model one-off retries: `${id}:minute`, `${id}:busy`, `${id}:plain`
+    while (queue.length && m < list.length && used < GEMINI_MAX_REQUESTS && Date.now() < deadline) {
       const model = list[m];
       const budget = Math.floor(model.out * (share.get(model.id) ?? GEMINI_REPLY_SHARE));
       const batch = [];
@@ -335,12 +393,14 @@ Reply with a JSON array holding one object per item: its "id", and its translati
         size += cost;
       }
       const v3 = cmpVersion(/^gemini-(\d+(?:\.\d+)*)/.exec(model.id)?.[1] || '0', '3') >= 0;
-      const thinking = tried.has(`${model.id}:plain`) ? undefined : v3 ? { thinkingLevel: 'low' } : { thinkingBudget: 1024 };
-      const r = await call(`${GEMINI_API}/models/${encodeURIComponent(model.id)}:generateContent`, {
+      // Gemini 3 and later take a thinkingLevel; 2.5 takes a budget. Never both: Gemini 4 rejects that with a 400.
+      const thinking = tried.has(`${model.id}:plain`) ? undefined : v3 ? { thinkingLevel: GEMINI_THINKING } : { thinkingBudget: 2048 };
+      log(`  ${model.id}: sending ${batch.length} texts (${jobs.map((j) => j.code).join(', ')})…`);
+      const r = await generate(model, {
         systemInstruction: { parts: [{ text: system }] },
         contents: [{ role: 'user', parts: [{ text: `<items>${JSON.stringify(batch)}</items>\n\nTranslate every item into ${langs}.` }] }],
         generationConfig: { responseMimeType: 'application/json', responseSchema: schema, maxOutputTokens: model.out, ...(thinking && { thinkingConfig: thinking }) },
-      }).catch((err) => ({ status: 0, ok: false, json: { error: { message: err.message } } }));
+      }, log, deadline);
 
       if (!r.ok) {
         const f = geminiFailure(r.status, r.json);
@@ -352,8 +412,15 @@ Reply with a JSON array holding one object per item: its "id", and its translati
           await sleep(f.retryMs);
           continue;
         }
+        if (f.kind === 'busy' && !tried.has(`${model.id}:busy`)) {
+          tried.add(`${model.id}:busy`);
+          log(`  ${model.id}: busy (${f.message.slice(0, 80)}), trying again in ${GEMINI_BUSY_WAIT_MS / 1000} s`);
+          await sleep(GEMINI_BUSY_WAIT_MS);
+          continue;
+        }
         if (f.kind === 'invalid' && thinking) {
-          tried.add(`${model.id}:plain`); // some models take neither thinking setting; retry once without it
+          tried.add(`${model.id}:plain`); // a model that takes neither thinking setting; retry once without it
+          log(`  ${model.id}: rejected the thinking setting (${f.message.slice(0, 80)}), retrying without it`);
           continue;
         }
         log(`  ! ${model.id}: ${f.kind === 'quota' || f.kind === 'minute' ? 'quota used up' : f.message}${list[m + 1] ? `, trying ${list[m + 1].id}` : ''}`);
@@ -362,17 +429,15 @@ Reply with a JSON array holding one object per item: its "id", and its translati
       }
 
       used += 1;
-      const cand = r.json.candidates?.[0];
-      if (cand?.finishReason === 'MAX_TOKENS' && batch.length > 1) {
+      if (r.finish === 'MAX_TOKENS' && batch.length > 1) {
         share.set(model.id, (share.get(model.id) ?? GEMINI_REPLY_SHARE) / 2);
         log(`  ! ${model.id}: reply cut off; retrying with smaller requests`);
         continue;
       }
-      const text = (cand?.content?.parts || []).filter((p) => !p.thought && typeof p.text === 'string').map((p) => p.text).join('');
       let rows = null;
-      try { rows = JSON.parse(text); } catch { /* handled below */ }
+      try { rows = JSON.parse(r.text); } catch { /* handled below */ }
       if (!Array.isArray(rows)) {
-        const why = r.json.promptFeedback?.blockReason || cand?.finishReason || 'no JSON in the reply';
+        const why = r.block || r.error?.message?.slice(0, 120) || r.finish || 'no JSON in the reply';
         log(`  ! ${model.id}: no usable translations (${why})${list[m + 1] ? `, trying ${list[m + 1].id}` : ''}`);
         m += 1;
         continue;
