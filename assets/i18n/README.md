@@ -9,6 +9,8 @@ fallback: any key missing from another language shows in English.
 - **`_one` / `_other`** keys are the singular and plural forms of a count.
 - **`ms.*`, `gw.*` and `stab.*`** translate the milestone, groundwork and stability names. Their English
   lives in `assets/js/scoring.js`, so `en.json` doesn't repeat them.
+- **`common.space`, `common.comma`, `common.stop`, `common.colon`, `common.list`** are what the page puts between
+  pieces it joins (a space, “, ”, “. ”, “: ” and a list comma). Chinese, for example, uses no space and full-width punctuation.
 - **Text only:** translations are inserted as plain text, so HTML in a value shows up literally.
 - **`auto.*`** (optional) translate the sentences the scout builds from fixed templates, such as
   “Scout spotted owner/repo (possible effort, substance 91).” The patterns are `AUTO` in `assets/js/i18n.js`;

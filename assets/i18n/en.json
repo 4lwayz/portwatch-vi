@@ -3,6 +3,11 @@
   "meta.boardTitle": "Board · PortWatch VI",
   "skip": "Skip to the leaderboard",
   "common.loading": "Loading…",
+  "common.space": " ",
+  "common.comma": ", ",
+  "common.stop": ". ",
+  "common.colon": ": ",
+  "common.list": ", ",
 
   "nav.home": "PortWatch VI home",
   "nav.sections": "Sections",

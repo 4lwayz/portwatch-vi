@@ -5,6 +5,8 @@ import { initI18n, t, tr, td, locale } from './i18n.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+// Separators between translated pieces (a space, ", ", ". ", ": ", list comma); Chinese uses none or full-width ones.
+const sep = (k) => esc(t(`common.${k}`));
 
 // Everything rendered comes from data/tracker.json, part of which is written by an
 // automated scout reading untrusted repos, so every string is escaped.
@@ -144,7 +146,7 @@ function startCountdown(exe) {
     box.classList.add('is-released');
     $('#cd-foot').innerHTML = `${esc(t('cd.outSince', { day: dayFmt.format(target), time: timeFmt.format(target) }))}${src}`;
   } else {
-    const when = exe.timeAnnounced ? `${dayFmt.format(target)}, ${timeFmt.format(target)}` : t('cd.noTime', { day: dayFmt.format(target) });
+    const when = exe.timeAnnounced ? `${dayFmt.format(target)}${t('common.comma')}${timeFmt.format(target)}` : t('cd.noTime', { day: dayFmt.format(target) });
     $('#cd-foot').innerHTML = `${esc(t('cd.expected', { when }))}${src}`;
   }
 
@@ -182,7 +184,7 @@ function renderOverall(data) {
   const leader = ov.leader?.effort;
   animateNumber($('#ov-score'), ov.score);
   $('#ov-leader').innerHTML = leader
-    ? `${esc(t('ov.leader'))} <a href="#effort-${esc(leader.id)}">${esc(leader.name)}</a> ${hasRepo(leader) ? `${esc(t('ov.byOwner', { owner: owner(leader.repo) }))} ` : ''}${esc(ov.leader.reached === 'groundwork' ? t('ov.stillGroundwork') : t('ov.reached', { label: msLabel(ov.leader.reached) }))}`
+    ? `${esc(t('ov.leader'))}${sep('space')}<a href="#effort-${esc(leader.id)}">${esc(leader.name)}</a>${hasRepo(leader) ? `${sep('space')}${esc(t('ov.byOwner', { owner: owner(leader.repo) }))}${sep('space')}` : ' '}${esc(ov.leader.reached === 'groundwork' ? t('ov.stillGroundwork') : t('ov.reached', { label: msLabel(ov.leader.reached) }))}`
     : esc(t('ov.none'));
   $('#ov-stage').textContent = msLabel(ov.furthest.key);
   $('#ov-top3').textContent = `${pct(ov.top3)}%`;
@@ -341,7 +343,7 @@ function effortCard(e, rank, open, overallRank = null) {
     const v = Math.max(0, Math.min(1, +(e.groundwork?.[g.key]) || 0));
     return `<div class="gw-row" title="${esc(gwDesc(g))}"><span>${esc(gwLabel(g))}</span><b>${Math.round(v * 100)}%</b><div class="gw-bar"><i data-width="${v * 100}"></i></div></div>`;
   }).join('');
-  const claims = (e.claims || []).slice(0, 2).map((c) => `<div class="claim"><b>${esc(t('effort.claim'))}</b> “${esc(td(c.text))}”, ${esc(t('effort.mayMean'))} <em>${esc(MILESTONES.some((m) => m.key === c.milestone) ? msLabel(c.milestone) : c.milestone)}</em>. ${esc(t('effort.awaiting'))}</div>`).join('');
+  const claims = (e.claims || []).slice(0, 2).map((c) => `<div class="claim"><b>${esc(t('effort.claim'))}</b>${sep('space')}“${esc(td(c.text))}”${sep('comma')}${esc(t('effort.mayMean'))} <em>${esc(MILESTONES.some((m) => m.key === c.milestone) ? msLabel(c.milestone) : c.milestone)}</em>${sep('stop')}${esc(t('effort.awaiting'))}</div>`).join('');
   const src = effortAvatar(e);
   const url = effortUrl(e);
   const external = hasRepo(e) ? ' target="_blank" rel="noopener"' : '';
@@ -423,7 +425,7 @@ function renderTools(tools) {
 function renderInbox(data) {
   const c = (data.candidates || []).filter((x) => x.status !== 'rejected');
   if (!c.length) {
-    $('#inbox-list').innerHTML = `<div class="empty">${esc(t('inbox.empty'))} ${esc(data.scout?.lastRun ? t('inbox.lastRan', { ago: ago(data.scout.lastRun) }) : t('inbox.every'))}</div>`;
+    $('#inbox-list').innerHTML = `<div class="empty">${esc(t('inbox.empty'))}${sep('space')}${esc(data.scout?.lastRun ? t('inbox.lastRan', { ago: ago(data.scout.lastRun) }) : t('inbox.every'))}</div>`;
     return;
   }
   // Deliberately plain text: unreviewed repos can be copies or lures, so we don't link them.
@@ -432,7 +434,7 @@ function renderInbox(data) {
       <div>
         <b>${esc(x.repo)}</b> <span class="tag tag-self">${esc(t('inbox.unreviewed'))}</span>
         <p>${esc(td(x.description) || t('inbox.noDesc'))}</p>
-        <p>${esc(t('inbox.foundVia', { x: (x.sources || [x.source]).filter(Boolean).join(', ') }))} · ${esc(ago(x.foundAt))} · ★ ${fmtK(x.stars)}${x.signals?.length ? ` · ${esc(x.signals.slice(0, 4).map(td).join(', '))}` : ''}</p>
+        <p>${esc(t('inbox.foundVia', { x: (x.sources || [x.source]).filter(Boolean).join(', ') }))} · ${esc(ago(x.foundAt))} · ★ ${fmtK(x.stars)}${x.signals?.length ? ` · ${esc(x.signals.slice(0, 4).map(td).join(t('common.list')))}` : ''}</p>
       </div>
       <div class="c-score"><b>${Math.round(x.substance || 0)}</b>${esc(t('inbox.substance'))}</div>
     </div>`).join('');
@@ -462,7 +464,7 @@ function renderNews(news) {
         <time>${esc(fmtDay(n.date))}</time>
         <h3>${esc(td(n.title))}</h3>
         <p>${esc(td(n.dek))}</p>
-        ${!small && n.image?.credit ? `<span class="story-credit">${esc(t('news.image'))} ${esc(n.image.credit)}</span>` : ''}
+        ${!small && n.image?.credit ? `<span class="story-credit">${esc(t('news.image'))}${sep('space')}${esc(n.image.credit)}</span>` : ''}
       </div>
     </a>`;
   $('#news-list').innerHTML = card(items[0], false) + `<div class="news-list">${items.slice(1, 7).map((n) => card(n, true)).join('')}</div>`;
@@ -493,8 +495,8 @@ function renderNews(news) {
         <div class="article">${(n.body || []).map((p) => `<p>${esc(td(p))}</p>`).join('')}</div>
         <div class="sources">
           <h4>${esc(t('news.sources'))}</h4>
-          <ul>${(n.sources || []).map((s) => `<li><a href="${esc(safeLink(s.url))}" ${s.url?.startsWith('#') ? '' : 'target="_blank" rel="noopener"'}>${esc(s.outlet)}: ${esc(td(s.title))}</a></li>`).join('')}</ul>
-          <p class="fine">${n.image?.credit ? `${esc(t('news.image'))} <a href="${esc(safeHttp(n.image.link || n.image.url))}" target="_blank" rel="noopener">${esc(n.image.credit)}</a>. ` : ''}${esc(n.by === 'claude' ? t('news.byClaude') : n.by === 'report' ? t('news.byReport') : t('news.byPortWatch'))}${page ? ` <a href="${esc(page)}">${esc(t('news.link'))}</a>` : ''}</p>
+          <ul>${(n.sources || []).map((s) => `<li><a href="${esc(safeLink(s.url))}" ${s.url?.startsWith('#') ? '' : 'target="_blank" rel="noopener"'}>${esc(s.outlet)}${sep('colon')}${esc(td(s.title))}</a></li>`).join('')}</ul>
+          <p class="fine">${n.image?.credit ? `${esc(t('news.image'))}${sep('space')}<a href="${esc(safeHttp(n.image.link || n.image.url))}" target="_blank" rel="noopener">${esc(n.image.credit)}</a>${sep('stop')}` : ''}${esc(n.by === 'claude' ? t('news.byClaude') : n.by === 'report' ? t('news.byReport') : t('news.byPortWatch'))}${page ? `${sep('space')}<a href="${esc(page)}">${esc(t('news.link'))}</a>` : ''}</p>
         </div>
       </div>`;
     dlg.showModal();
