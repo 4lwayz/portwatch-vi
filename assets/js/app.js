@@ -276,7 +276,13 @@ function renderChanges(changes) {
   const items = [...changes].reverse().slice(0, 12);
   if (!items.length) { $('#changes').hidden = true; return; }
   const cls = { up: 'ck-up', down: 'ck-down', flag: 'ck-flag', new: 'ck-new', removed: 'ck-down', claim: 'ck-flag' };
-  list.innerHTML = items.map((c) => `<li><span class="ck ${cls[c.kind] || ''}"></span><time>${esc(new Date(`${c.date}T12:00:00Z`).toLocaleDateString(locale(), { day: 'numeric', month: 'short' }))}</time><span>${esc(c.text)}</span></li>`).join('');
+  list.innerHTML = items.map((c) => {
+    const when = c.at ? new Date(c.at) : new Date(`${c.date}T12:00:00Z`);
+    const label = c.at
+      ? when.toLocaleString(locale(), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+      : when.toLocaleDateString(locale(), { day: 'numeric', month: 'short' });
+    return `<li><span class="ck ${cls[c.kind] || ''}"></span><time datetime="${esc(c.at || c.date)}">${esc(label)}</time><span>${esc(c.text)}</span></li>`;
+  }).join('');
 }
 
 /* ---------- Race ---------- */
