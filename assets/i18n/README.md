@@ -20,14 +20,14 @@ fallback: any key missing from another language shows in English.
 ## Content translations
 
 Project summaries, news and other text from `data/tracker.json` are in English. A language marked
-`data: true` in `LANGS` (Simplified Chinese so far) also loads `data/i18n/<code>.json`, which maps each English
+`data: true` in `LANGS` (Simplified and Traditional Chinese so far) also loads `data/i18n/<code>.json`, which maps each English
 text the homepage shows to its translation. An empty value means it isn't translated yet; the page shows the
 English until it's filled in.
 
 - `node scripts/translate-data.mjs` keeps those files in step with `data/tracker.json`: it drops texts the page
-  no longer shows and adds new ones with an empty value. With `ANTHROPIC_API_KEY` set, Claude fills the empty
-  values (the scout does this on every run when the key is set). Without it, the daily editor fills them in
-  (see EDITOR.md).
+  no longer shows and adds new ones with an empty value. With `GEMINI_API_KEY` set (a free Google AI Studio
+  key), Gemini fills the empty values of every language in one request; with `ANTHROPIC_API_KEY`, Claude does.
+  The scout does this on every run when a key is set. Without one, the daily editor fills them in (see EDITOR.md).
 - To translate by hand, fill in the empty values and never change a key. Translate faithfully: keep every
   number, name, hedge (“self-reported”, “unverified”) and warning, and reuse this file's terms (milestone names
   and so on). Add no links: a value with a link or domain its English doesn't have is emptied on the next run.

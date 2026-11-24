@@ -9,7 +9,8 @@ export const LANGS = [
   { code: 'en', name: 'English', short: 'EN' },
   { code: 'pt-BR', name: 'Português (Brasil)', short: 'PT' },
   { code: 'es', name: 'Español', short: 'ES' },
-  { code: 'zh-CN', name: '简体中文', short: '中', data: true },
+  { code: 'zh-CN', name: '简体中文', short: '简', data: true },
+  { code: 'zh-TW', name: '繁體中文', short: '繁', data: true },
 ];
 const KEY = 'pw-lang';
 const CODES = LANGS.map((l) => l.code);
@@ -35,8 +36,8 @@ export function pickLang() {
     const low = String(l).toLowerCase();
     if (low.startsWith('pt')) return 'pt-BR';
     if (low.startsWith('es')) return 'es';
-    // shortcut: any zh-* (incl. zh-TW/zh-HK) gets Simplified until a Traditional file exists
-    if (low.startsWith('zh')) return 'zh-CN';
+    // Traditional script (zh-TW, zh-HK, zh-MO, zh-Hant…) gets zh-TW; any other Chinese gets zh-CN.
+    if (low.startsWith('zh')) return /^zh-(tw|hk|mo)\b|hant/.test(low) ? 'zh-TW' : 'zh-CN';
     if (low.startsWith('en')) return 'en';
   }
   return 'en';
@@ -88,7 +89,7 @@ export function tr(key, english, vars) {
   return fill(lang !== 'en' && typeof dict[key] === 'string' ? dict[key] : english, vars);
 }
 
-// Counted strings: key_one for exactly 1, key_other otherwise (right for en, pt-BR and es; zh-CN uses the same text for both).
+// Counted strings: key_one for exactly 1, key_other otherwise (right for en, pt-BR and es; zh-* uses the same text for both).
 export function tn(key, n, vars) {
   return t(`${key}_${n === 1 ? 'one' : 'other'}`, { n, ...vars });
 }
