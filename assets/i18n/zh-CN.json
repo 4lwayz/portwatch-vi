@@ -53,8 +53,8 @@
   "cd.outSince": "发布于 {day} {time}",
   "cd.expected": "预计 {when}",
   "cd.noTime": "{day} · 具体时间未公布，按 UTC 00:00 倒计时",
-  "cd.sinceRelease": "距发布已过时间。各项目现在可以尝试启动真正的游戏了。",
-  "cd.left": "距缺失的可执行文件预定发布还剩。在那之前，谁都无法启动 GTA VI。",
+  "cd.sinceRelease": "这是发布至今的时间。各项目现在可以尝试启动真正的游戏了。",
+  "cd.left": "这是距离缺失的可执行文件预计发布的剩余时间。在那之前，谁都无法启动 GTA VI。",
   "cd.dueNow": "已到预定时间，正等待它出现（并且可以读取）。",
   "cd.overdue": "已逾期 {d} 天 {h} 小时，仍未发布。",
 
@@ -64,7 +64,7 @@
   "ov.boot": "启动 GTA VI",
   "ov.count": "追踪项目数",
   "ov.leader": "领先者：",
-  "ov.byOwner": "作者 {owner}。",
+  "ov.byOwner": "（作者 {owner}）。",
   "ov.stillGroundwork": "仍处于基础工作阶段，还没有任何项目运行过 GTA VI。",
   "ov.reached": "已达到“{label}”。",
   "ov.none": "暂无追踪的项目。",
@@ -162,7 +162,7 @@
   "inbox.title": "新候选项目",
   "inbox.sub": "侦察程序每 3 小时在 GitHub、GitLab、Hacker News、Bluesky、Mastodon、Lemmy 和 4chan（/v/、/vg/）搜索新项目。有真实代码的仓库会列在这里等待审核。我们刻意不放链接，并会过滤掉已追踪项目的复制品。",
   "inbox.empty": "没有等待审核的项目。",
-  "inbox.lastRan": "侦察程序上次运行于{ago}。",
+  "inbox.lastRan": "侦察程序上次运行：{ago}。",
   "inbox.every": "侦察程序每 3 小时运行一次。",
   "inbox.unreviewed": "未审核 · 不提供链接",
   "inbox.noDesc": "无描述",
@@ -171,7 +171,7 @@
 
   "safety.title": "根本没有下载",
   "safety.body": "本页的任何项目都不提供游戏、密钥或可执行文件，本站也从不链接到这些东西。这周任何声称提供可直接游玩的 PC 版 GTA VI 的，都是诈骗。",
-  "safety.seen": "已发现 {n} 个",
+  "safety.seen": "已发现 {n} 起",
 
   "method.kicker": "方法说明",
   "method.title": "进度条是怎么算的",
@@ -184,7 +184,7 @@
   "footer.disclaimer": "粉丝自制的追踪站。与 Rockstar Games、Take-Two 或 Microsoft 无关，也未获其认可。Grand Theft Auto 及相关商标归其所有者。本站不托管也不链接任何游戏文件、密钥或可执行文件。",
   "footer.data": "数据：",
   "footer.dataTail": "，由侦察程序每 3 小时刷新。",
-  "footer.scoutRun": "侦察程序上次运行于{ago}",
+  "footer.scoutRun": "侦察程序上次运行：{ago}",
 
   "error.load": "无法加载追踪数据：{msg}",
 
