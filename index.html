@@ -195,7 +195,7 @@
         </div>
         <div class="mega" id="mega">
           <div class="mega-markers" id="mega-markers"></div>
-          <div class="mega-track"><div class="mega-fill" id="mega-fill"></div><div class="mega-ticks" id="mega-ticks"></div></div>
+          <div class="mega-track" id="overall-progress" role="progressbar" aria-labelledby="ov-title" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="mega-fill" id="mega-fill"></div><div class="mega-ticks" id="mega-ticks"></div></div>
           <div class="mega-labels" id="mega-labels"></div>
         </div>
         <div class="ov-history" id="ov-history" hidden></div>
@@ -204,10 +204,36 @@
 
     <section class="wrap section changes-section" id="changes" aria-labelledby="changes-title">
       <div class="changes-card card">
-        <h2 class="mini-title" id="changes-title" data-i18n="changes.title">What changed</h2>
-        <ol class="changes" id="changes-list"></ol>
+        <div class="changes-head">
+          <div>
+            <h2 id="changes-title" data-i18n="changes.title">What changed</h2>
+            <p class="changes-hint" id="changes-hint" data-i18n="changes.hint">Latest first. Scroll sideways to explore the history.</p>
+          </div>
+          <div class="changes-nav">
+            <button class="changes-arrow" id="changes-prev" type="button" aria-label="Previous updates" data-i18n-attr="aria-label:changes.previous" aria-controls="changes-list" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+            </button>
+            <button class="changes-arrow" id="changes-next" type="button" aria-label="Next updates" data-i18n-attr="aria-label:changes.next" aria-controls="changes-list" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+        <ol class="changes" id="changes-list" tabindex="0" aria-labelledby="changes-title" aria-describedby="changes-keyboard"></ol>
+        <div class="changes-foot">
+          <p class="changes-count" id="changes-count" role="status"></p>
+          <p class="changes-keyboard" id="changes-keyboard" data-i18n="changes.keyboard">Use the arrow keys to browse; Home / End to jump.</p>
+        </div>
       </div>
     </section>
+
+    <dialog class="change-reader" id="change-reader" aria-labelledby="change-reader-title">
+      <div class="change-reader-head">
+        <h2 id="change-reader-title"></h2>
+        <button class="change-close" id="change-reader-close" type="button" aria-label="Close update" data-i18n-attr="aria-label:changes.close" autofocus>×</button>
+      </div>
+      <div id="change-reader-meta"></div>
+      <p class="change-reader-text" id="change-reader-text"></p>
+    </dialog>
 
     <section class="wrap section" id="race" aria-labelledby="race-title">
       <div class="section-head">

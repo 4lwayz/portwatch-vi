@@ -201,6 +201,7 @@ function renderOverall(data) {
     return `<div class="mega-label ${cls}" style="left:${m.at}%" data-tip="${esc(msDesc(m))}" data-tip-title="${esc(msLabel(m.key))}"><b>${m.at}%</b><span class="dot"></span>${esc(msLabel(m.key))}</div>`;
   }).join('');
   $('#mega-fill').dataset.width = ov.score;
+  $('#overall-progress').setAttribute('aria-valuenow', String(ov.score));
 
   const top = ov.ranked.slice(0, 6);
   const draw = () => drawMarkers(top, leader);
@@ -268,10 +269,83 @@ function renderHistory(history) {
 /* ---------- Changes ---------- */
 function renderChanges(changes) {
   const list = $('#changes-list');
-  const items = [...changes].reverse().slice(0, 12);
+  const items = [...changes].reverse();
   if (!items.length) { $('#changes').hidden = true; return; }
-  const cls = { up: 'ck-up', down: 'ck-down', flag: 'ck-flag', new: 'ck-new', removed: 'ck-down', claim: 'ck-flag' };
-  list.innerHTML = items.map((c) => `<li><span class="ck ${cls[c.kind] || ''}"></span><time>${esc(new Date(`${c.date}T12:00:00Z`).toLocaleDateString(locale(), { day: 'numeric', month: 'short' }))}</time><span>${esc(c.text)}</span></li>`).join('');
+  const kinds = new Set(['up', 'down', 'flag', 'new', 'removed', 'claim']);
+  const prev = $('#changes-prev');
+  const next = $('#changes-next');
+  const count = $('#changes-count');
+  const dialog = $('#change-reader');
+  const metadata = (c) => {
+    const kind = kinds.has(c.kind) ? c.kind : 'update';
+    const date = new Date(`${c.date}T12:00:00Z`);
+    const validDate = Number.isFinite(date.getTime());
+    return `<div class="change-meta">
+        <span class="change-kind change-kind-${kind}">${esc(t(`changes.kind.${kind}`))}</span>
+        ${validDate ? `<time datetime="${esc(c.date)}" title="${esc(date.toLocaleDateString(locale(), { dateStyle: 'long' }))}">${esc(date.toLocaleDateString(locale(), { day: 'numeric', month: 'short' }))}</time>` : ''}
+      </div>`;
+  };
+  // The compact preview never replaces the original report: the dialog shows it in full.
+  list.innerHTML = items.map((c, i) => `<li class="change">
+      ${metadata(c)}
+      <p class="change-preview">${esc(c.text)}</p>
+      <button class="change-read" type="button" data-change="${i}" aria-haspopup="dialog" aria-controls="change-reader" aria-label="${esc(t('changes.readLabel', { n: i + 1 }))}">${esc(t('changes.read'))}</button>
+    </li>`
+  ).join('');
+  const cards = [...list.children];
+  const behavior = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+  const move = (direction) => {
+    const gap = parseFloat(getComputedStyle(list).columnGap);
+    const step = cards[0].getBoundingClientRect().width + gap;
+    const page = Math.max(1, Math.floor((list.clientWidth + gap + 1) / step));
+    list.scrollBy({ left: direction * step * page, behavior: behavior() });
+  };
+  const update = () => {
+    const bounds = list.getBoundingClientRect();
+    const visible = cards.map((card, i) => ({ i, rect: card.getBoundingClientRect() }))
+      .filter(({ rect }) => Math.min(rect.right, bounds.right) - Math.max(rect.left, bounds.left) >= rect.width / 2);
+    if (visible.length) count.textContent = t(visible.length === 1 ? 'changes.positionOne' : 'changes.position', { start: visible[0].i + 1, end: visible.at(-1).i + 1, total: items.length });
+    prev.disabled = list.scrollLeft <= 1;
+    next.disabled = list.scrollLeft + list.clientWidth >= list.scrollWidth - 1;
+  };
+  prev.onclick = () => move(-1);
+  next.onclick = () => move(1);
+  list.addEventListener('keydown', (ev) => {
+    if (ev.target !== list) return;
+    if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') {
+      ev.preventDefault();
+      move(ev.key === 'ArrowLeft' ? -1 : 1);
+    } else if (ev.key === 'Home' || ev.key === 'End') {
+      ev.preventDefault();
+      list.scrollTo({ left: ev.key === 'Home' ? 0 : list.scrollWidth, behavior: behavior() });
+    }
+  });
+  let frame;
+  const scheduleUpdate = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); };
+  list.addEventListener('scroll', scheduleUpdate, { passive: true });
+  new ResizeObserver(scheduleUpdate).observe(list);
+
+  let opener;
+  list.addEventListener('click', (ev) => {
+    const button = ev.target.closest('[data-change]');
+    if (!button) return;
+    const index = Number(button.dataset.change);
+    const item = items[index];
+    if (!item) return;
+    opener = button;
+    $('#change-reader-title').textContent = t('changes.detailTitle', { n: index + 1, total: items.length });
+    $('#change-reader-meta').innerHTML = metadata(item);
+    $('#change-reader-text').textContent = item.text;
+    dialog.showModal();
+    dialog.scrollTop = 0;
+  });
+  $('#change-reader-close').onclick = () => dialog.close();
+  dialog.addEventListener('click', (ev) => {
+    const rect = dialog.getBoundingClientRect();
+    if (ev.target === dialog && (ev.clientX < rect.left || ev.clientX > rect.right || ev.clientY < rect.top || ev.clientY > rect.bottom)) dialog.close();
+  });
+  dialog.addEventListener('close', () => opener?.focus({ preventScroll: true }));
+  update();
 }
 
 /* ---------- Race ---------- */
