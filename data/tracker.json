@@ -625,6 +625,41 @@
       "claims": []
     },
     {
+      "id": "leonardo",
+      "name": "Leonardo",
+      "repo": null,
+      "link": "https://leonardo-status.pages.dev/",
+      "byline": "Private code · based on Leonida",
+      "tier": "tracked",
+      "approach": "Compatibility layer",
+      "target": "GTA VI only",
+      "summary": "Private Windows port built on Leonida, running Xbox x86-64 code with RDNA2-to-SPIR-V Vulkan shaders. Status page reports menus at 30 fps and loading finishing, though the world is not visible yet. Self-reported, unverified.",
+      "highlights": [
+        "Menus run at ~30 fps with controller input, intro movie and loading-screen music",
+        "Loading finishes in ~7.5 min on Windows (AMD); first-mission title appeared in one run",
+        "All 16 game program files resolve imports; menus and loading screens draw via Vulkan"
+      ],
+      "blockers": [
+        "World rendering starts at 1–5 fps but isn't visible; most runs end in a GPU crash or watchdog",
+        "Code is private (~80 contributors), so nobody outside the team can test or reproduce it",
+        "NVIDIA, Intel CPU and Linux (Wine) lag behind Windows AMD; Intel GPU and macOS untested"
+      ],
+      "provenOn": null,
+      "gta": {
+        "loads": 1,
+        "boots": 1,
+        "menu": 1,
+        "ingame": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {},
+      "assessedAt": "2026-11-24",
+      "assessedBy": "manual",
+      "claims": []
+    },
+    {
       "id": "marvis",
       "name": "VIctory",
       "repo": "Marvisak/VIctory",

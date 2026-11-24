@@ -14,10 +14,10 @@ const REPO_RE = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const repoUrl = (repo, branch) => (REPO_RE.test(repo || '') ? `https://github.com/${repo}${branch && branch !== 'main' && branch !== 'master' ? `/tree/${encodeURIComponent(branch)}` : ''}` : '#');
 const owner = (repo) => (repo || '').split('/')[0];
 const avatar = (repo) => (REPO_RE.test(repo || '') ? `https://github.com/${encodeURIComponent(owner(repo))}.png?size=88` : '');
-// Efforts with no public code have `repo: null`. They may give a local `avatar` image and a `link` to our own article.
+// Efforts with no public code have `repo: null`. They may give a local `avatar` image and a `link` to our own article or an https status page.
 const hasRepo = (e) => REPO_RE.test(e.repo || '');
 const effortAvatar = (e) => (/^assets\/img\/[\w/.-]+$/.test(e.avatar || '') ? e.avatar : avatar(e.repo));
-const effortUrl = (e) => (hasRepo(e) ? repoUrl(e.repo, e.branch) : /^news\/[a-z0-9-]+\.html$/.test(e.link || '') ? e.link : '');
+const effortUrl = (e) => (hasRepo(e) ? repoUrl(e.repo, e.branch) : (/^news\/[a-z0-9-]+\.html$/.test(e.link || '') || /^https:\/\//.test(e.link || '')) ? e.link : '');
 const safeHttp = (u) => (/^https:\/\//.test(u || '') ? u : '#');
 const pct = (v) => `${Math.round(v * 10) / 10}`;
 
@@ -349,7 +349,7 @@ function effortCard(e, rank, open, overallRank = null) {
   const claims = (e.claims || []).slice(0, 2).map((c) => `<div class="claim"><b>${esc(t('effort.claim'))}</b> “${esc(c.text)}”, ${esc(t('effort.mayMean'))} <em>${esc(MILESTONES.some((m) => m.key === c.milestone) ? msLabel(c.milestone) : c.milestone)}</em>. ${esc(t('effort.awaiting'))}</div>`).join('');
   const src = effortAvatar(e);
   const url = effortUrl(e);
-  const external = hasRepo(e) ? ' target="_blank" rel="noopener"' : '';
+  const external = hasRepo(e) || /^https:\/\//.test(url) ? ' target="_blank" rel="noopener"' : '';
   return `
   <li class="effort ${rank && rank <= 3 ? 'is-top' : ''}${e.nuked ? ' is-nuked' : ''}" id="effort-${esc(e.id)}">
     <div class="e-rank">${e.nuked ? `<span class="nuke-rank" title="${esc(t('effort.nukedTitle', { date: e.nuked.at || '' }))}">${ICON.nuke}</span>` : rank}${overallRank ? `<small class="e-rank-overall" title="${esc(t('race.overallTitle'))}">${esc(t('race.overall', { n: overallRank }))}</small>` : ''}</div>
