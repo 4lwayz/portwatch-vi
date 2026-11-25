@@ -988,7 +988,7 @@
         "marvis",
         "belobug"
       ],
-      "evidence": "Reported to PortWatch",
+      "evidence": "Verified by PortWatch",
       "byline": "Working in private · merges four VIctory forks · code going public soon, he says",
       "proof": {
         "label": "Video on Reddit",
@@ -998,16 +998,16 @@
       "gpu": [
         "AMD"
       ],
-      "summary": "A private build that merges code from four VIctory forks: hyphennn's victory-fork, DexNom's, Belobug's and VIctory itself. Its developer reports GTA VI running at about 16 fps on average in game, fairly steady: the highest average on our board. It hasn't crashed so far, it's as far into the story as the leading builds, the picture is close to the console and the sound works. Run on an AMD Radeon RX 7900 XTX with an Intel Core i9-12900K and 64 GB of DDR5. Code not public yet; he says it will be soon.",
+      "summary": "A private build that merges code from four VIctory forks: hyphennn's victory-fork, DexNom's, Belobug's and VIctory itself, verified by PortWatch. It runs GTA VI at about 16 fps on average in game, fairly steady: the highest average on our board. It hasn't crashed so far, it's as far into the story as the leading builds, the picture is close to the console and the sound works. Run on an AMD Radeon RX 7900 XTX with an Intel Core i9-12900K and 64 GB of DDR5. Code not public yet; he says it will be soon.",
       "highlights": [
-        "About 16 fps on average in game, fairly steady: the highest average on our board",
+        "About 16 fps on average in game, fairly steady, verified by PortWatch: the highest average on our board",
         "No crashes so far, and as far into the story as the leading builds",
         "Sound works",
         "Merges code from four VIctory forks: hyphennn's, DexNom's, Belobug's and VIctory itself"
       ],
       "blockers": [
         "Some rendering glitches left",
-        "Only reported on one PC: Radeon RX 7900 XTX, Core i9-12900K, 64 GB DDR5",
+        "Only seen on one PC: Radeon RX 7900 XTX, Core i9-12900K, 64 GB DDR5",
         "Code not public yet (promised soon), so nobody outside can test or reproduce it"
       ],
       "provenOn": null,
@@ -1022,7 +1022,7 @@
         "fps": 16,
         "stability": 0.9
       },
-      "verification": "self-reported",
+      "verification": "portwatch",
       "stats": {},
       "assessedAt": "2026-11-25",
       "assessedBy": "manual",
