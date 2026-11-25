@@ -1,6 +1,6 @@
 import { MILESTONES, GROUNDWORK, STABILITY, TRACKS, scoreEffort, overall, ladderValue, byStars, isPrivateBuild, trackStep, stabilityKey } from './scoring.js';
 import { getLiveViewers, trackView } from './backend.js';
-import { coverHtml, articlePath } from './news-shared.js';
+import { coverHtml, articlePath, newsTime, byNewest } from './news-shared.js';
 import { fillPinned } from './pinned.js';
 import { initI18n, t, tr, locale } from './i18n.js';
 
@@ -627,6 +627,12 @@ function bindFolds() {
 /* ---------- News ---------- */
 const safeLink = (u) => (/^#[\w-]+$/.test(u || '') ? u : safeHttp(u));
 const fmtDay = (d) => new Date(`${d}T12:00:00Z`).toLocaleDateString(locale(), { day: 'numeric', month: 'short', year: 'numeric' });
+// A post's day and time in the reader's own time zone, or the day alone for older posts.
+const fmtWhen = (n) => {
+  const at = newsTime(n);
+  return at ? new Date(at).toLocaleString(locale(), { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : fmtDay(n.date);
+};
+const whenTag = (n) => `<time datetime="${esc(newsTime(n) || n.date)}">${esc(fmtWhen(n))}</time>`;
 
 function storyMedia(n) {
   const img = n.image && /^https:\/\//.test(n.image.url || '')
@@ -636,8 +642,8 @@ function storyMedia(n) {
 }
 
 function renderNews(news) {
-  // Newest day first; stories from the same day keep their order in the data (newest first).
-  const items = [...news].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  // Newest first, by publish time (or day, for older posts); ties keep their order in the data.
+  const items = [...news].sort(byNewest);
   if (!items.length) { $('#news').hidden = true; return; }
   // Real links to each article's own page (built at deploy) so search engines can follow them;
   // a plain click opens the article in the reader instead.
@@ -645,7 +651,7 @@ function renderNews(news) {
     <a class="story ${small ? 'is-small' : ''}" href="${esc(articlePath(n) || '#news')}" data-story="${esc(n.id)}">
       ${storyMedia(n)}
       <div class="story-body">
-        <time>${esc(fmtDay(n.date))}</time>
+        ${whenTag(n)}
         <h3>${esc(n.title)}</h3>
         <p>${esc(n.dek)}</p>
         ${!small && n.image?.credit ? `<span class="story-credit">${esc(t('news.image'))} ${esc(n.image.credit)}</span>` : ''}
@@ -673,7 +679,7 @@ function renderNews(news) {
     $('#reader-body').innerHTML = `
       ${storyMedia(n)}
       <div class="reader-inner">
-        <p class="meta">${esc(catLabel(n.category))} · ${esc(fmtDay(n.date))}</p>
+        <p class="meta">${esc(catLabel(n.category))} · ${whenTag(n)}</p>
         <h2 id="reader-title">${esc(n.title)}</h2>
         <p class="dek">${esc(n.dek)}</p>
         <div class="article">${(n.body || []).map((p) => `<p>${esc(p)}</p>`).join('')}</div>
