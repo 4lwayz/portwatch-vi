@@ -2562,15 +2562,15 @@
       "tier": "watchlist",
       "approach": "Static recompilation",
       "target": "GTA VI only",
-      "summary": "Community continuation of NotRexed’s Leonida, carrying its commit history forward. NotRexed remains on the community server and may return. The README says GTA VI does not boot yet.",
+      "summary": "Community continuation of NotRexed’s Leonida. Self-reported: the retail executable reaches responsive first-run screens and starts story loading; no rendered world frame is verified. NotRexed may return.",
       "highlights": [
         "The only public Leonida Continued repository identified by the project FAQ",
-        "Native Windows port using Vulkan, according to the project README",
+        "Merged project reports document responsive first-run screens and story loading on the native Windows port",
         "Preserves the original Leonida commit history and contributor credits"
       ],
       "blockers": [
-        "The project README says GTA VI does not boot yet",
-        "Its README documents remaining gaps in the D3D12-to-Vulkan layer and runtime"
+        "No rendered world frame or playable controls are verified",
+        "A contributor reports GPU loss during story loading; this report is self-reported"
       ],
       "groundwork": {
         "loader": 0,
@@ -2580,9 +2580,9 @@
       },
       "provenOn": null,
       "gta": {
-        "loads": 0,
-        "boots": 0,
-        "menu": 0,
+        "loads": 1,
+        "boots": 1,
+        "menu": 1,
         "world": 0,
         "playable": 0,
         "story": 0,
@@ -3616,7 +3616,7 @@
       "id": "copies",
       "pattern": "Re-uploads of tracked projects under other accounts",
       "label": "",
-      "count": 74,
+      "count": 73,
       "reason": "Copies can be quietly modified to bundle malware. Only use the original repositories linked in the race above.",
       "members": [
         "FaelSemW/RafaVI",
@@ -3636,7 +3636,6 @@
         "fablinoo/palmwave",
         "Marsietiss/xcl-frontier",
         "Caliiu/DedSec",
-        "ubiquitarianism/leonida",
         "LeonidaReforge/Leonida",
         "danilotallaric2/leonida",
         "LuanBogoqb/Leonida",
@@ -6434,8 +6433,8 @@
   "changes": [
     {
       "date": "2026-11-25",
-      "kind": "flag",
-      "text": "Added Leonida Continued as the public community continuation of NotRexed’s Leonida; its README says GTA VI does not boot yet."
+      "kind": "up",
+      "text": "Leonida Continued reaches the responsive first-run screens and starts story loading in self-reported native Windows runs; no world frame is verified."
     },
     {
       "date": "2026-11-24",
