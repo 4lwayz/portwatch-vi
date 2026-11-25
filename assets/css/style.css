@@ -907,3 +907,12 @@ a.story { text-decoration: none; }
   .page { padding-top: 16px; }
   .archive { grid-template-columns: 1fr; }
 }
+
+/* ---------- Folded sections (watchlist, toolkit): closed until opened ---------- */
+.fold > summary { list-style: none; cursor: pointer; user-select: none; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary.more-link::after { content: "↓"; }
+.fold[open] > summary.more-link::after { content: "↑"; }
+.fold[open] > summary { margin-bottom: 18px; }
+.fold .fold-hide, .fold[open] .fold-show { display: none; }
+.fold[open] .fold-hide { display: inline; }

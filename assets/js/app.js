@@ -91,10 +91,9 @@ async function main() {
   renderNews(data.news || []);
   renderWatchlist(data);
   renderTools(data.tools || []);
-  renderInbox(data);
-  renderFlags(data.flagged || []);
   renderMethod();
   bindControls();
+  bindFolds();
   observeBars();
   trackView('/').then(watchViewers); // afterwards, so this visitor is in the count
 }
@@ -192,7 +191,7 @@ function startCountdown(exe) {
 
 /* ---------- Overall ---------- */
 function renderOverall(data) {
-  const all = data.efforts;
+  const all = data.efforts.filter((e) => !e.nuked); // nuked efforts aren't shown anywhere
   const ov = overall(all);
   const leader = ov.leader?.effort;
   animateNumber($('#ov-score'), ov.score);
@@ -336,10 +335,11 @@ function isGtaSpecific(e) { return /gta/i.test(e.target || ''); }
 function renderRace() {
   const { data, filter, sort } = state;
   // Only public code is ranked; private builds get their own unranked list below the race.
-  let list = data.efforts.filter((e) => e.tier === 'tracked' && !isPrivateBuild(e));
+  // Nuked efforts (taken offline) aren't shown (owner's call, 2026-11-25). They stay in tracker.json,
+  // where their repo names keep the scout from listing copies of them as new candidates.
+  let list = data.efforts.filter((e) => e.tier === 'tracked' && !e.nuked && !isPrivateBuild(e));
   if (filter === 'gta') list = list.filter(isGtaSpecific);
   if (filter === 'generic') list = list.filter((e) => !isGtaSpecific(e));
-  // Nuked efforts (taken offline) stay on the board for the record, after the ranked ones and without a rank.
   const byScore = (a, b) => Number(!!a.nuked) - Number(!!b.nuked) || b._s.score - a._s.score || byStars(a, b);
   const sorters = {
     score: byScore,
@@ -496,7 +496,10 @@ function effortCard(e, rank, open, overallRank = null) {
     e.target && `<span class="tag ${isGtaSpecific(e) ? 'tag-gta' : ''}">${esc(e.target)}</span>`,
     e.verification === 'reproduced'
       ? `<span class="tag tag-ok">${esc(t('effort.reproduced'))}</span>`
-      : `<span class="tag tag-self" title="${esc(t('effort.selfTitle'))}">${esc(t('effort.self'))}</span>`,
+      // The owner has seen the build run (owner's call): stronger than the README alone.
+      : e.verification === 'portwatch'
+        ? `<span class="tag tag-ok" title="${esc(t('effort.verifiedTitle'))}">${esc(t('effort.verified'))}</span>`
+        : `<span class="tag tag-self" title="${esc(t('effort.selfTitle'))}">${esc(t('effort.self'))}</span>`,
     e.provenOn && ladderValue(e.groundwork?.proven) > 0 && `<span class="tag tag-proven" title="${esc(t('effort.runsTitle'))}">${esc(t('effort.runs', { x: e.provenOn }))}</span>`,
     stale && `<span class="tag tag-stale">${esc(t('effort.quiet', { n: Math.floor(daysSince(st.pushedAt)) }))}</span>`,
     st.missing && `<span class="tag tag-stale">${esc(t('effort.gone'))}</span>`,
@@ -564,7 +567,8 @@ function effortCard(e, rank, open, overallRank = null) {
 function renderWatchlist(data) {
   const rows = data.efforts.filter((e) => e.tier === 'watchlist').sort((a, b) => b._s.score - a._s.score || byStars(a, b));
   if (!rows.length) { $('#watchlist').hidden = true; return; }
-  const head = ['watch.project', 'watch.approach', 'watch.progress', 'watch.stars', 'watch.lastPush'].map((k) => `<span>${esc(t(k))}</span>`).join('');
+  foldLabel($('#watch-toggle'), t('fold.projects', { n: rows.length }));
+  const head =['watch.project', 'watch.approach', 'watch.progress', 'watch.stars', 'watch.lastPush'].map((k) => `<span>${esc(t(k))}</span>`).join('');
   $('#watch-list').innerHTML = `
     <div class="w-row w-head" role="row">${head}</div>` +
     rows.map((e) => `
@@ -579,6 +583,8 @@ function renderWatchlist(data) {
 
 /* ---------- Toolkit ---------- */
 function renderTools(tools) {
+  if (!tools.length) { $('#toolkit').hidden = true; return; }
+  foldLabel($('#tools-toggle'), t('fold.tools', { n: tools.length }));
   $('#tools-list').innerHTML = tools.map((x) => `
     <a class="tool" href="${esc(repoUrl(x.repo))}" target="_blank" rel="noopener">
       <span class="t-kind">${esc(x.kind)}</span>
@@ -588,23 +594,25 @@ function renderTools(tools) {
     </a>`).join('');
 }
 
-/* ---------- Inbox ---------- */
-function renderInbox(data) {
-  const c = (data.candidates || []).filter((x) => x.status !== 'rejected');
-  if (!c.length) {
-    $('#inbox-list').innerHTML = `<div class="empty">${esc(t('inbox.empty'))} ${esc(data.scout?.lastRun ? t('inbox.lastRan', { ago: ago(data.scout.lastRun) }) : t('inbox.every'))}</div>`;
-    return;
-  }
-  // Deliberately plain text: unreviewed repos can be copies or lures, so we don't link them.
-  $('#inbox-list').innerHTML = c.slice(0, 12).map((x) => `
-    <div class="cand">
-      <div>
-        <b>${esc(x.repo)}</b> <span class="tag tag-self">${esc(t('inbox.unreviewed'))}</span>
-        <p>${esc(x.description || t('inbox.noDesc'))}</p>
-        <p>${esc(t('inbox.foundVia', { x: (x.sources || [x.source]).filter(Boolean).join(', ') }))} · ${esc(ago(x.foundAt))} · ★ ${fmtK(x.stars)}${x.signals?.length ? ` · ${esc(x.signals.slice(0, 4).join(', '))}` : ''}</p>
-      </div>
-      <div class="c-score"><b>${Math.round(x.substance || 0)}</b>${esc(t('inbox.substance'))}</div>
-    </div>`).join('');
+/* ---------- Folded sections ---------- */
+// The watchlist and the toolkit start closed (owner's call, 2026-11-25): a <details> per section.
+function foldLabel(summary, showText) {
+  summary.innerHTML = `<span class="fold-show">${esc(showText)}</span><span class="fold-hide">${esc(t('fold.hide'))}</span>`;
+}
+// A link to something inside a closed section (#effort-… from the change feed or the bar) opens it first.
+function bindFolds() {
+  const openFor = (hash) => {
+    if (!/^#[\w-]+$/.test(hash || '')) return;
+    const el = document.getElementById(hash.slice(1));
+    const fold = el?.closest('details.fold');
+    if (!fold || fold.open) return;
+    fold.open = true;
+    observeBars();
+    requestAnimationFrame(() => el.scrollIntoView({ block: 'start' }));
+  };
+  window.addEventListener('hashchange', () => openFor(location.hash));
+  document.addEventListener('click', (ev) => { const a = ev.target.closest?.('a[href^="#"]'); if (a) openFor(a.getAttribute('href')); });
+  openFor(location.hash);
 }
 
 /* ---------- News ---------- */
@@ -675,11 +683,6 @@ function renderNews(news) {
 }
 
 /* ---------- Safety ---------- */
-function renderFlags(flags) {
-  $('#flag-list').innerHTML = flags.map((f) => `
-    <li><b>${esc(f.pattern)}<span>${esc(f.members?.length ? t('safety.seen', { n: f.members.length }) : f.label || '')}</span></b><p>${esc(f.reason)}</p></li>`).join('');
-}
-
 /* ---------- Method ---------- */
 function renderMethod() {
   const gwShare = MILESTONES[1].at;
