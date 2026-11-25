@@ -18,6 +18,9 @@ const articleUrl = (n) => `${SITE_URL}${articlePath(n).replace(/\.html$/, '')}`;
 const isDay = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d || '');
 const httpsOnly = (u) => (/^https:\/\/[^\s"'<>]+$/.test(u || '') ? u : null);
 const fmtDay = (d) => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const fmtStamp = (n) => (Number.isFinite(Date.parse(n.publishedAt || ''))
+  ? `${fmtDay(n.date)} · ${new Date(n.publishedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}`
+  : fmtDay(n.date));
 const jsonLd = (o) => JSON.stringify(o, null, 1).replace(/</g, '\\u003c');
 const isoTime = (s) => { const t = Date.parse(s || ''); return Number.isFinite(t) ? new Date(t).toISOString() : null; };
 
@@ -114,7 +117,7 @@ const card = (n, small) => `
       <a class="story ${small ? 'is-small' : ''}" href="${esc(n.id)}.html">
         ${media(n)}
         <div class="story-body">
-          <time datetime="${n.date}">${esc(fmtDay(n.date))}</time>
+          <time datetime="${esc(n.publishedAt || n.date)}">${esc(fmtStamp(n))}</time>
           <h3>${esc(n.title)}</h3>
           <p>${esc(n.dek)}</p>
         </div>
@@ -136,7 +139,7 @@ function articlePage(n, others) {
     '@type': 'NewsArticle',
     headline: String(n.title).slice(0, 110),
     description: n.dek || undefined,
-    datePublished: n.date,
+    datePublished: Number.isFinite(Date.parse(n.publishedAt || '')) ? n.publishedAt : n.date,
     dateModified: modified,
     image: [img || SOCIAL_IMAGE],
     articleSection: n.category || undefined,
@@ -157,7 +160,7 @@ function articlePage(n, others) {
     <article class="reader reader-page">
       ${media(n)}
       <div class="reader-inner">
-        <p class="meta">${esc(n.category)} · <time datetime="${n.date}">${esc(fmtDay(n.date))}</time></p>
+        <p class="meta">${esc(n.category)} · <time datetime="${esc(n.publishedAt || n.date)}">${esc(fmtStamp(n))}</time></p>
         <h1>${esc(n.title)}</h1>
         ${n.dek ? `<p class="dek">${esc(n.dek)}</p>` : ''}
         <div class="article">
@@ -236,7 +239,7 @@ function rssFeed(news, updated) {
     <title>${esc(n.title)}</title>
     <link>${link}</link>
     <guid isPermaLink="true">${link}</guid>
-    <pubDate>${new Date(`${n.date}T12:00:00Z`).toUTCString()}</pubDate>
+    <pubDate>${new Date(Number.isFinite(Date.parse(n.publishedAt || '')) ? n.publishedAt : `${n.date}T12:00:00Z`).toUTCString()}</pubDate>
     <category>${esc(n.category)}</category>
     <description>${esc(n.dek || '')}</description>
   </item>`;

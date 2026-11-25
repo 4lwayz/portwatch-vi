@@ -619,6 +619,12 @@ function bindFolds() {
 /* ---------- News ---------- */
 const safeLink = (u) => (/^#[\w-]+$/.test(u || '') ? u : safeHttp(u));
 const fmtDay = (d) => new Date(`${d}T12:00:00Z`).toLocaleDateString(locale(), { day: 'numeric', month: 'short', year: 'numeric' });
+const fmtNewsStamp = (n) => {
+  const day = fmtDay(n.date);
+  return Number.isFinite(Date.parse(n.publishedAt || ''))
+    ? `${day} · ${new Date(n.publishedAt).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' })}`
+    : day;
+};
 
 function storyMedia(n) {
   const img = n.image && /^https:\/\//.test(n.image.url || '')
@@ -637,7 +643,7 @@ function renderNews(news) {
     <a class="story ${small ? 'is-small' : ''}" href="${esc(articlePath(n) || '#news')}" data-story="${esc(n.id)}">
       ${storyMedia(n)}
       <div class="story-body">
-        <time>${esc(fmtDay(n.date))}</time>
+        <time datetime="${esc(n.publishedAt || `${n.date}T12:00:00Z`)}">${esc(fmtNewsStamp(n))}</time>
         <h3>${esc(n.title)}</h3>
         <p>${esc(n.dek)}</p>
         ${!small && n.image?.credit ? `<span class="story-credit">${esc(t('news.image'))} ${esc(n.image.credit)}</span>` : ''}
@@ -665,7 +671,7 @@ function renderNews(news) {
     $('#reader-body').innerHTML = `
       ${storyMedia(n)}
       <div class="reader-inner">
-        <p class="meta">${esc(catLabel(n.category))} · ${esc(fmtDay(n.date))}</p>
+        <p class="meta">${esc(catLabel(n.category))} · <time datetime="${esc(n.publishedAt || `${n.date}T12:00:00Z`)}">${esc(fmtNewsStamp(n))}</time></p>
         <h2 id="reader-title">${esc(n.title)}</h2>
         <p class="dek">${esc(n.dek)}</p>
         <div class="article">${(n.body || []).map((p) => `<p>${esc(p)}</p>`).join('')}</div>
