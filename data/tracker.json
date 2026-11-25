@@ -3262,197 +3262,28 @@
   ],
   "candidates": [
     {
-      "repo": "Linox-IDK/LNX-victory",
-      "name": "LNX-victory",
-      "description": "VIctory fork for 8 GB+ NVIDIA cards: 7-8 fps on an RTX 5060 Ti (Series S profile + FSR), lower VRAM use, shader fixes. Shader help wanted. No game files.",
-      "language": "Rust",
+      "repo": "tudorek12345/VictoryIsInOurName.hep",
+      "name": "VictoryIsInOurName.hep",
+      "description": "Maintainer reports boot and menu; black world transition, no verified gameplay. Based on Leonida and VIctory; earlier takedown and eligibility require owner review.",
+      "language": "Python",
       "stars": 1,
-      "createdAt": "2026-11-24T21:56:08Z",
-      "pushedAt": "2026-11-25T21:19:56Z",
+      "createdAt": "2026-11-24T06:31:01Z",
+      "pushedAt": "2026-11-25T18:57:24Z",
       "defaultBranch": "main",
       "sources": [
-        "GitHub search"
-      ],
-      "links": [],
-      "foundAt": "2026-11-25T22:09:30.708Z",
-      "substance": 98,
-      "signals": [
-        "Rust",
-        "10 technical terms",
-        "status table",
-        "tests",
-        "100+ commits/7d"
-      ],
-      "kind": "effort",
-      "status": "new"
-    },
-    {
-      "repo": "xcl-dev/xcl",
-      "name": "xcl",
-      "description": "Xbox Series compatibility layer for Windows - runs console game code natively, reimplements the console system libraries and recompiles RDNA2 shaders to DXIL",
-      "language": "Rust",
-      "stars": 8289,
-      "createdAt": "2026-11-20T20:03:21Z",
-      "pushedAt": "2026-11-25T21:36:24Z",
-      "defaultBranch": "main",
-      "sources": [
-        "4chan /vg/"
+        "Maintainer tracking request (not scout discovery)"
       ],
       "links": [
-        "https://boards.4chan.org/vg/thread/588744758"
+        "https://github.com/4lwayz/portwatch-vi/issues/38",
+        "https://github.com/4lwayz/portwatch-vi/issues/139"
       ],
-      "foundAt": "2026-11-25T22:09:30.708Z",
-      "substance": 98,
-      "signals": [
-        "Rust",
-        "28 technical terms",
-        "status table",
-        "tests",
-        "100+ commits/7d"
-      ],
-      "kind": "effort",
-      "status": "new"
-    },
-    {
-      "repo": "baummarder/xHoly",
-      "name": "xHoly",
-      "description": "an independent Xbox Series emulator",
-      "language": "Rust",
-      "stars": 2,
-      "createdAt": "2026-11-21T22:07:11Z",
-      "pushedAt": "2026-11-25T21:48:29Z",
-      "defaultBranch": "main",
-      "sources": [
-        "GitHub search"
-      ],
-      "links": [],
-      "foundAt": "2026-11-25T22:09:30.708Z",
-      "substance": 92,
-      "signals": [
-        "Rust",
-        "14 technical terms",
-        "status table",
-        "tests",
-        "51 commits/7d"
-      ],
-      "kind": "effort",
-      "status": "new"
-    },
-    {
-      "repo": "decantlabs/decant",
-      "name": "decant",
-      "description": "Run Xbox Series titles natively on PC",
-      "language": "Rust",
-      "stars": 0,
-      "createdAt": "2026-11-25T18:51:54Z",
-      "pushedAt": "2026-11-25T22:07:50Z",
-      "defaultBranch": "main",
-      "sources": [
-        "GitHub search"
-      ],
-      "links": [],
-      "foundAt": "2026-11-25T22:09:30.708Z",
-      "substance": 92,
-      "signals": [
-        "Rust",
-        "18 technical terms",
-        "status table",
-        "tests",
-        "21 commits/7d"
-      ],
-      "kind": "effort",
-      "status": "new"
-    },
-    {
-      "repo": "POMXARK/bcpack-gpu-hlsl",
-      "name": "bcpack-gpu-hlsl",
-      "description": "Clean-room Xbox Series BCPack GPU decoder & 4K AAA benchmark (DX12 HLSL SM 6.6 + Vulkan 1.3 SPIR-V): 11.33 GB/s BC1, 6.02 GB/s BC7 rANS, Zero-Copy C-ABI, 1.25M Descriptor Paging, 12.41M Mesh Shaders + Hi-Z @ 150.6 FPS on RTX 5080 (19/19 PASS).",
-      "language": "Rust",
-      "stars": 0,
-      "createdAt": "2026-11-25T13:02:18Z",
-      "pushedAt": "2026-11-25T22:04:07Z",
-      "defaultBranch": "main",
-      "sources": [
-        "GitHub search"
-      ],
-      "links": [],
-      "foundAt": "2026-11-25T22:09:30.708Z",
-      "substance": 83,
-      "signals": [
-        "Rust",
-        "18 technical terms",
-        "30 commits/7d"
-      ],
-      "kind": "effort",
-      "status": "new"
-    },
-    {
-      "repo": "ihaterockstargames/sixth-star",
-      "name": "sixth-star",
-      "description": "A Windows compatibility layer for Xbox Series X|S (GDK) titles: native x86-64, translated shaders, D3D12.X and DXR. Bring your own dump; no game files.",
-      "language": "Rust",
-      "stars": 0,
-      "createdAt": "2026-11-25T19:53:31Z",
-      "pushedAt": "2026-11-25T21:54:09Z",
-      "defaultBranch": "main",
-      "sources": [
-        "GitHub search"
-      ],
-      "links": [],
-      "foundAt": "2026-11-25T22:09:30.708Z",
+      "foundAt": "2026-11-25T20:14:54Z",
       "substance": 77,
       "signals": [
-        "Rust",
-        "14 technical terms",
-        "status table",
-        "7 commits/7d"
-      ],
-      "kind": "effort",
-      "status": "new"
-    },
-    {
-      "repo": "sefaalcn/half-step-game-project",
-      "name": "half-step-game-project",
-      "description": "Half Step Game Project — Xbox Series title compatibility layer for Windows (based on VIctory)",
-      "language": "Rust",
-      "stars": 0,
-      "createdAt": "2026-11-24T23:14:04Z",
-      "pushedAt": "2026-11-25T19:11:03Z",
-      "defaultBranch": "main",
-      "sources": [
-        "GitHub search"
-      ],
-      "links": [],
-      "foundAt": "2026-11-25T22:09:30.708Z",
-      "substance": 71,
-      "signals": [
-        "Rust",
-        "5 technical terms",
+        "Python",
+        "3 technical terms",
         "status table",
         "tests",
-        "20 commits/7d"
-      ],
-      "kind": "effort",
-      "status": "new"
-    },
-    {
-      "repo": "Ryanabcraft/scarlett-victory-bench",
-      "name": "scarlett-victory-bench",
-      "description": "Fork of DexNom/VIctory: measured frame-time optimisations for running GTA VI's Xbox Series executable on Windows (D3D12 layer). Fetch off the critical path, per-stage split, NVIDIA numbers.",
-      "language": "Rust",
-      "stars": 0,
-      "createdAt": "2026-11-25T19:25:29Z",
-      "pushedAt": "2026-11-25T21:33:45Z",
-      "defaultBranch": "main",
-      "sources": [
-        "GitHub search"
-      ],
-      "links": [],
-      "foundAt": "2026-11-25T22:09:30.708Z",
-      "substance": 68,
-      "signals": [
-        "Rust",
-        "5 technical terms",
         "100+ commits/7d"
       ],
       "kind": "effort",
