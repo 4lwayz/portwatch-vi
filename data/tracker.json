@@ -978,6 +978,53 @@
       "readmeChangedAt": "2026-11-25"
     },
     {
+      "id": "avatarmanz",
+      "name": "AvatarManz",
+      "avatar": "assets/img/efforts/avatarmanz.jpg",
+      "repo": null,
+      "basedOn": [
+        "victory-gta6",
+        "dexnom",
+        "marvis",
+        "belobug"
+      ],
+      "evidence": "Reported to PortWatch",
+      "byline": "Working in private · merges four VIctory forks · code going public soon, he says",
+      "tier": "tracked",
+      "gpu": [
+        "AMD"
+      ],
+      "summary": "A private build that merges code from four VIctory forks: hyphennn's victory-fork, DexNom's, Belobug's and VIctory itself. Its developer reports GTA VI running at about 16 fps on average in game, fairly steady: the highest average on our board. It hasn't crashed so far, it's as far into the story as the leading builds, the picture is close to the console and the sound works. Run on an AMD Radeon RX 7900 XTX with an Intel Core i9-12900K and 64 GB of DDR5. Code not public yet; he says it will be soon.",
+      "highlights": [
+        "About 16 fps on average in game, fairly steady: the highest average on our board",
+        "No crashes so far, and as far into the story as the leading builds",
+        "Sound works",
+        "Merges code from four VIctory forks: hyphennn's, DexNom's, Belobug's and VIctory itself"
+      ],
+      "blockers": [
+        "Some rendering glitches left",
+        "Only reported on one PC: Radeon RX 7900 XTX, Core i9-12900K, 64 GB DDR5",
+        "Code not public yet (promised soon), so nobody outside can test or reproduce it"
+      ],
+      "provenOn": null,
+      "gta": {
+        "loads": 1,
+        "boots": 1,
+        "menu": 1,
+        "world": 1,
+        "playable": 1,
+        "story": 0.5,
+        "render": 0.8,
+        "fps": 16,
+        "stability": 0.9
+      },
+      "verification": "self-reported",
+      "stats": {},
+      "assessedAt": "2026-11-25",
+      "assessedBy": "manual",
+      "claims": []
+    },
+    {
       "id": "doomsday",
       "name": "Doomsday",
       "avatar": "assets/img/efforts/doomsday.jpg",
@@ -7389,6 +7436,11 @@
       "date": "2026-11-25",
       "kind": "new",
       "text": "Scout spotted xcl-dev/xcl (possible effort, substance 98)."
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "new",
+      "text": "AvatarManz joins as a private build at 83.1% and leads our overall number: it merges four VIctory forks and reportedly runs GTA VI at about 16 fps on average, with sound and no crashes so far, on a Radeon RX 7900 XTX."
     }
   ],
   "history": [
@@ -7426,11 +7478,11 @@
     },
     {
       "date": "2026-11-25",
-      "leader": 79.5,
-      "leaderId": "darkworldhm",
-      "top3": 78.7,
+      "leader": 83.1,
+      "leaderId": "avatarmanz",
+      "top3": 80.4,
       "furthest": "playable",
-      "tracked": 41
+      "tracked": 42
     }
   ],
   "scout": {
