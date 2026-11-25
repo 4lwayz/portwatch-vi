@@ -458,7 +458,7 @@ html:not([lang="en"]) .nav-links a { padding-inline: 9px; }
 @keyframes shimmer { from { background-position: -240px 0; } to { background-position: calc(100% + 240px) 0; } }
 .mega-ticks, .bar-ticks { position: absolute; inset: 0; pointer-events: none; }
 .mega-ticks i, .bar-ticks i { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--surface); opacity: .95; }
-.mega-labels { position: relative; height: 54px; margin-top: 10px; }
+.mega-labels { position: relative; min-height: 54px; margin-top: 10px; }
 .mega-label {
   position: absolute; top: 0;
   transform: translateX(-50%);
@@ -553,6 +553,8 @@ html:not([lang="en"]) .nav-links a { padding-inline: 9px; }
 .tag-self { background: rgba(255, 194, 77, .18); color: var(--fg-gold); }
 .tag-ok { background: rgba(22, 163, 106, .12); color: var(--fg-green); }
 .tag-proven { background: rgba(122, 92, 255, .1); color: var(--fg-violet); }
+.tag-proof { background: rgba(255, 46, 126, .1); color: var(--fg-pink); }
+a.tag-proof:hover { text-decoration: underline; }
 .tag-stale { background: rgba(229, 72, 77, .1); color: var(--fg-red); }
 .tag-claim { background: rgba(255, 138, 61, .16); color: var(--fg-orange); }
 
@@ -591,11 +593,7 @@ html:not([lang="en"]) .nav-links a { padding-inline: 9px; }
 /* The steps to Playable sit 10% apart: each label starts at its tick (its dot on the tick) instead of centring on it. */
 .mega-label:not(:last-of-type) { transform: translateX(-4px); text-align: left; }
 .mega-label:first-of-type { transform: none; }
-/* Below desktop width every other label also drops to a second row. */
-@media (max-width: 1180px) and (min-width: 761px) {
-  .mega-labels { height: 66px; }
-  .mega-label:nth-of-type(even) { top: 28px; }
-}
+/* When they don't fit on one row, layoutMegaLabels() in app.js spreads them over more rows. */
 
 /* Private builds: no public code, so listed under the race without a rank */
 .pb-lock {
@@ -921,7 +919,6 @@ a.tag { text-decoration: none; }
   .ov-stats { grid-template-columns: repeat(2, 1fr); width: 100%; }
   .mega-label { font-size: 10.5px; }
   .mega-label b { display: none; }
-  .mega-label:nth-of-type(even) { top: 22px; }
   .effort { grid-template-columns: 1fr; padding: 18px; }
   .e-rank { text-align: left; font-size: 22px; }
   .e-top { flex-wrap: wrap; }
@@ -961,3 +958,12 @@ a.story { text-decoration: none; }
   .page { padding-top: 16px; }
   .archive { grid-template-columns: 1fr; }
 }
+
+/* ---------- Folded sections (watchlist, toolkit): closed until opened ---------- */
+.fold > summary { list-style: none; cursor: pointer; user-select: none; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary.more-link::after { content: "↓"; }
+.fold[open] > summary.more-link::after { content: "↑"; }
+.fold[open] > summary { margin-bottom: 18px; }
+.fold .fold-hide, .fold[open] .fold-show { display: none; }
+.fold[open] .fold-hide { display: inline; }

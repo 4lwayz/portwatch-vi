@@ -56,7 +56,6 @@
         <a href="#watchlist"><svg class="tabler-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/img/tabler.svg#list-details"/></svg><span data-i18n="nav.watchlist">Watchlist</span></a>
         <a href="#toolkit"><svg class="tabler-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/img/tabler.svg#tool"/></svg><span data-i18n="nav.toolkit">Toolkit</span></a>
         <a href="#method"><svg class="tabler-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/img/tabler.svg#chart-bar"/></svg><span data-i18n="nav.scoring">Scoring</span></a>
-        <a href="#safety" class="nav-warn"><svg class="tabler-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/img/tabler.svg#alert-triangle"/></svg><span data-i18n="nav.fakes">Fake downloads</span></a>
       </nav>
       <span class="nav-updated" id="nav-updated" data-i18n="common.loading">Loading…</span>
     </div>
@@ -273,12 +272,15 @@
     <section class="wrap section" id="watchlist" aria-labelledby="watch-title">
       <div class="section-head">
         <div>
-          <p class="kicker" data-i18n="watch.kicker">Early or stalled</p>
+          <p class="kicker" data-i18n="watch.kicker">Further back</p>
           <h2 id="watch-title" data-i18n="watch.title">Watchlist</h2>
-          <p class="sub" data-i18n="watch.sub">Real but early projects: scaffolding, research probes or a different route. They move up to the race when they ship something you can measure.</p>
+          <p class="sub" data-i18n="watch.sub">Projects further back: early, stalled or taking a different route. They move up to the race when they catch up with the leaders.</p>
         </div>
       </div>
-      <div class="watch card" id="watch-list" role="table" aria-label="Watchlist" data-i18n-attr="aria-label:watch.title"></div>
+      <details class="fold">
+        <summary class="more-link" id="watch-toggle"></summary>
+        <div class="watch card" id="watch-list" role="table" aria-label="Watchlist" data-i18n-attr="aria-label:watch.title"></div>
+      </details>
     </section>
 
     <section class="wrap section" id="toolkit" aria-labelledby="tool-title">
@@ -289,31 +291,10 @@
           <p class="sub" data-i18n="tools.sub">These won't run the game, but every port leans on them: archive explorers, texture codecs and format notes.</p>
         </div>
       </div>
-      <div class="tools" id="tools-list"></div>
-    </section>
-
-    <section class="wrap section" id="inbox" aria-labelledby="inbox-title">
-      <div class="section-head">
-        <div>
-          <p class="kicker" data-i18n="inbox.kicker">Spotted by the scout</p>
-          <h2 id="inbox-title" data-i18n="inbox.title">New candidates</h2>
-          <p class="sub" id="inbox-sub" data-i18n="inbox.sub">Every 3 hours the scout searches GitHub, GitLab, Hacker News, Bluesky, Mastodon, Lemmy and 4chan (/v/, /vg/) for new efforts. Repos with real code are listed here until they're reviewed. They are deliberately not linked, and copies of tracked projects are filtered out.</p>
-        </div>
-      </div>
-      <div class="inbox" id="inbox-list"></div>
-    </section>
-
-    <section class="wrap section" id="safety" aria-labelledby="safety-title">
-      <div class="safety card">
-        <div class="safety-head">
-          <svg class="tabler-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="assets/img/tabler.svg#alert-triangle"/></svg>
-          <div>
-            <h2 id="safety-title" data-i18n="safety.title">There is no download</h2>
-            <p data-i18n="safety.body">No project on this page hosts the game, keys or an executable, and this site never links to any. Anything offering a ready-to-play GTA VI for PC this week is a scam.</p>
-          </div>
-        </div>
-        <ul class="flags" id="flag-list"></ul>
-      </div>
+      <details class="fold">
+        <summary class="more-link" id="tools-toggle"></summary>
+        <div class="tools" id="tools-list"></div>
+      </details>
     </section>
 
     <section class="wrap section" id="method" aria-labelledby="method-title">

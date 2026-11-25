@@ -80,7 +80,6 @@ function shell({ title, description, canonical, ogType = 'website', image, image
         <a href="../#race">${icon('activity', '../')}<span>Race</span></a>
         <a href="./" class="is-current">${icon('news', '../')}<span>News</span></a>
         <a href="../#method">${icon('chart-bar', '../')}<span>Scoring</span></a>
-        <a href="../#safety" class="nav-warn">${icon('alert-triangle', '../')}<span>Fake downloads</span></a>
       </nav>
     </div>
   </header>
