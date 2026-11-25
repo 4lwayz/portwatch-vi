@@ -34,7 +34,7 @@ jobs:
       - name: Collect site files
         run: |
           mkdir -p _site
-          cp -r index.html assets data _site/   # dashboard/ is private and never deployed; the board was removed 2026-11-24
+          cp -r index.html 404.html assets data _site/   # dashboard/ is private and never deployed; the board was removed 2026-11-24
           cp google*.html _site/   # Google Search Console ownership file; keep it, or Google un-verifies the site
           touch _site/.nojekyll
 
