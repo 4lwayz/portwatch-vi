@@ -2852,6 +2852,48 @@
       "claims": [],
       "readmeSha": "346fcf9a17a21b44b89f69d23d1b6a2b4d277e488d529e933b0b32a76dd57f44",
       "readmeChangedAt": "2026-11-25"
+    },
+    {
+      "id": "dkdknight",
+      "name": "dkdknight",
+      "repo": "dkdknight/victory-fork",
+      "branch": "feature/levels-on-demand",
+      "tier": "tracked",
+      "gpu": [
+        "NVIDIA"
+      ],
+      "approach": "Compatibility layer",
+      "target": "GTA VI only",
+      "summary": "dkdknight's fork of hyphennn's victory-fork, working on frame rate. On an RTX 4090 the prologue plays at 17 fps; on an RTX 5080 the opening cutscene runs lit at 9.5-10 fps, up from 2.5-4. Ray-traced light still off. Self-reported.",
+      "highlights": [
+        "17 fps playing the prologue on an RTX 4090 + i9-13900K; 9.5-10 fps in the opening cutscene on an RTX 5080",
+        "Video memory no longer overcommitted: texture levels made on demand, title buffers read in place",
+        "Every change measured back to back with screenshots, in docs/gta6-performance-notes.md"
+      ],
+      "blockers": [
+        "Still well under 30 fps; profiling shows the frame waiting on submission and memory",
+        "The game's ray-traced light does not run yet (its structure builder is off)",
+        "Tested on two NVIDIA PCs only; not reproduced by others yet"
+      ],
+      "provenOn": null,
+      "gta": {
+        "loads": 1,
+        "boots": 1,
+        "menu": 1,
+        "world": 1,
+        "playable": 1,
+        "story": 0,
+        "render": 0.5,
+        "fps": 17,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "related": [
+        "fxceless/victory-fork"
+      ],
+      "assessedAt": "2026-11-25",
+      "assessedBy": "manual",
+      "claims": []
     }
   ],
   "tools": [
