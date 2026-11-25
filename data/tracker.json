@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25T04:22:56.289Z",
+  "updated": "2026-11-25T05:52:35.079Z",
   "site": {
     "title": "PortWatch VI",
     "heroImage": "assets/img/hero-miami.jpg"
@@ -2552,6 +2552,57 @@
       "assessedBy": "claude",
       "claims": [],
       "readmeSha": "346fcf9a17a21b44b89f69d23d1b6a2b4d277e488d529e933b0b32a76dd57f44",
+      "readmeChangedAt": "2026-11-25"
+    },
+    {
+      "id": "leonida-continued",
+      "name": "Leonida Continued",
+      "repo": "ubiquitarianism/leonida",
+      "branch": "main",
+      "tier": "watchlist",
+      "approach": "Static recompilation",
+      "target": "GTA VI only",
+      "summary": "Community continuation of NotRexed’s Leonida, carrying its commit history forward. NotRexed remains on the community server and may return. The README says GTA VI does not boot yet.",
+      "highlights": [
+        "The only public Leonida Continued repository identified by the project FAQ",
+        "Native Windows port using Vulkan, according to the project README",
+        "Preserves the original Leonida commit history and contributor credits"
+      ],
+      "blockers": [
+        "The project README says GTA VI does not boot yet",
+        "Its README documents remaining gaps in the D3D12-to-Vulkan layer and runtime"
+      ],
+      "groundwork": {
+        "loader": 0,
+        "shaders": 0,
+        "graphics": 0,
+        "proven": 0
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 0,
+        "boots": 0,
+        "menu": 0,
+        "world": 0,
+        "playable": 0,
+        "story": 0,
+        "render": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "stars": 1993,
+        "forks": 438,
+        "openIssues": 1099,
+        "createdAt": "2026-11-23T23:54:39Z",
+        "pushedAt": "2026-11-25T05:32:29Z",
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-25",
+      "assessedBy": "manual",
+      "claims": [],
       "readmeChangedAt": "2026-11-25"
     }
   ],
@@ -5624,11 +5675,6 @@
       "seenAt": "2026-11-24"
     },
     {
-      "repo": "ubiquitarianism/leonida",
-      "reason": "copy of ItsNotRexed/Leonida",
-      "seenAt": "2026-11-24"
-    },
-    {
       "repo": "Blackfrost-AI/GrandFrostAuto",
       "reason": "thin (substance 7)",
       "auto": true,
@@ -6386,6 +6432,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-25",
+      "kind": "flag",
+      "text": "Added Leonida Continued as the public community continuation of NotRexed’s Leonida; its README says GTA VI does not boot yet."
+    },
     {
       "date": "2026-11-24",
       "kind": "new",
