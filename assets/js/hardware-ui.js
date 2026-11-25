@@ -68,7 +68,7 @@ export function initHardware(cfg) {
         };
     }
 
-    const fpsTxt = (fps) => (fps ? `${fps.min}–${fps.max} FPS` : t('hw.fpsNone'));
+    const fpsTxt = (fps) => (fps ? (fps.min === fps.max ? `${fps.min} FPS` : `${fps.min}–${fps.max} FPS`) : t('hw.fpsNone'));
 
     function render() {
         const { rows, warnings } = evaluate(selection(), cfg);
