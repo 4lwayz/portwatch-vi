@@ -1607,6 +1607,63 @@
       "readmeChangedAt": "2026-11-23"
     },
     {
+      "id": "leonida-continued",
+      "name": "Leonida Continued",
+      "repo": "ubiquitarianism/leonida",
+      "branch": "main",
+      "tier": "watchlist",
+      "gpu": [
+        "NVIDIA"
+      ],
+      "approach": "Static recompilation",
+      "target": "GTA VI only",
+      "summary": "Community continuation of Leonida with its full history. On main, GTA VI runs offline on Windows and Linux/Proton through the intro, first-run menus and full story load into the world phase; no world frame verified yet. Self-reported.",
+      "highlights": [
+        "Offline Windows first-run UI draws legible controller prompts (PR #939, docs/first_run_ui.md)",
+        "Windows and Linux/Proton: splash, launch movie, menus with pad input, full story load (PR #984)",
+        "GTA VI's executable reaches its frame loop on current main (PR #321)"
+      ],
+      "blockers": [
+        "No 3D world frame verified yet after the story load finishes",
+        "World start stalls on driver compute pipeline compiles and large title-memory mirroring (~1.4 GB) before hitting the hang watchdog",
+        "High RAM footprint (~14-20 GB across RAM/swap at story load) and remaining streamed CopyPageMappingsBatchX timing gaps"
+      ],
+      "groundwork": {
+        "loader": 0.85,
+        "shaders": 0.9,
+        "graphics": 0.7,
+        "proven": 0
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 1,
+        "boots": 1,
+        "menu": 1,
+        "world": 0,
+        "playable": 0,
+        "story": 0,
+        "render": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "stars": 2252,
+        "forks": 508,
+        "openIssues": 1431,
+        "createdAt": "2026-11-23T23:54:39Z",
+        "pushedAt": "2026-11-25T17:36:11Z",
+        "commits7d": 100,
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-25",
+      "assessedBy": "manual",
+      "readmeSha": "b5f3f6218851fe9b98bb9223e4ada9827cc674d9180b91deb7f8edf8a6091157",
+      "claims": [],
+      "readmeChangedAt": "2026-11-25"
+    },
+    {
       "id": "openscarlett",
       "name": "OpenScarlett",
       "repo": "californiaAlmonds/OpenScarlett",
@@ -3531,7 +3588,7 @@
       "id": "copies",
       "pattern": "Re-uploads of tracked projects under other accounts",
       "label": "",
-      "count": 90,
+      "count": 89,
       "reason": "Copies can be quietly modified to bundle malware. Only use the original repositories linked in the race above.",
       "members": [
         "FaelSemW/RafaVI",
@@ -3551,7 +3608,6 @@
         "fablinoo/palmwave",
         "Marsietiss/xcl-frontier",
         "Caliiu/DedSec",
-        "ubiquitarianism/leonida",
         "LeonidaReforge/Leonida",
         "danilotallaric2/leonida",
         "LuanBogoqb/Leonida",
@@ -5656,11 +5712,6 @@
       "seenAt": "2026-11-24"
     },
     {
-      "repo": "ubiquitarianism/leonida",
-      "reason": "copy of ItsNotRexed/Leonida",
-      "seenAt": "2026-11-24"
-    },
-    {
       "repo": "Blackfrost-AI/GrandFrostAuto",
       "reason": "thin (substance 7)",
       "auto": true,
@@ -7155,6 +7206,11 @@
       "date": "2026-11-25",
       "kind": "up",
       "text": "Belobug's build speeds up from about 3 to 4 fps (its README reports 5-7), rising to 77.7%, just behind DexNom."
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "new",
+      "text": "Leonida Continued (ubiquitarianism/leonida) joins the watchlist at 30%: the community continuation of Leonida, whose README reports the game booting through the first-run pages and the full story load on Windows and Linux/Proton. No world frame yet (self-reported)."
     }
   ],
   "history": [
