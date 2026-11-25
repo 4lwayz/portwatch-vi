@@ -31,6 +31,12 @@ for (const e of data.efforts || []) {
     const v = e.gta?.[key];
     check(typeof v === 'number' && v >= 0 && v <= 1, `effort ${e.id} gta.${key}=${v} out of range`);
   }
+  // Unknown keys are silently ignored by scoring.js LADDER, so they make progress bars wrong.
+  // `ingame` was the old name; current efforts use `world`/`playable` (see scoring.js).
+  const gtaKeys = ['loads', 'boots', 'menu', 'world', 'playable', 'story', 'render', 'fps', 'stability'];
+  for (const key of Object.keys(e.gta || {})) {
+    check(gtaKeys.includes(key), `effort ${e.id} has unknown gta key: ${key}`);
+  }
   // The editor's "up to 3" is a soft preference; owner decisions in EDITOR.md legitimately keep more.
   for (const key of ['highlights', 'blockers']) {
     check(Array.isArray(e[key]), `effort ${e.id} ${key} must be an array`);
