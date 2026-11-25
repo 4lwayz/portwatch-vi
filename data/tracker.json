@@ -3198,6 +3198,34 @@
   ],
   "candidates": [
     {
+      "repo": "tudorek12345/VictoryIsInOurName.hep",
+      "name": "VictoryIsInOurName.hep",
+      "description": "Maintainer reports boot and menu; black world transition, no verified gameplay. Based on Leonida and VIctory; earlier takedown and eligibility require owner review.",
+      "language": "Python",
+      "stars": 1,
+      "createdAt": "2026-11-24T06:31:01Z",
+      "pushedAt": "2026-11-25T18:57:24Z",
+      "defaultBranch": "main",
+      "sources": [
+        "Maintainer tracking request (not scout discovery)"
+      ],
+      "links": [
+        "https://github.com/4lwayz/portwatch-vi/issues/38",
+        "https://github.com/4lwayz/portwatch-vi/issues/139"
+      ],
+      "foundAt": "2026-11-25T20:14:54Z",
+      "substance": 77,
+      "signals": [
+        "Python",
+        "3 technical terms",
+        "status table",
+        "tests",
+        "100+ commits/7d"
+      ],
+      "kind": "effort",
+      "status": "new"
+    },
+    {
       "repo": "Archivist-Atlas/gta-vi-astral",
       "name": "gta-vi-astral",
       "description": "Mon propre recompiler GTA VI",
