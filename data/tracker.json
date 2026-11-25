@@ -2562,15 +2562,15 @@
       "tier": "watchlist",
       "approach": "Static recompilation",
       "target": "GTA VI only",
-      "summary": "Community continuation of NotRexed’s Leonida. Self-reported: the retail executable reaches responsive first-run screens and starts story loading; no rendered world frame is verified. NotRexed may return.",
+      "summary": "Self-reported: on native Windows and Linux/Proton, it reaches responsive first-run screens, completes story loading and enters the world phase; no world frame is verified. NotRexed may return.",
       "highlights": [
         "The only public Leonida Continued repository identified by the project FAQ",
-        "Merged project reports document responsive first-run screens and story loading on the native Windows port",
+        "The updated project README reports first-run UI and story loading through the world phase on native Windows and Linux/Proton",
         "Preserves the original Leonida commit history and contributor credits"
       ],
       "blockers": [
-        "No rendered world frame or playable controls are verified",
-        "A contributor reports GPU loss during story loading; this report is self-reported"
+        "The project README says no rendered world frame has been verified; story mode is not playable",
+        "A world-start GPU device loss is reported in the project issue tracker"
       ],
       "groundwork": {
         "loader": 0,
@@ -6434,7 +6434,7 @@
     {
       "date": "2026-11-25",
       "kind": "up",
-      "text": "Leonida Continued reaches the responsive first-run screens and starts story loading in self-reported native Windows runs; no world frame is verified."
+      "text": "Leonida Continued’s updated README reports responsive first-run screens and story loading through the world phase on Windows and Linux/Proton; no world frame is verified."
     },
     {
       "date": "2026-11-24",
