@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25T04:22:56.289Z",
+  "updated": "2026-11-25T05:52:35.079Z",
   "site": {
     "title": "PortWatch VI",
     "heroImage": "assets/img/hero-miami.jpg"
@@ -2553,6 +2553,57 @@
       "claims": [],
       "readmeSha": "346fcf9a17a21b44b89f69d23d1b6a2b4d277e488d529e933b0b32a76dd57f44",
       "readmeChangedAt": "2026-11-25"
+    },
+    {
+      "id": "leonida-continued",
+      "name": "Leonida Continued",
+      "repo": "ubiquitarianism/leonida",
+      "branch": "main",
+      "tier": "watchlist",
+      "approach": "Static recompilation",
+      "target": "GTA VI only",
+      "summary": "Self-reported: on native Windows and Linux/Proton, it reaches responsive first-run screens, completes story loading and enters the world phase; no world frame is verified. NotRexed may return.",
+      "highlights": [
+        "The only public Leonida Continued repository identified by the project FAQ",
+        "The updated project README reports first-run UI and story loading through the world phase on native Windows and Linux/Proton",
+        "Preserves the original Leonida commit history and contributor credits"
+      ],
+      "blockers": [
+        "The project README says no rendered world frame has been verified; story mode is not playable",
+        "A world-start GPU device loss is reported in the project issue tracker"
+      ],
+      "groundwork": {
+        "loader": 0,
+        "shaders": 0,
+        "graphics": 0,
+        "proven": 0
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 1,
+        "boots": 1,
+        "menu": 1,
+        "world": 0,
+        "playable": 0,
+        "story": 0,
+        "render": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "stars": 1993,
+        "forks": 438,
+        "openIssues": 1099,
+        "createdAt": "2026-11-23T23:54:39Z",
+        "pushedAt": "2026-11-25T05:32:29Z",
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-25",
+      "assessedBy": "manual",
+      "claims": [],
+      "readmeChangedAt": "2026-11-25"
     }
   ],
   "tools": [
@@ -3565,7 +3616,7 @@
       "id": "copies",
       "pattern": "Re-uploads of tracked projects under other accounts",
       "label": "",
-      "count": 74,
+      "count": 73,
       "reason": "Copies can be quietly modified to bundle malware. Only use the original repositories linked in the race above.",
       "members": [
         "FaelSemW/RafaVI",
@@ -3585,7 +3636,6 @@
         "fablinoo/palmwave",
         "Marsietiss/xcl-frontier",
         "Caliiu/DedSec",
-        "ubiquitarianism/leonida",
         "LeonidaReforge/Leonida",
         "danilotallaric2/leonida",
         "LuanBogoqb/Leonida",
@@ -5624,11 +5674,6 @@
       "seenAt": "2026-11-24"
     },
     {
-      "repo": "ubiquitarianism/leonida",
-      "reason": "copy of ItsNotRexed/Leonida",
-      "seenAt": "2026-11-24"
-    },
-    {
       "repo": "Blackfrost-AI/GrandFrostAuto",
       "reason": "thin (substance 7)",
       "auto": true,
@@ -6386,6 +6431,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-25",
+      "kind": "up",
+      "text": "Leonida Continued’s updated README reports responsive first-run screens and story loading through the world phase on Windows and Linux/Proton; no world frame is verified."
+    },
     {
       "date": "2026-11-24",
       "kind": "new",
