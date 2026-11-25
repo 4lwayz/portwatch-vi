@@ -2693,7 +2693,7 @@
       "blockers": [
         "2-3 fps in the world: the frame is 455-555 ms, the card 79-80% busy, and a single 281 ms read-after-write wait serializes the host against the card",
         "Ray-traced light and shadows do not run yet, so everything the sun does not hit directly is black",
-        "About 22 GB of memory in use during play; tested on one PC (RTX 4070, i7-14700KF), not reproduced by others yet"
+        "About 22 GB of memory in use during play; tested on one PC (RTX 5070, Ryzen 7 7700X), not reproduced by others yet"
       ],
       "provenOn": null,
       "groundwork": {
