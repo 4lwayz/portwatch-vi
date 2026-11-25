@@ -1,8 +1,7 @@
 {
-  "show": false,
+  "show": true,
   "name": "4lwayz",
   "avatar": "assets/img/4lwayz-2.jpg",
-  "text": "BRUH we need to find this rumble guy",
-  "gif": "assets/img/pinned/whiplash.gif",
-  "updated": "2026-11-25T20:18:37Z"
+  "text": "Yeah guys, avatarmanz's build is actually playable at 16 fps... his repo will be public in a bit...",
+  "updated": "2026-11-25T22:13:40Z"
 }
