@@ -3,6 +3,7 @@ import { getLiveViewers, trackView } from './backend.js';
 import { coverHtml, articlePath } from './news-shared.js';
 import { fillPinned } from './pinned.js';
 import { initI18n, t, tr, locale } from './i18n.js';
+import { icon } from './icons.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -55,16 +56,8 @@ function ago(iso) {
 const daysSince = (iso) => (Date.now() - Date.parse(iso)) / 864e5;
 const fmtK = (n) => (n == null ? '-' : n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : `${n}`);
 
-const ICON = {
-  // Radiation trefoil: three 60-degree blades around a dot.
-  nuke: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M17.25 21.09A10.5 10.5 0 0 1 6.75 21.09L10.4 14.77A3.2 3.2 0 0 0 13.6 14.77Z"/><path d="M1.5 12A10.5 10.5 0 0 1 6.75 2.91L10.4 9.23A3.2 3.2 0 0 0 8.8 12Z"/><path d="M17.25 2.91A10.5 10.5 0 0 1 22.5 12L15.2 12A3.2 3.2 0 0 0 13.6 9.23Z"/></svg>',
-  star: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 .8l2.2 4.6 5 .7-3.6 3.5.9 5L8 12.2 3.5 14.6l.9-5L.8 6.1l5-.7z"/></svg>',
-  fork: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5 3.3a1.8 1.8 0 1 0-2.3 1.7v.8A2.5 2.5 0 0 0 5.2 8.3h1.9v2.7a1.8 1.8 0 1 0 1.8 0V8.3h1.9a2.5 2.5 0 0 0 2.5-2.5V5a1.8 1.8 0 1 0-1.5 0v.8a1 1 0 0 1-1 1H5.2a1 1 0 0 1-1-1V5A1.8 1.8 0 0 0 5 3.3Z"/></svg>',
-  issue: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></svg>',
-  commit: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 5a3 3 0 0 1 2.9 2.2H15v1.6h-4.1a3 3 0 0 1-5.8 0H1V7.2h4.1A3 3 0 0 1 8 5Zm0 1.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"/></svg>',
-  clock: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 4.5V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
-  gh: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0a8 8 0 0 0-2.5 15.6c.4 0 .5-.2.5-.4v-1.5c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.3 1.9.9 2.4.7 0-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8a7.5 7.5 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.8-3.6 4 .3.3.6.8.6 1.5v2.2c0 .2.1.5.6.4A8 8 0 0 0 8 0Z"/></svg>',
-};
+// Radiation trefoil used by the existing takedown treatment.
+const NUKE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M17.25 21.09A10.5 10.5 0 0 1 6.75 21.09L10.4 14.77A3.2 3.2 0 0 0 13.6 14.77Z"/><path d="M1.5 12A10.5 10.5 0 0 1 6.75 2.91L10.4 9.23A3.2 3.2 0 0 0 8.8 12Z"/><path d="M17.25 2.91A10.5 10.5 0 0 1 22.5 12L15.2 12A3.2 3.2 0 0 0 13.6 9.23Z"/></svg>';
 
 const state = { data: null, filter: 'all', sort: 'score' };
 
@@ -518,9 +511,9 @@ function effortCard(e, rank, open, overallRank = null) {
   const external = hasRepo(e) ? ' target="_blank" rel="noopener"' : '';
   return `
   <li class="effort ${rank && rank <= 3 ? 'is-top' : ''}${e.nuked ? ' is-nuked' : ''}" id="effort-${esc(e.id)}">
-    <div class="e-rank">${e.nuked ? `<span class="nuke-rank" title="${esc(t('effort.nukedTitle', { date: e.nuked.at || '' }))}">${ICON.nuke}</span>` : rank}${overallRank ? `<small class="e-rank-overall" title="${esc(t('race.overallTitle'))}">${esc(t('race.overall', { n: overallRank }))}</small>` : ''}</div>
+    <div class="e-rank">${e.nuked ? `<span class="nuke-rank" title="${esc(t('effort.nukedTitle', { date: e.nuked.at || '' }))}">${NUKE_ICON}</span>` : rank}${overallRank ? `<small class="e-rank-overall" title="${esc(t('race.overallTitle'))}">${esc(t('race.overall', { n: overallRank }))}</small>` : ''}</div>
     <div class="e-main">
-      ${e.nuked ? `<div class="nuke-banner" title="${esc(t('effort.nukedTitle', { date: e.nuked.at || '' }))}">${ICON.nuke}<b>${esc(t('effort.nuked'))}</b><span>${esc(e.nuked.note || '')}</span></div>` : ''}
+      ${e.nuked ? `<div class="nuke-banner" title="${esc(t('effort.nukedTitle', { date: e.nuked.at || '' }))}">${NUKE_ICON}<b>${esc(t('effort.nuked'))}</b><span>${esc(e.nuked.note || '')}</span></div>` : ''}
       <div class="e-top">
         ${src ? `<img class="e-avatar" src="${esc(src)}" alt="" loading="lazy" data-hide-on-error>` : ''}
         <div class="e-title">
@@ -550,15 +543,15 @@ function effortCard(e, rank, open, overallRank = null) {
         </div>
       </div>
       <div class="e-foot">
-        ${hasRepo(e) ? `<span class="stat-i" title="${esc(t('effort.stars'))}">${ICON.star}${fmtK(st.stars)}</span>
-        <span class="stat-i" title="${esc(t('effort.forks'))}">${ICON.fork}${fmtK(st.forks)}</span>
-        <span class="stat-i" title="${esc(t('effort.issues'))}">${ICON.issue}${fmtK(st.openIssues)}</span>
-        ${st.commits7d != null ? `<span class="stat-i" title="${esc(t('effort.commitsTitle'))}">${ICON.commit}${esc(t('effort.commits', { n: st.commits7d >= 100 ? '100+' : st.commits7d }))}</span>` : ''}
-        <span class="stat-i" title="${esc(t('effort.lastPush'))}">${ICON.clock}${esc(t('effort.pushed', { ago: ago(st.pushedAt) }))}</span>` : ''}
+        ${hasRepo(e) ? `<span class="stat-i" title="${esc(t('effort.stars'))}">${icon('star')}${fmtK(st.stars)}</span>
+        <span class="stat-i" title="${esc(t('effort.forks'))}">${icon('git-fork')}${fmtK(st.forks)}</span>
+        <span class="stat-i" title="${esc(t('effort.issues'))}">${icon('circle-dot')}${fmtK(st.openIssues)}</span>
+        ${st.commits7d != null ? `<span class="stat-i" title="${esc(t('effort.commitsTitle'))}">${icon('git-commit')}${esc(t('effort.commits', { n: st.commits7d >= 100 ? '100+' : st.commits7d }))}</span>` : ''}
+        <span class="stat-i" title="${esc(t('effort.lastPush'))}">${icon('clock')}${esc(t('effort.pushed', { ago: ago(st.pushedAt) }))}</span>` : ''}
         <span class="spacer"></span>
         <span class="w-muted" title="${esc(t('effort.reviewedTitle'))}">${esc(e.assessedBy === 'claude' ? t('effort.byClaude') : t('effort.reviewed'))} ${esc(e.assessedAt || '')}</span>
-        <button class="toggle" data-toggle aria-expanded="${open}">${esc(open ? t('effort.hideDetails') : t('effort.details'))}</button>
-        ${hasRepo(e) ? `<a class="gh-link" href="${esc(repoUrl(e.repo, e.branch))}" target="_blank" rel="noopener">${ICON.gh}GitHub</a>` : ''}
+        <button class="toggle" data-toggle aria-expanded="${open}"><span>${esc(open ? t('effort.hideDetails') : t('effort.details'))}</span>${icon('chevron-down')}</button>
+        ${hasRepo(e) ? `<a class="gh-link" href="${esc(repoUrl(e.repo, e.branch))}" target="_blank" rel="noopener">${icon('brand-github')}GitHub</a>` : ''}
       </div>
     </div>
   </li>`;
@@ -711,7 +704,7 @@ function bindControls() {
     const det = btn.closest('.effort').querySelector('.e-details');
     det.hidden = !det.hidden;
     btn.setAttribute('aria-expanded', String(!det.hidden));
-    btn.textContent = det.hidden ? t('effort.details') : t('effort.hideDetails');
+    btn.querySelector('span').textContent = det.hidden ? t('effort.details') : t('effort.hideDetails');
     observeBars();
   });
 

@@ -18,11 +18,34 @@
   }
   apply(saved());
 
-  var ICONS = {
-    system: '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 14h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-    light: '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 .9v1.8M8 13.3v1.8M.9 8h1.8M13.3 8h1.8M3 3l1.3 1.3M11.7 11.7 13 13M3 13l1.3-1.3M11.7 4.3 13 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-    dark: '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M13.6 10.2A6 6 0 0 1 5.8 2.4a6 6 0 1 0 7.8 7.8Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'
-  };
+  var sprite = new URL('../img/tabler.svg', document.currentScript.src);
+  var ICONS = { system: 'device-desktop', light: 'sun', dark: 'moon' };
+  function themeIcon(choice) {
+    return '<svg class="tabler-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="' + sprite.href + '#' + ICONS[choice] + '"/></svg>';
+  }
+
+  function mountNavigation(nav) {
+    var button = nav.querySelector('.nav-menu-toggle');
+    if (!button) return;
+    var links = document.getElementById(button.getAttribute('aria-controls'));
+    var narrow = window.matchMedia('(max-width: 1040px)');
+    function expanded() { return button.getAttribute('aria-expanded') === 'true'; }
+    function setExpanded(open) { button.setAttribute('aria-expanded', String(open)); }
+
+    button.hidden = false;
+    button.addEventListener('click', function () { setExpanded(!expanded()); });
+    links.addEventListener('click', function (ev) { if (ev.target.closest('a')) setExpanded(false); });
+    document.addEventListener('click', function (ev) {
+      if (!button.contains(ev.target) && !links.contains(ev.target)) setExpanded(false);
+    });
+    nav.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && expanded()) {
+        setExpanded(false);
+        button.focus();
+      }
+    });
+    if (narrow.addEventListener) narrow.addEventListener('change', function () { setExpanded(false); });
+  }
   var LABELS = { system: 'System', light: 'Light', dark: 'Dark' };
   var PREFIX = 'Theme';
   var relabel = null;
@@ -37,13 +60,14 @@
   function mount() {
     var nav = document.querySelector('.nav-inner');
     if (!nav || nav.querySelector('.theme-pick')) return;
+    mountNavigation(nav);
     var wrap = document.createElement('div');
     wrap.className = 'theme-pick';
     wrap.innerHTML =
       '<button type="button" class="theme-btn" aria-haspopup="true" aria-expanded="false"></button>' +
       '<div class="theme-menu" role="menu" hidden>' +
       ['system', 'light', 'dark'].map(function (k) {
-        return '<button type="button" role="menuitemradio" data-theme-choice="' + k + '">' + ICONS[k] + '<span>' + LABELS[k] + '</span></button>';
+        return '<button type="button" role="menuitemradio" data-theme-choice="' + k + '">' + themeIcon(k) + '<span>' + LABELS[k] + '</span></button>';
       }).join('') + '</div>';
     nav.appendChild(wrap);
     var btn = wrap.querySelector('.theme-btn');
@@ -51,7 +75,7 @@
 
     function render() {
       var c = saved();
-      btn.innerHTML = ICONS[isDark(c) ? 'dark' : 'light'];
+      btn.innerHTML = themeIcon(isDark(c) ? 'dark' : 'light');
       btn.setAttribute('aria-label', PREFIX + ': ' + LABELS[c]);
       btn.title = PREFIX + ': ' + LABELS[c];
       menu.querySelectorAll('[data-theme-choice]').forEach(function (b) {
