@@ -758,6 +758,66 @@
   ],
   "efforts": [
     {
+      "id": "n137s",
+      "name": "N137S",
+      "repo": "N137S/gta6-progress",
+      "branch": "main",
+      "tier": "tracked",
+      "gpu": [
+        "AMD"
+      ],
+      "approach": "Compatibility layer",
+      "target": "GTA VI only",
+      "summary": "N137S's private-line fork of the VIctory compatibility layer (fxceless line), run on an all-AMD laptop APU: Ryzen AI Max+ 395 (16 cores / 32 threads) with a Radeon 8060S iGPU and 128 GB of LPDDR5X-8000 unified memory, split in the BIOS into 64 GB of system RAM and 64 GB of dedicated VRAM. Progress is shared as a measured log, not as a release: the open world renders with full graphics close to the retail game and is playable at a steady 4-5 fps (peaks 4.9), up from 1.5-1.8 - sound works, saves load and store, and 1h+ sessions ran without a crash. Built with an AI agent (goose running GLM 5.3 Flash) under the author's direction, every step measured by the fork's own instrumentation.",
+      "highlights": [
+        "Platform: AMD Ryzen AI Max+ 395, 16 cores / 32 threads, Radeon 8060S, 128 GB LPDDR5X-8000 unified memory split 64 GB system RAM / 64 GB dedicated VRAM, Windows 11 x64",
+        "Playable: the open world renders with full graphics (lighting, textures, people, vehicles, vegetation, water, sky) close to the retail game - on an integrated GPU, 1h+ sessions without a crash",
+        "Frame time in the open world cut from 620-650 ms to 204-260 ms: steady 4-5 fps, up from 1.5-1.8 (self-reported, measured in the fork's own logs)",
+        "In-process memory copies under the kernel write watch with a vectored-exception fallback: kernel-copy time 107 to 4.5 ms per frame (factor ~25)",
+        "Refreshes cut into 4 MiB disjoint pieces over a kept worker pool; large single copies now parallelize too",
+        "Full frame instrumentation: every submission split into run_deferred / batch flush / ExecuteCommandLists / waits; the GPU finishes in 10-17 ms and waits on the CPU"
+      ],
+      "blockers": [
+        "4-5 fps leaves headroom: the bottleneck is CPU-side copy bandwidth, about 500 MB of title-memory refreshes a frame, while the GPU waits 10-17 ms a frame",
+        "The title's memory often cannot be placed in GPU-local memory, so copies stay on the critical path; more video memory budget did not move this (measured)",
+        "Progress-only, no source release: claims cannot be reproduced by others (one machine, one Strix Halo APU)"
+      ],
+      "groundwork": {
+        "loader": 0.9,
+        "shaders": 0.9,
+        "graphics": 0.85,
+        "proven": 0.4
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 1,
+        "boots": 1,
+        "menu": 1,
+        "world": 1,
+        "playable": 1,
+        "story": 0.1,
+        "render": 0.85,
+        "fps": 4,
+        "stability": 0.7
+      },
+      "verification": "self-reported",
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "createdAt": "2026-11-25T22:00:00Z",
+        "pushedAt": "2026-11-25T22:00:00Z",
+        "archived": false,
+        "missing": false,
+        "commits7d": 0
+      },
+      "assessedAt": "2026-11-25",
+      "assessedBy": "manual",
+      "claims": [],
+      "readmeSha": "0000000000000000000000000000000000000000000000000000000000000000",
+      "readmeChangedAt": "2026-11-25"
+    },
+    {
       "id": "belobug",
       "name": "Belobug",
       "repo": "Belobug/VIctory-Belobug-AMD",
