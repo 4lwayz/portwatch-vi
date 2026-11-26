@@ -2,6 +2,6 @@
   "show": true,
   "name": "4lwayz",
   "avatar": "assets/img/4lwayz-2.jpg",
-  "text": "**Experienced devs wanted: let's help DexNom make a real build.**\n\nWhile most builds chase FPS, DexNom is going after the hard part: native resolution, full ray tracing (already working, about 1 fps for now) and memory use that fits normal PCs.\n\nHe needs people who know GPU memory, CPU-GPU transfers, texture streaming, D3D12 or Rust. Testers and profilers are welcome too. DM him:\nhttps://x.com/DexNom_/status/2125947738420551767\nhttps://redd.it/1y628de",
-  "updated": "2026-11-26T14:28:30Z"
+  "text": "Check out Belo's new build, it performs just about as good as CGBJ at 22 fps free-roam and it's public! We're getting close...",
+  "updated": "2026-11-26T18:05:43Z"
 }
