@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T01:31:36.865Z",
+  "updated": "2026-11-26T03:58:05.011Z",
   "site": {
     "title": "PortWatch VI",
     "heroImage": "assets/img/hero-miami.jpg"
@@ -772,16 +772,16 @@
       ],
       "approach": "Compatibility layer",
       "target": "GTA VI only",
-      "summary": "Belobug's fork of VIctory for AMD Radeon, run on an all-AMD PC: Radeon RX 9070 XT 16 GB, Ryzen 7 9800X3D, 64 GB RAM, Windows 11. PortWatch has seen it running: GTA VI's open world renders lit, with textures, people, vehicles, vegetation, water and sky, and looks close to the retail game. It plays through missions at about 4 fps and rarely crashes.",
+      "summary": "Belobug's VIctory fork runs on AMD Radeon; PortWatch saw its near-console open world and mission gameplay at about 4 fps. The owner now reports ray tracing working on AMD; the README still describes the ray-tracing path as failing.",
       "highlights": [
         "Platform: AMD Radeon RX 9070 XT 16 GB, Ryzen 7 9800X3D, 64 GB RAM, Windows 11",
         "The open world looks close to the retail game: lit, with textures, people, vehicles, vegetation, water and sky",
-        "Plays through missions and rarely crashes",
-        "Built on VIctory's main and upstream pull requests, not on victory-fork; GPL-3.0"
+        "Owner reports ray-traced lighting now working on AMD",
+        "Plays through missions and rarely crashes; built on VIctory's main and upstream pull requests"
       ],
       "blockers": [
         "About 4 fps; its README reports 5-7 fps (less while driving) and calls that \"not playable yet\"",
-        "Moving vehicles lose or stretch parts, distant trees aren't drawn, and a flat constant stands in for ray-traced light in the shade",
+        "Ray tracing is reported working on AMD; the README says enabling its ray-tracing path still ends in device removal",
         "Needs about 22 GB of RAM and more than 16 GB of video memory; tested on one AMD PC only, nothing on NVIDIA or Intel yet"
       ],
       "provenOn": null,
@@ -807,7 +807,7 @@
         "missing": false,
         "commits7d": 100
       },
-      "assessedAt": "2026-11-25",
+      "assessedAt": "2026-11-26",
       "assessedBy": "manual",
       "claims": [],
       "readmeSha": "82c3bd370e2c12dcc8f0582ea80535348dd6a5a7c5fdeda09de348437f1a9af7",
@@ -1049,10 +1049,10 @@
       "gpu": [
         "AMD"
       ],
-      "summary": "A private build shown on NotNozy's \"GTA6 Modding Stream\" on Rumble. It looks about the same as AvatarManz's build, the leader on our board: as far into the story as the leading builds, with a picture close to the console. It runs on an AMD card. Code not public, and what it builds on isn't known.",
+      "summary": "A private build shown on NotNozy's \"GTA6 Modding Stream\" on Rumble. It looks about the same as AvatarManz's build; the owner rates its story progress at halfway. It runs on an AMD card. Code not public, and what it builds on isn't known.",
       "highlights": [
         "Looks about the same as AvatarManz's build, the leader on our board",
-        "As far into the story as the leading builds, with a picture close to the console",
+        "Owner rates story progress at half, with a picture close to the console",
         "Runs on an AMD card"
       ],
       "blockers": [
@@ -1066,14 +1066,14 @@
         "menu": 1,
         "world": 1,
         "playable": 1,
-        "story": 0.5,
+        "story": 0.6,
         "render": 0.76,
         "fps": 16,
         "stability": 0.9
       },
       "verification": "self-reported",
       "stats": {},
-      "assessedAt": "2026-11-25",
+      "assessedAt": "2026-11-26",
       "assessedBy": "manual",
       "claims": []
     },
@@ -1094,10 +1094,10 @@
         "AMD",
         "NVIDIA"
       ],
-      "summary": "A private group's build on JoshuuDev's victory-amd fork of VIctory, verified by PortWatch. It runs GTA VI with ray-traced lighting at about 3-5 fps, almost never crashes, and gets as far into the story as the leading public builds. The in-game phone renders really well, and the map menu runs at a higher frame rate. It's built mostly for AMD and also works on NVIDIA, at a lower frame rate. Code not public.",
+      "summary": "A private group's build on JoshuuDev's victory-amd fork of VIctory, verified by PortWatch. It runs GTA VI with ray-traced lighting at about 3-5 fps, almost never crashes, and the owner rates its story progress at halfway. The in-game phone renders really well, and the map menu runs at a higher frame rate. It's built mostly for AMD and also works on NVIDIA, at a lower frame rate. Code not public.",
       "highlights": [
         "Ray-traced lighting at about 3-5 fps, verified by PortWatch",
-        "Almost never crashes, and gets as far into the story as the leading public builds",
+        "Almost never crashes; owner rates story progress at half",
         "The in-game phone renders really well; the map menu runs at a higher frame rate",
         "Runs mostly on AMD; also works on NVIDIA at a lower frame rate"
       ],
@@ -1113,14 +1113,14 @@
         "menu": 1,
         "world": 1,
         "playable": 1,
-        "story": 0.5,
+        "story": 0.6,
         "render": 0.85,
         "fps": 4,
         "stability": 0.8
       },
       "verification": "portwatch",
       "stats": {},
-      "assessedAt": "2026-11-25",
+      "assessedAt": "2026-11-26",
       "assessedBy": "manual",
       "claims": []
     },
@@ -1141,10 +1141,10 @@
       "gpu": [
         "NVIDIA"
       ],
-      "summary": "A build shown on darkworldhm's Rumble stream on 25 Nov, running GTA VI's free roam at about 12-15 fps, swinging between 5 and 24: the highest frame rate on our board. It's as far into the story as the leading builds and hasn't crashed so far. The picture looks alright, with some texture or ray-tracing glitches. Reportedly on an NVIDIA RTX 50-series card. It's built on VIctory, but which fork isn't known. Code not public.",
+      "summary": "A build shown on darkworldhm's Rumble stream on 25 Nov, running GTA VI's free roam at about 12-15 fps, swinging between 5 and 24: the highest frame rate on our board. The owner rates its story progress at halfway, and it hasn't crashed so far. The picture looks alright, with some texture or ray-tracing glitches. Reportedly on an NVIDIA RTX 50-series card. It's built on VIctory, but which fork isn't known. Code not public.",
       "highlights": [
         "About 12-15 fps in free roam, up to 24: the highest frame rate on our board",
-        "As far into the story as the leading builds",
+        "Owner rates story progress at half",
         "No crashes seen so far"
       ],
       "blockers": [
@@ -1159,14 +1159,14 @@
         "menu": 1,
         "world": 1,
         "playable": 1,
-        "story": 0.5,
+        "story": 0.6,
         "render": 0.7,
         "fps": 15,
         "stability": 0.7
       },
       "verification": "self-reported",
       "stats": {},
-      "assessedAt": "2026-11-25",
+      "assessedAt": "2026-11-26",
       "assessedBy": "manual",
       "claims": []
     },
@@ -1181,15 +1181,15 @@
       "evidence": "Confirmed by PortWatch",
       "byline": "Working in private · built on hyphennn's victory-fork",
       "tier": "tracked",
-      "summary": "A private build on hyphennn's victory-fork of VIctory. PortWatch confirmed a player moving around Lucia's prologue at about 3 fps, the same scene as the other builds, but with rendering ahead: it looks almost like the retail game. Code not public.",
+      "summary": "A private build on hyphennn's victory-fork of VIctory. PortWatch confirmed a player moving around Lucia's prologue at about 3 fps; the owner now rates its story progress at halfway. Its rendering is ahead of the other builds, but code is not public.",
       "highlights": [
         "Looks almost like the retail game in Lucia's prologue",
         "PortWatch confirmed a player moving around, at about 3 fps",
-        "Rendering ahead of the other builds on the same code"
+        "Owner rates story progress at half"
       ],
       "blockers": [
         "Runs at about 3 fps",
-        "Not yet past the opening",
+        "PortWatch only confirmed the prologue; half-story progress is the owner's rating",
         "Code is private, so nobody outside can test or reproduce it"
       ],
       "provenOn": null,
@@ -1199,14 +1199,14 @@
         "menu": 1,
         "world": 1,
         "playable": 1,
-        "story": 0,
+        "story": 0.6,
         "render": 0.8,
         "fps": 3,
         "stability": "unknown"
       },
       "verification": "self-reported",
       "stats": {},
-      "assessedAt": "2026-11-24",
+      "assessedAt": "2026-11-26",
       "assessedBy": "manual",
       "claims": []
     },
@@ -1259,6 +1259,9 @@
       "id": "cgbj",
       "name": "CGBJ",
       "repo": null,
+      "gpu": [
+        "NVIDIA"
+      ],
       "basedOn": [
         "marvis",
         "xcl"
@@ -1269,15 +1272,15 @@
       "tier": "tracked",
       "approach": "Compatibility layer",
       "target": "GTA VI only",
-      "summary": "A private build based on VIctory, using some of XCL's work. PortWatch verified it gets in game: a player moves and talks to NPCs, very slowly. A video shows the opening in flat, unlit colours. Code not public.",
+      "summary": "Private VIctory/XCL build, PortWatch-verified. Owner rates story halfway, rendering 0.75 and stability 0.85. It averages 25 fps on NVIDIA with 8 GB RAM and 16 GB VRAM; code is private.",
       "highlights": [
-        "A player moves with a controller, talks to NPCs and opens the in-game menu",
-        "A video on X shows the opening scenes in flat colours: a car, a street, a prison yard",
-        "Built on VIctory's runtime, with some of XCL's work added"
+        "Owner ratings: half the story, rendering 0.75, stability 0.85",
+        "25 fps gameplay average, highest reported on the board (NVIDIA, 8 GB RAM, 16 GB VRAM)",
+        "Close to the console with minor glitches; code remains private"
       ],
       "blockers": [
-        "No lighting yet, and the screen was black while a player walked around",
-        "Runs very slowly",
+        "Minor visual glitches remain",
+        "Gameplay does not sustain 30 fps; 25 fps is the reported average",
         "Code is private, so nobody outside the group can test or reproduce it"
       ],
       "provenOn": null,
@@ -1287,14 +1290,14 @@
         "menu": 1,
         "world": 1,
         "playable": 1,
-        "story": 0,
-        "render": 0.25,
-        "fps": 4,
-        "stability": "unknown"
+        "story": 0.6,
+        "render": 0.75,
+        "fps": 25,
+        "stability": 0.85
       },
-      "verification": "self-reported",
+      "verification": "portwatch",
       "stats": {},
-      "assessedAt": "2026-11-24",
+      "assessedAt": "2026-11-26",
       "assessedBy": "manual",
       "claims": []
     },
@@ -1363,16 +1366,16 @@
       ],
       "approach": "Compatibility layer",
       "target": "GTA VI only",
-      "summary": "Marvis's Rust layer runs GTA VI's own code natively. In the world the intro cutscene now draws textured and lit, and the prologue is reached, at about 1 fps; its README says it isn't playable yet. Self-reported.",
+      "summary": "Marvis's Rust layer runs GTA VI natively. The owner reports controlled gameplay is now reachable, though the build remains unstable; the README still says it is not playable and reports about 1 fps in the world.",
       "highlights": [
         "README reports first-boot screens, intro video, start screen and saves working at 30 fps",
         "Intro cutscene drawn textured and lit, with hair, sky and depth of field",
-        "Loads the world in about a minute and reaches the prologue"
+        "Owner reports player-controlled gameplay is now reachable, but remains unstable"
       ],
       "blockers": [
         "About 1 fps; ray-traced shadows and indirect light are missing",
         "Tested on one machine (AMD RX 6700 XT); not reproduced by others yet",
-        "Code published hours after the stream; not yet reviewed by PortWatch"
+        "README still says not playable; the new gameplay report has not yet been reproduced"
       ],
       "provenOn": null,
       "gta": {
@@ -1380,10 +1383,10 @@
         "boots": 1,
         "menu": 1,
         "world": 1,
-        "playable": 0,
+        "playable": 1,
         "story": 0,
         "render": 0,
-        "fps": 0,
+        "fps": 1,
         "stability": "unknown"
       },
       "verification": "self-reported",
@@ -1398,7 +1401,7 @@
         "missing": false,
         "mentions7d": 1
       },
-      "assessedAt": "2026-11-24",
+      "assessedAt": "2026-11-26",
       "assessedBy": "manual",
       "claims": [],
       "readmeSha": "7aa3bf9a409402b32f6d645b36cf90277c790b174f7264d210f018959dc41402",
@@ -7379,6 +7382,51 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-26",
+      "kind": "up",
+      "text": "CGBJ's owner raises rendering to 0.75 (close to the console, minor glitches); its score rises from 83.6% to 86.7%, retaking the overall headline lead."
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "up",
+      "text": "NotNozy's owner rating moves story progress to half; score rises from 82.6% to 84.3%."
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "up",
+      "text": "darkworldhm's owner rating moves story progress to half; score rises from 79.5% to 81.3%."
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "up",
+      "text": "Doomsday's owner rating moves story progress to half; score rises from 78.7% to 80.5%."
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "up",
+      "text": "suri's owner rating moves story progress to half; score rises from 61.0% to 71.5%."
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "up",
+      "text": "CGBJ is now the overall score leader at 83.6% after its owner-rated rendering rose to 0.5 and stability to 0.85; it remains a private, unranked build in the public race."
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "up",
+      "text": "CGBJ reaches half-story progress (owner rating); its score rises from 61.5% to 72.0%, with visuals still weak at render 0.25."
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "up",
+      "text": "CGBJ's PortWatch-verified gameplay average is 25 fps, the highest reported on the board; its score rises from 54.5% to 61.5%, with rendering still weak at 0.25."
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "up",
+      "text": "Owner reports VIctory now reaches player-controlled gameplay, advancing to Playable; CGBJ reports near-stable 30 fps in interiors and cutscenes with full ray tracing on NVIDIA, and Belobug reports ray tracing working on AMD."
+    },
     {
       "date": "2026-11-25",
       "kind": "new",
