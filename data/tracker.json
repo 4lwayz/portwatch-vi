@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T05:32:10.991Z",
+  "updated": "2026-11-26T05:34:51.258Z",
   "site": {
     "title": "PortWatch VI",
     "heroImage": "assets/img/hero-miami.jpg"
@@ -1267,6 +1267,10 @@
         "xcl"
       ],
       "evidence": "Checked by PortWatch with the group",
+      "proof": {
+        "label": "Watch video",
+        "url": "https://v.redd.it/137k5pow5w3i1"
+      },
       "link": "news/2026-11-24-cgbj-in-game.html",
       "byline": "Private code · based on VIctory and XCL",
       "tier": "tracked",
