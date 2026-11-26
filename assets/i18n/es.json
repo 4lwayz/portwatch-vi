@@ -104,7 +104,11 @@
   "race.sortActive": "Actividad reciente",
   "race.overall": "#{n} en general",
   "race.overallTitle": "Posición entre todos los proyectos",
-  "race.empty": "Ningún proyecto coincide con este filtro todavía.",
+  "race.search": "Buscar proyecto público",
+  "race.searchPlaceholder": "Nombre del proyecto o repositorio",
+  "race.results": "Mostrando {shown} de {total} proyectos públicos",
+  "race.reset": "Borrar búsqueda y filtros",
+  "race.empty": "No se encontraron proyectos públicos. Prueba otro nombre o borra los filtros.",
 
   "ms.groundwork.label": "Preparación",
   "ms.groundwork.desc": "Loader, bibliotecas del sistema, traducción de shaders y capa gráfica, construidos antes de que exista el ejecutable.",

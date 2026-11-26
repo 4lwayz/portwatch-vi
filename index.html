@@ -30,10 +30,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/img/hero-miami.jpg" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/home.css">
   <script src="assets/js/theme.js"></script>
   <script type="module" src="assets/js/app.js"></script>
 </head>
-<body>
+<body class="home">
   <a class="skip" href="#race" data-i18n="skip">Skip to the leaderboard</a>
 
   <header class="nav" id="nav">
@@ -47,6 +48,7 @@
         <span>PortWatch<b>VI</b></span>
       </a>
       <nav class="nav-links" aria-label="Sections" data-i18n-attr="aria-label:nav.sections">
+        <a href="#changes" data-i18n="changes.title">What changed</a>
         <a href="#race" data-i18n="nav.race">Race</a>
         <a href="#news" data-i18n="nav.news">News</a>
         <a href="#watchlist" data-i18n="nav.watchlist">Watchlist</a>
@@ -251,6 +253,12 @@
           <h2 id="race-title" data-i18n="race.title">The race</h2>
           <p class="sub" data-i18n="race.sub">The efforts with public code, ranked by how close each is to running the game. Scores come from each project's public README, commits and issues. Self-reported claims are labelled. Private builds are listed below the race, without a rank.</p>
         </div>
+      </div>
+      <div class="race-toolbar">
+        <label class="race-search" for="race-search">
+          <span data-i18n="race.search">Find a public project</span>
+          <input id="race-search" type="search" autocomplete="off" spellcheck="false" placeholder="Project or repository name" data-i18n-attr="placeholder:race.searchPlaceholder" aria-controls="race-list">
+        </label>
         <div class="controls">
           <div class="chips" id="race-chips" role="group" aria-label="Filter efforts" data-i18n-attr="aria-label:race.filterLabel">
             <button class="chip is-on" data-filter="all" data-i18n="race.all">All</button>
@@ -263,6 +271,10 @@
             </select>
           </label>
         </div>
+      </div>
+      <div class="race-results">
+        <p id="race-count" role="status" aria-live="polite" aria-atomic="true"></p>
+        <button id="race-reset" type="button" hidden data-i18n="race.reset">Clear search and filters</button>
       </div>
       <ol class="race" id="race-list"></ol>
       <div class="private-builds" id="private-builds" hidden>
