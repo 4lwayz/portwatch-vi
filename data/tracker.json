@@ -3077,6 +3077,59 @@
       "claims": [],
       "readmeSha": "346fcf9a17a21b44b89f69d23d1b6a2b4d277e488d529e933b0b32a76dd57f44",
       "readmeChangedAt": "2026-11-25"
+    },
+    {
+      "id": "openera",
+      "name": "OpenEra",
+      "repo": "PlutonusDev/OpenEra",
+      "branch": "main",
+      "tier": "watchlist",
+      "approach": "Compatibility layer",
+      "target": "Any Xbox Series game",
+      "summary": "GPL-3.0 C++20 layer that runs a title's own x86-64 code natively, with its own PE loader and reimplemented console modules. Early: its loader and module shims are in progress, and no game runs yet. Self-reported.",
+      "highlights": [
+        "PE/COFF reader and XVD/XVC container parser finished",
+        "Loader links title DLLs, shims and host DLLs, with unwind data registered",
+        "Clean-room policy; ships no Microsoft binaries, keys or SDK headers"
+      ],
+      "blockers": [
+        "No commercial title runs yet; booting to a menu is its first milestone",
+        "Graphics translation and the RDNA2-to-DXIL shader recompiler are still planned",
+        "Not GTA VI-specific; Xbox One titles come later"
+      ],
+      "groundwork": {
+        "loader": 0.2,
+        "shaders": 0,
+        "graphics": 0,
+        "proven": 0
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 0,
+        "boots": 0,
+        "menu": 0,
+        "world": 0,
+        "playable": 0,
+        "story": 0,
+        "render": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "verification": "self-reported",
+      "stats": {
+        "stars": 92,
+        "forks": 3,
+        "openIssues": 29,
+        "createdAt": "2026-11-24T12:49:30Z",
+        "pushedAt": "2026-11-25T17:32:43Z",
+        "commits7d": 48,
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-26",
+      "assessedBy": "manual",
+      "claims": [],
+      "readmeSha": "13493f903f07d967d433c589c2c5d094dec39b07697b71fa362ea12c58b1636e"
     }
   ],
   "tools": [
@@ -6066,13 +6119,6 @@
       "pushedAt": "2026-11-24T07:27:11Z"
     },
     {
-      "repo": "PlutonusDev/OpenEra",
-      "reason": "thin (substance 19)",
-      "auto": true,
-      "seenAt": "2026-11-24",
-      "pushedAt": "2026-11-24T12:51:17Z"
-    },
-    {
       "repo": "aldr888/porto-sol",
       "reason": "off-topic (original fan game, not a port)",
       "auto": true,
@@ -7088,6 +7134,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-26",
+      "kind": "new",
+      "text": "OpenEra (PlutonusDev/OpenEra) joins the watchlist: an early Xbox Series compatibility layer whose loader is still in progress. Self-reported."
+    },
     {
       "date": "2026-11-25",
       "kind": "new",
