@@ -2,6 +2,7 @@
   "show": true,
   "name": "4lwayz",
   "avatar": "assets/img/4lwayz-2.jpg",
-  "text": "Check out Belo's new build, it performs just about as good as CGBJ at 22 fps free-roam and it's public! We're getting close...",
-  "updated": "2026-11-26T18:05:43Z"
+  "text": "**Devs: please put a performance overlay on your in-game clips.**\n\nLike the one on Belo's build below: FPS and frame times, resolution, GPU and CPU with their load, and how much VRAM and RAM the game uses.\n\nIt keeps the race more transparent, everyone sees what their build really runs at, at what resolution and on what PC.",
+  "gif": "assets/img/pinned/2026-11-26-belo-overlay.png",
+  "updated": "2026-11-26T18:17:40Z"
 }
