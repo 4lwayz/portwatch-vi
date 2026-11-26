@@ -2,7 +2,7 @@ import { MILESTONES, GROUNDWORK, STABILITY, TRACKS, scoreEffort, overall, ladder
 import { getLiveViewers, trackView } from './backend.js';
 import { coverHtml, articlePath, newsTime, byNewest } from './news-shared.js';
 import { fillPinned } from './pinned.js';
-import { initI18n, t, tr, locale } from './i18n.js';
+import { initI18n, t, tr, locale, onLangChange } from './i18n.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -66,7 +66,25 @@ const ICON = {
   gh: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0a8 8 0 0 0-2.5 15.6c.4 0 .5-.2.5-.4v-1.5c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.3 1.9.9 2.4.7 0-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8a7.5 7.5 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.8-3.6 4 .3.3.6.8.6 1.5v2.2c0 .2.1.5.6.4A8 8 0 0 0 8 0Z"/></svg>',
 };
 
-const state = { data: null, filter: 'all', sort: 'score' };
+const state = { data: null, pinned: null, liveCount: null, filter: 'all', sort: 'score' };
+
+function renderAll(animate = true) {
+  const data = state.data;
+  if (!data) return;
+  renderMeta(data);
+  startCountdown(data.exe || {});
+  if (state.pinned) fillPinned($('#pinned'), state.pinned, { ago, when: (iso) => new Date(iso).toLocaleString(locale()) });
+  renderLivePill();
+  renderOverall(data, animate);
+  renderChanges(data.changes || []);
+  renderFilterChips();
+  renderRace(!animate);
+  renderNews(data.news || []);
+  renderWatchlist(data);
+  renderTools(data.tools || []);
+  renderMethod();
+  observeBars(!animate);
+}
 
 async function main() {
   // The pinned message is optional: it loads alongside and never holds up or breaks the page.
@@ -81,21 +99,15 @@ async function main() {
   state.data = data;
   for (const e of data.efforts) Object.assign(e, { _s: scoreEffort(e) });
 
-  renderMeta(data);
   renderHeroArt(data.site || {});
-  startCountdown(data.exe || {});
-  pinned.then((p) => fillPinned($('#pinned'), p, { ago, when: (iso) => new Date(iso).toLocaleString(locale()) }));
-  renderOverall(data);
-  renderChanges(data.changes || []);
-  renderFilterChips();
-  renderRace();
-  renderNews(data.news || []);
-  renderWatchlist(data);
-  renderTools(data.tools || []);
-  renderMethod();
+  renderAll(true);
+  pinned.then((p) => {
+    state.pinned = p;
+    fillPinned($('#pinned'), p, { ago, when: (iso) => new Date(iso).toLocaleString(locale()) });
+  });
   bindControls();
   bindFolds();
-  observeBars();
+  onLangChange(() => renderAll(false));
   trackView('/').then(watchViewers); // afterwards, so this visitor is in the count
 }
 
@@ -107,7 +119,6 @@ function renderMeta(data) {
   $('#scout-status').textContent = sc.lastRun
     ? `${t('footer.scoutRun', { ago: ago(sc.lastRun) })}${sc.lastSummary ? `: ${sc.lastSummary}` : ''}`
     : t('inbox.every');
-  window.addEventListener('scroll', () => $('#nav').classList.toggle('is-scrolled', window.scrollY > 8), { passive: true });
 }
 
 function renderHeroArt(site) {
@@ -125,15 +136,19 @@ function renderHeroArt(site) {
    Read on load, then every 5 minutes from visible tabs only: the free backend plan has tight egress, log and
    realtime-connection limits, so don't poll faster or hold a connection open. */
 const LIVE_REFRESH_MS = 5 * 60_000;
-function watchViewers() {
+function renderLivePill() {
   const pill = $('#watching');
+  const n = state.liveCount;
+  pill.hidden = n === null;
+  if (n !== null) pill.textContent = t('hero.watching', { n: n.toLocaleString(locale()) });
+}
+function watchViewers() {
   let last = 0;
   const refresh = async () => {
     if (document.hidden) return;
     last = Date.now();
-    const n = await getLiveViewers();
-    pill.hidden = n === null;
-    if (n !== null) pill.textContent = t('hero.watching', { n: n.toLocaleString(locale()) });
+    state.liveCount = await getLiveViewers();
+    renderLivePill();
   };
   refresh();
   setInterval(refresh, LIVE_REFRESH_MS);
@@ -141,7 +156,9 @@ function watchViewers() {
 }
 
 /* ---------- Countdown ---------- */
+let countdownTimer;
 function startCountdown(exe) {
+  clearInterval(countdownTimer);
   const box = $('#countdown');
   const by = exe.by ? t('cd.dropBy', { by: exe.by }) : t('cd.drop');
   const released = exe.status === 'released' && exe.releasedAt;
@@ -187,15 +204,17 @@ function startCountdown(exe) {
     $('#cd-status').textContent = status;
   };
   tick();
-  setInterval(tick, 1000);
+  countdownTimer = setInterval(tick, 1000);
 }
 
 /* ---------- Overall ---------- */
-function renderOverall(data) {
+let drawOverall = null;
+function renderOverall(data, animate = true) {
   const all = data.efforts.filter((e) => !e.nuked); // nuked efforts aren't shown anywhere
   const ov = overall(all);
   const leader = ov.leader?.effort;
-  animateNumber($('#ov-score'), ov.score);
+  if (animate) animateNumber($('#ov-score'), ov.score);
+  else $('#ov-score').textContent = ov.score.toFixed(ov.score % 1 ? 1 : 0);
   $('#ov-leader').innerHTML = leader
     ? `${esc(t('ov.leader'))} <a href="#effort-${esc(leader.id)}">${esc(leader.name)}</a> ${hasRepo(leader) ? `${esc(t('ov.byOwner', { owner: owner(leader.repo) }))} `
       : leader.basedOn?.length ? `<span class="ov-private"><span class="pb-lock" aria-hidden="true"></span>${t('ov.privateOn', { names: leader.basedOn.map((id) => `<a href="#effort-${esc(id)}">${esc(effortName(id))}</a>`).join(', ') })}</span> ` : ''}${esc(ov.leader.reached === 'groundwork' ? t('ov.stillGroundwork') : t('ov.reached', { label: msLabel(ov.leader.reached) }))}`
@@ -213,20 +232,20 @@ function renderOverall(data) {
   // Ticks + labels
   const furthestIdx = MILESTONES.findIndex((m) => m.key === ov.furthest.key);
   $('#mega-ticks').innerHTML = MILESTONES.slice(1, -1).map((m) => `<i style="left:${m.at}%"></i>`).join('');
-  $('#mega-labels').innerHTML = MILESTONES.map((m, i) => {
+  const scaleHtml = `<span class="mega-scale" aria-hidden="true">${MILESTONES.map((m, i) =>
+    `<span class="${i <= furthestIdx ? 'is-reached' : ''}" style="left:${m.at}%">${m.at}%</span>`).join('')}</span>`;
+  $('#mega-labels').innerHTML = scaleHtml + MILESTONES.map((m, i) => {
     const cls = i <= furthestIdx ? 'is-reached' : i === furthestIdx + 1 ? 'is-next' : '';
-    return `<div class="mega-label ${cls}" style="left:${m.at}%" data-tip="${esc(msDesc(m))}" data-tip-title="${esc(msLabel(m.key))}"><b>${m.at}%</b><span class="dot"></span>${esc(msLabel(m.key))}</div>`;
+    return `<div class="mega-label ${cls}" style="left:${m.at}%" data-tip="${esc(msDesc(m))}" data-tip-title="${esc(msLabel(m.key))}"><b>${m.at}%</b><span class="dot"></span><span class="ml-name">${esc(msLabel(m.key))}</span></div>`;
   }).join('') +
     // Between Playable and Complete there's no single next step: the four tracks fill it side by side.
-    `<p class="mega-zone" data-tip="${esc(t('method.tracksSub'))}" data-tip-title="${esc(t('method.tracksTitle'))}">${TRACKS.map((tk) => esc(trackLabel(tk))).join(' · ')}</p>`;
+    `<p class="mega-zone" data-tip="${esc(t('method.tracksSub'))}" data-tip-title="${esc(t('method.tracksTitle'))}"><span class="mz-text">${TRACKS.map((tk) => esc(trackLabel(tk))).join(' · ')}</span><b>50–100%</b></p>`;
   $('#mega-fill').dataset.width = ov.score;
 
   const top = ov.ranked.slice(0, 6);
-  const draw = () => { drawMarkers(top, leader); layoutMegaLabels(); };
-  draw();
-  document.fonts?.ready.then(draw); // Inter swaps in after first paint and changes label widths
-  let raf;
-  window.addEventListener('resize', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); });
+  drawOverall = () => { drawMarkers(top, leader); layoutMegaLabels(); };
+  drawOverall();
+  if (animate) document.fonts?.ready.then(() => drawOverall?.()); // Inter swaps in after first paint and changes label widths
 
   renderHistory(data.history || []);
 }
@@ -238,7 +257,7 @@ function drawMarkers(ranked, leader) {
   const W = box.clientWidth;
   const H = box.clientHeight;
   if (!W) return;
-  const GAP = 42;
+  const GAP = Math.min(42, Math.max(30, (W - 36) / Math.max(1, ranked.length - 1)));
   const items = ranked.map((r) => ({ r, x: (r.score / 100) * W })).sort((a, b) => a.x - b.x);
   items.forEach((it, i) => { it.a = i ? Math.max(it.x, items[i - 1].a + GAP) : it.x; });
   const shift = items.reduce((s, it) => s + (it.x - it.a), 0) / Math.max(1, items.length);
@@ -273,34 +292,44 @@ function drawMarkers(ranked, leader) {
                 ${priv ? `<span class="mk-face">${face}<span class="bp-lock"><span class="pb-lock" aria-hidden="true"></span></span></span>` : face}
               </a>`;
     }).join('');
+  // Keep marker tooltips inside the progress card on narrow screens.
+  const boxRect = box.getBoundingClientRect();
+  for (const label of box.querySelectorAll('.mk-name')) {
+    const r = label.getBoundingClientRect();
+    if (r.right > boxRect.right) {
+      label.style.transform = `translateX(${Math.round(boxRect.right - r.right)}px)`;
+    } else if (r.left < boxRect.left) {
+      label.style.transform = `translateX(${Math.round(boxRect.left - r.left)}px)`;
+    }
+  }
 }
 
-// Milestone labels sit under their ticks, 10% apart up to Playable. When neighbours would touch
-// (phones, longer translations), they're dealt into the fewest rows that keep every row clear:
-// 1-2-1-2, then 1-2-3-1-2-3 and so on, so each row still reads left to right.
+// Milestone labels sit under their ticks on one row when they fit; on phones or narrow screens
+// where neighbours would collide, switch to a tick-aligned % ruler plus an ordered milestone grid.
 function layoutMegaLabels() {
   const box = $('#mega-labels');
   const labels = [...box.querySelectorAll('.mega-label')];
   if (!labels.length || !box.clientWidth) return;
+  box.classList.remove('is-grid');
   labels.forEach((l) => { l.style.top = '0px'; });
   const span = (el) => { const r = el.getBoundingClientRect(); return [r.left, r.right]; };
   const spans = labels.map(span);
-  // The track names between Playable and Complete share the first row (hidden on phones).
-  // Their CSS already stops short of Complete, so only the steps up to Playable are checked against them.
   const zone = box.querySelector('.mega-zone');
   const zoneSpan = zone && zone.getClientRects().length ? span(zone) : null;
   const last = labels.length - 1;
   const GAP = 10;
   const clear = (a, b) => a[1] + GAP <= b[0] || b[1] + GAP <= a[0];
-  const fits = (rows) => spans.every((a, i) =>
-    (i % rows || i === last || !zoneSpan || clear(a, zoneSpan)) &&
-    spans.every((b, j) => j <= i || (j - i) % rows || clear(a, b)));
-  let rows = 1;
-  while (rows < labels.length && !fits(rows)) rows++;
+  const fitsOneRow = spans.every((a, i) =>
+    (i === last || !zoneSpan || clear(a, zoneSpan)) &&
+    spans.every((b, j) => j <= i || clear(a, b)));
+  if (!fitsOneRow) {
+    box.classList.add('is-grid');
+    labels.forEach((l) => { l.style.top = ''; });
+    box.style.height = '';
+    return;
+  }
   const h = Math.max(...labels.map((l) => l.offsetHeight));
-  const step = h + 6;
-  labels.forEach((l, i) => { l.style.top = `${(i % rows) * step}px`; });
-  box.style.height = `${(rows - 1) * step + h + 14}px`;
+  box.style.height = `${h + 14}px`;
 }
 
 function renderHistory(history) {
@@ -322,12 +351,78 @@ function renderHistory(history) {
 }
 
 /* ---------- Changes ---------- */
+let changesAc;
 function renderChanges(changes) {
+  changesAc?.abort();
+  changesAc = new AbortController();
   const list = $('#changes-list');
   const items = [...changes].reverse().slice(0, 12);
   if (!items.length) { $('#changes').hidden = true; return; }
   const cls = { up: 'ck-up', down: 'ck-down', flag: 'ck-flag', new: 'ck-new', removed: 'ck-down', claim: 'ck-flag' };
   list.innerHTML = items.map((c) => `<li><span class="ck ${cls[c.kind] || ''}"></span><time>${esc(new Date(`${c.date}T12:00:00Z`).toLocaleDateString(locale(), { day: 'numeric', month: 'short' }))}</time><span>${esc(c.text)}</span></li>`).join('');
+
+  const card = list.closest('.changes-card');
+  card?.querySelector('.changes-nav')?.remove();
+  card?.querySelector('.changes-dots')?.remove();
+  if (items.length < 2 || !card) return;
+
+  const nav = document.createElement('div');
+  nav.className = 'changes-nav';
+  nav.innerHTML = `<button type="button" data-dir="-1" aria-label="Previous">‹</button><span>1 / ${items.length}</span><button type="button" data-dir="1" aria-label="Next">›</button>`;
+  list.before(nav);
+
+  const MAX_DOTS = 5;
+  const dotCount = Math.min(items.length, MAX_DOTS);
+  const dots = document.createElement('div');
+  dots.className = 'changes-dots';
+  dots.setAttribute('aria-hidden', 'true');
+  dots.innerHTML = Array.from({ length: dotCount }, () => '<button type="button" tabindex="-1"></button>').join('');
+  card.append(dots);
+
+  const cards = [...list.children];
+  const btns = [...dots.children];
+  const [prevBtn, counter, nextBtn] = nav.children;
+  let active = 0;
+  const goTo = (idx) => {
+    const i = Math.max(0, Math.min(cards.length - 1, idx));
+    const pad = parseFloat(getComputedStyle(list).paddingLeft) || 0;
+    const target = list.scrollLeft + (cards[i].getBoundingClientRect().left - list.getBoundingClientRect().left - pad);
+    list.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+  };
+  const syncDot = () => {
+    const pad = parseFloat(getComputedStyle(list).paddingLeft) || 0;
+    const atEnd = list.scrollLeft + list.clientWidth >= list.scrollWidth - 2;
+    active = atEnd ? cards.length - 1 : 0;
+    if (!atEnd) {
+      const origin = list.getBoundingClientRect().left + pad;
+      let best = Infinity;
+      cards.forEach((li, i) => {
+        const d = Math.abs(li.getBoundingClientRect().left - origin);
+        if (d < best) { best = d; active = i; }
+      });
+    }
+    const start = cards.length <= dotCount ? 0 : Math.max(0, Math.min(cards.length - dotCount, active - Math.floor(dotCount / 2)));
+    btns.forEach((b, k) => {
+      const idx = start + k;
+      b.dataset.idx = String(idx);
+      b.classList.toggle('is-on', idx === active);
+      b.classList.toggle('is-edge', (k === 0 && start > 0) || (k === dotCount - 1 && start + dotCount < cards.length));
+    });
+    counter.textContent = `${active + 1} / ${cards.length}`;
+    prevBtn.disabled = active === 0;
+    nextBtn.disabled = active === cards.length - 1;
+  };
+  syncDot();
+  let raf;
+  list.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(syncDot); }, { passive: true, signal: changesAc.signal });
+  dots.addEventListener('click', (ev) => {
+    const b = ev.target.closest('button');
+    if (b) goTo(Number(b.dataset.idx));
+  });
+  nav.addEventListener('click', (ev) => {
+    const b = ev.target.closest('button[data-dir]');
+    if (b) goTo(active + Number(b.dataset.dir));
+  });
 }
 
 /* ---------- Race ---------- */
@@ -346,12 +441,16 @@ const gpuTags = (e) => (Array.isArray(e.gpu) ? e.gpu : []).filter((v) => GPU_CLA
 function renderFilterChips() {
   const inRace = state.data.efforts.filter((e) => e.tier === 'tracked' && !e.nuked && !isPrivateBuild(e));
   const brands = Object.keys(GPU_CLASS).filter((v) => inRace.some((e) => Array.isArray(e.gpu) && e.gpu.includes(v)));
-  $('#race-chips').innerHTML = `<button class="chip is-on" data-filter="all">${esc(t('race.all'))}</button>` +
-    brands.map((v) => `<button class="chip" data-filter="${esc(v)}" title="${esc(gpuTitle(v))}">${esc(v)}</button>`).join('');
+  if (state.filter !== 'all' && !brands.includes(state.filter)) state.filter = 'all';
+  $('#race-chips').innerHTML = `<button class="chip${state.filter === 'all' ? ' is-on' : ''}" data-filter="all">${esc(t('race.all'))}</button>` +
+    brands.map((v) => `<button class="chip${state.filter === v ? ' is-on' : ''}" data-filter="${esc(v)}" title="${esc(gpuTitle(v))}">${esc(v)}</button>`).join('');
 }
 
-function renderRace() {
+function renderRace(preserveOpen = false) {
   const { data, filter, sort } = state;
+  const openIds = preserveOpen
+    ? new Set($$('#race-list .effort').filter((li) => !li.querySelector('.e-details')?.hidden).map((li) => li.id))
+    : null;
   // Only public code is ranked; private builds get their own unranked list below the race.
   // Nuked efforts (taken offline) aren't shown (owner's call, 2026-11-25). They stay in tracker.json,
   // where their repo names keep the scout from listing copies of them as new candidates.
@@ -367,11 +466,13 @@ function renderRace() {
   const ranked = [...data.efforts.filter((e) => e.tier === 'tracked' && !e.nuked && !isPrivateBuild(e))].sort(byScore);
   const rankedInFilter = list.filter((e) => !e.nuked).sort(byScore);
   const filtered = filter !== 'all';
+  const compact = window.matchMedia('(max-width: 760px)').matches;
   list.sort(sorters[sort] || byScore);
   $('#race-list').innerHTML = list.map((e, i) => {
     const overall = e.nuked ? null : ranked.indexOf(e) + 1;
     const rank = e.nuked ? null : filtered ? rankedInFilter.indexOf(e) + 1 : overall;
-    return effortCard(e, rank, sort === 'score' && !e.nuked ? i < 3 : false, filtered ? overall : null);
+    const open = openIds ? openIds.has(`effort-${e.id}`) : !compact && sort === 'score' && !e.nuked ? i < 3 : false;
+    return effortCard(e, rank, open, filtered ? overall : null);
   }).join('') ||
     `<li class="empty">${esc(t('race.empty'))}</li>`;
   renderPrivateBuilds();
@@ -559,6 +660,9 @@ function effortCard(e, rank, open, overallRank = null) {
       </div>
       ${claims}
       <div class="e-details" ${open ? '' : 'hidden'}>
+        <div class="e-details-bar">
+          <button class="toggle toggle-top" data-toggle aria-expanded="${open}">${esc(open ? t('effort.hideDetails') : t('effort.details'))}</button>
+        </div>
         ${e.groundwork ? `<div class="gw">
           <h4>${esc(t('effort.gwBreakdown'))}</h4>
           ${gwRows}
@@ -670,6 +774,7 @@ function renderNews(news) {
       </div>
     </a>`;
   $('#news-list').innerHTML = card(items[0], false) + `<div class="news-list">${items.slice(1, 7).map((n) => card(n, true)).join('')}</div>`;
+  $('#news .headlines')?.remove();
   const heads = (state.data.headlines || []).slice(0, 10);
   if (heads.length) {
     $('#news-list').insertAdjacentHTML('afterend', `
@@ -678,13 +783,43 @@ function renderNews(news) {
         <ul>${heads.map((h) => `<li><a href="${esc(safeHttp(h.link))}" target="_blank" rel="noopener noreferrer">${esc(h.title)}</a><span>${esc(h.outlet)} · ${esc(ago(h.date))}</span></li>`).join('')}</ul>
       </div>`);
   }
+}
+
+/* ---------- Safety ---------- */
+/* ---------- Method ---------- */
+function renderMethod() {
+  const gwShare = MILESTONES[1].at;
+  const playAt = MILESTONES.find((m) => m.key === 'playable').at;
+  const span = MILESTONES[MILESTONES.length - 1].at - playAt;
+  $('#ladder-explain').innerHTML = MILESTONES.filter((m) => m.key !== 'complete').map((m, i) => `
+    <li><span class="le-at">${i === 0 ? `0–${gwShare}` : m.at}</span><div><h4>${esc(msLabel(m.key))}</h4><p>${esc(msDesc(m))}</p></div></li>`).join('') +
+    `<li class="le-tracks"><span class="le-at">${playAt}–100</span><div><h4>${esc(t('method.tracksTitle'))}</h4><p>${esc(t('method.tracksSub'))}</p>
+      <ul>${TRACKS.map((tk) => `<li><b>${esc(trackLabel(tk))}<span>${esc(t('method.pts', { n: Math.round(tk.weight * span * 10) / 10 }))}</span></b>${esc(trackDesc(tk))}${
+        tk.steps ? `<small>${tk.steps.map((s) => esc(stepLabel(tk.key, s))).join(' → ')}</small>` : ''}</li>`).join('')}</ul></div></li>`;
+  $('#gw-explain').innerHTML = GROUNDWORK.map((g) => `<li><b>${esc(gwLabel(g))}<span>${esc(t('method.pts', { n: Math.round(g.weight * gwShare * 10) / 10 }))}</span></b>${esc(gwDesc(g))}</li>`).join('');
+}
+
+/* ---------- Interaction ---------- */
+function bindControls() {
+  window.addEventListener('scroll', () => $('#nav').classList.toggle('is-scrolled', window.scrollY > 8), { passive: true });
+  let resizeRaf;
+  window.addEventListener('resize', () => { cancelAnimationFrame(resizeRaf); resizeRaf = requestAnimationFrame(() => drawOverall?.()); });
+
+  $('#race-chips').addEventListener('click', (ev) => {
+    const b = ev.target.closest('.chip[data-filter]');
+    if (!b) return;
+    $$('.chip[data-filter]').forEach((x) => x.classList.toggle('is-on', x === b));
+    state.filter = b.dataset.filter;
+    renderRace();
+  });
+  $('#sort').addEventListener('change', (ev) => { state.sort = ev.target.value; renderRace(); });
 
   const dlg = $('#reader');
   $('#news-list').addEventListener('click', (ev) => {
     const btn = ev.target.closest('[data-story]');
     if (!btn) return;
     if (ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return; // new tab/window: let the link work
-    const n = items.find((x) => x.id === btn.dataset.story);
+    const n = (state.data?.news || []).find((x) => x.id === btn.dataset.story);
     if (!n) return;
     ev.preventDefault();
     const page = articlePath(n);
@@ -707,37 +842,19 @@ function renderNews(news) {
   $('#reader-close').addEventListener('click', () => dlg.close());
   dlg.addEventListener('click', (ev) => { if (ev.target === dlg) dlg.close(); });
   $('#reader-body').addEventListener('click', (ev) => { if (ev.target.closest('a[href^="#"]')) dlg.close(); });
-}
-
-/* ---------- Safety ---------- */
-/* ---------- Method ---------- */
-function renderMethod() {
-  const gwShare = MILESTONES[1].at;
-  const playAt = MILESTONES.find((m) => m.key === 'playable').at;
-  const span = MILESTONES[MILESTONES.length - 1].at - playAt;
-  $('#ladder-explain').innerHTML = MILESTONES.filter((m) => m.key !== 'complete').map((m, i) => `
-    <li><span class="le-at">${i === 0 ? `0–${gwShare}` : m.at}</span><div><h4>${esc(msLabel(m.key))}</h4><p>${esc(msDesc(m))}</p></div></li>`).join('') +
-    `<li class="le-tracks"><span class="le-at">${playAt}–100</span><div><h4>${esc(t('method.tracksTitle'))}</h4><p>${esc(t('method.tracksSub'))}</p>
-      <ul>${TRACKS.map((tk) => `<li><b>${esc(trackLabel(tk))}<span>${esc(t('method.pts', { n: Math.round(tk.weight * span * 10) / 10 }))}</span></b>${esc(trackDesc(tk))}${
-        tk.steps ? `<small>${tk.steps.map((s) => esc(stepLabel(tk.key, s))).join(' → ')}</small>` : ''}</li>`).join('')}</ul></div></li>`;
-  $('#gw-explain').innerHTML = GROUNDWORK.map((g) => `<li><b>${esc(gwLabel(g))}<span>${esc(t('method.pts', { n: Math.round(g.weight * gwShare * 10) / 10 }))}</span></b>${esc(gwDesc(g))}</li>`).join('');
-}
-
-/* ---------- Interaction ---------- */
-function bindControls() {
-  $$('.chip[data-filter]').forEach((b) => b.addEventListener('click', () => {
-    $$('.chip[data-filter]').forEach((x) => x.classList.toggle('is-on', x === b));
-    state.filter = b.dataset.filter;
-    renderRace();
-  }));
-  $('#sort').addEventListener('change', (ev) => { state.sort = ev.target.value; renderRace(); });
   $('#race-list').addEventListener('click', (ev) => {
     const btn = ev.target.closest('[data-toggle]');
     if (!btn) return;
-    const det = btn.closest('.effort').querySelector('.e-details');
+    const card = btn.closest('.effort');
+    const det = card.querySelector('.e-details');
     det.hidden = !det.hidden;
-    btn.setAttribute('aria-expanded', String(!det.hidden));
-    btn.textContent = det.hidden ? t('effort.details') : t('effort.hideDetails');
+    for (const b of card.querySelectorAll('[data-toggle]')) {
+      b.setAttribute('aria-expanded', String(!det.hidden));
+      b.textContent = det.hidden ? t('effort.details') : t('effort.hideDetails');
+    }
+    if (det.hidden && card.getBoundingClientRect().top < 72) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
     observeBars();
   });
 
@@ -774,7 +891,14 @@ function bindControls() {
 }
 
 let io;
-function observeBars() {
+function observeBars(immediate = false) {
+  if (immediate) {
+    $$('[data-width]:not([data-seen])').forEach((el) => {
+      if (el.closest('[hidden]')) return;
+      el.dataset.seen = '1';
+      reveal(el);
+    });
+  }
   // Watch each bar's track, not the fill: a fill clipped to 0% counts as invisible.
   io ??= new IntersectionObserver((entries) => {
     for (const en of entries) {
