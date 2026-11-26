@@ -821,6 +821,10 @@
       "name": "Belobug",
       "repo": "Belobug/VIctory-Belobug-AMD",
       "branch": "main",
+      "proof": {
+        "label": "Belo Top Dawg",
+        "url": "https://www.reddit.com/r/FitGirlRepack/comments/1y67xnd/belo_top_dawg/"
+      },
       "tier": "tracked",
       "gpu": [
         "AMD"
