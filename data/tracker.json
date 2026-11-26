@@ -1320,9 +1320,6 @@
       "name": "CGBJ",
       "avatar": "assets/img/efforts/cgbj.png",
       "repo": "codec-d/cool_fox",
-      "gpu": [
-        "NVIDIA"
-      ],
       "basedOn": [
         "marvis",
         "xcl"
@@ -1337,10 +1334,10 @@
       "tier": "tracked",
       "approach": "Compatibility layer",
       "target": "GTA VI only",
-      "summary": "Public VIctory/XCL build, PortWatch-verified. Owner rates story progress at 80%, rendering 0.85 and stability 0.85. It averages 25 fps on NVIDIA with 8 GB system RAM and 16 GB VRAM.",
+      "summary": "Public VIctory/XCL build, PortWatch-verified. Owner rates story progress at 80%, rendering 0.85 and stability 0.85. It averages 25 fps with 8 GB system RAM and 16 GB VRAM.",
       "highlights": [
         "Owner ratings: 80% story, rendering 0.85, stability 0.85",
-        "25 fps gameplay average on NVIDIA",
+        "25 fps gameplay average",
         "Public GPL-3.0 source at codec-d/cool_fox"
       ],
       "blockers": [
