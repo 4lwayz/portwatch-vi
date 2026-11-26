@@ -257,20 +257,30 @@ revoke all on public.pageviews from anon, authenticated;
 grant select on public.pageviews to authenticated;
 drop policy if exists "admins read views" on public.pageviews;
 create policy "admins read views" on public.pageviews for select to authenticated using (public.is_admin());
+-- Sampling (2026-11-24): public pages report about 1 in 5 browser tabs (SAMPLE in assets/js/backend.js), and
+-- each view carries the number of tabs it stands for. Every count below sums w instead of counting rows.
+-- Older rows have w = 1.
+alter table public.pageviews add column if not exists w smallint not null default 1;
 
-create or replace function public.track_view(p_page text, p_ref text default null, p_sid text default null, p_new boolean default false) returns void
+-- The 4-argument version is dropped first: two overloads would leave PostgREST unable to choose. p_w has no
+-- default, so old copies of the site that still send only the 4 original arguments match nothing and aren't counted.
+drop function if exists public.track_view(text, text, text, boolean);
+drop function if exists public.track_view(text, text, text, boolean, integer);
+create or replace function public.track_view(p_page text, p_w integer, p_ref text default null, p_sid text default null, p_new boolean default false) returns void
 language sql security definer set search_path = '' as $$
-  insert into public.pageviews (page, ref, sid, new_session)
-  values (left(coalesce(p_page, '/'), 120), left(nullif(p_ref, ''), 120), left(p_sid, 40), coalesce(p_new, false));
+  insert into public.pageviews (page, ref, sid, new_session, w)
+  values (left(coalesce(p_page, '/'), 120), left(nullif(p_ref, ''), 120), left(p_sid, 40), coalesce(p_new, false),
+          least(greatest(coalesce(p_w, 1), 1), 50));
 $$;
-revoke all on function public.track_view(text, text, text, boolean) from public;
-grant execute on function public.track_view(text, text, text, boolean) to anon, authenticated;
+revoke all on function public.track_view(text, integer, text, text, boolean) from public;
+grant execute on function public.track_view(text, integer, text, text, boolean) to anon, authenticated;
 
 -- ---------- Public live viewer count ----------
 -- Same definition as the dashboard: tabs seen in the last 5 minutes. The threshold lives here, so small
 -- numbers never leave the database; below 25 the answer is null and the site shows nothing.
--- Every visitor asks on load, so the count is worked out at most once a minute and the answer shared:
--- on 2026-11-23, with ~3,000 visitors, recounting per call was 39% of the database's time.
+-- The count is worked out at most once a minute and the answer shared: on 2026-11-23, with ~3,000 visitors,
+-- recounting per call was 39% of the database's time. Since 2026-11-24 visitors don't call this at all:
+-- the site's /api/live (functions/api/live.js) asks once a minute per Cloudflare data centre and caches it.
 create table if not exists private.live_cache (
   id smallint primary key default 1 check (id = 1),
   n integer,
@@ -290,8 +300,10 @@ begin
   if cached_at > now() - interval '60 seconds' or not pg_try_advisory_xact_lock(hashtext('live_viewers')) then
     return cached_n;
   end if;
-  select case when count(distinct sid) >= 25 then count(distinct sid)::integer end into cached_n
-  from public.pageviews where ts >= now() - interval '5 minutes' and sid <> '';
+  select case when s >= 25 then s end into cached_n from (
+    select coalesce(sum(w), 0)::integer as s from (
+      select max(w) as w from public.pageviews
+      where ts >= now() - interval '5 minutes' and sid <> '' group by sid) t) x;
   update private.live_cache set n = cached_n, at = now() where id = 1;
   return cached_n;
 end $$;
@@ -305,22 +317,28 @@ begin
   if not public.is_admin() then raise exception 'not allowed'; end if;
   return json_build_object(
     'totals', json_build_object(
-      'views_today', (select count(*) from public.pageviews where ts >= date_trunc('day', now())),
-      'visitors_today', (select count(distinct sid) from public.pageviews where ts >= date_trunc('day', now())),
-      'views_7d', (select count(*) from public.pageviews where ts > now() - interval '7 days'),
-      'visitors_7d', (select count(distinct sid) from public.pageviews where ts > now() - interval '7 days'),
-      'views_all', (select count(*) from public.pageviews)),
+      'views_today', (select coalesce(sum(w), 0) from public.pageviews where ts >= date_trunc('day', now())),
+      'visitors_today', (select coalesce(sum(mw), 0) from (select max(w) as mw from public.pageviews
+        where ts >= date_trunc('day', now()) and sid is not null group by sid) v),
+      'views_7d', (select coalesce(sum(w), 0) from public.pageviews where ts > now() - interval '7 days'),
+      'visitors_7d', (select coalesce(sum(mw), 0) from (select max(w) as mw from public.pageviews
+        where ts > now() - interval '7 days' and sid is not null group by sid) v),
+      'views_all', (select coalesce(sum(w), 0) from public.pageviews)),
     'hourly', (select coalesce(json_agg(h order by h.hour), '[]'::json) from (
-      select date_trunc('hour', ts) as hour, count(*) as views, count(distinct sid) as visitors
-      from public.pageviews where ts > now() - interval '48 hours' group by 1) h),
+      select hour, sum(v) as views, coalesce(sum(mw) filter (where sid is not null), 0) as visitors from (
+        select date_trunc('hour', ts) as hour, sid, sum(w) as v, max(w) as mw
+        from public.pageviews where ts > now() - interval '48 hours' group by 1, 2) s group by 1) h),
     'daily', (select coalesce(json_agg(d order by d.day), '[]'::json) from (
-      select date_trunc('day', ts) as day, count(*) as views, count(distinct sid) as visitors
-      from public.pageviews where ts > now() - interval '30 days' group by 1) d),
+      select day, sum(v) as views, coalesce(sum(mw) filter (where sid is not null), 0) as visitors from (
+        select date_trunc('day', ts) as day, sid, sum(w) as v, max(w) as mw
+        from public.pageviews where ts > now() - interval '30 days' group by 1, 2) s group by 1) d),
     'pages', (select coalesce(json_agg(p), '[]'::json) from (
-      select page, count(*) as views from public.pageviews where ts > now() - interval '7 days' group by 1 order by 2 desc limit 12) p),
+      select page, sum(w) as views from public.pageviews where ts > now() - interval '7 days' group by 1 order by 2 desc limit 12) p),
     'refs', (select coalesce(json_agg(r), '[]'::json) from (
-      select coalesce(ref, '(direct)') as ref, count(distinct sid) as visitors from public.pageviews
-      where ts > now() - interval '7 days' and new_session group by 1 order by 2 desc limit 12) r),
+      select ref, sum(mw) as visitors from (
+        select coalesce(ref, '(direct)') as ref, sid, max(w) as mw from public.pageviews
+        where ts > now() - interval '7 days' and new_session and sid is not null group by 1, 2) s
+      group by 1 order by 2 desc limit 12) r),
     'board', json_build_object(
       'threads', (select count(*) from public.threads where status = 'visible'),
       'posts', (select count(*) from public.posts where status = 'visible'),
@@ -331,22 +349,22 @@ end $$;
 revoke all on function public.admin_stats() from public, anon;
 grant execute on function public.admin_stats() to authenticated;
 
--- People on the site right now, for the dashboard: one row per tab seen in the last few minutes, counted
--- here instead of shipping every page view to the browser.
+-- People on the site right now, for the dashboard: the tabs seen in the last few minutes (weighted by w),
+-- counted here instead of shipping every page view to the browser.
 create or replace function public.admin_live(p_minutes integer default 5) returns json
 language plpgsql stable security definer set search_path = '' as $$
 begin
   if not public.is_admin() then raise exception 'not allowed'; end if;
   return (
     with latest as (
-      select distinct on (sid) sid, page from public.pageviews
+      select distinct on (sid) sid, page, w from public.pageviews
       where ts >= now() - make_interval(mins => least(greatest(coalesce(p_minutes, 5), 1), 60)) and sid <> ''
       order by sid, ts desc
     )
     select json_build_object(
-      'total', (select count(*) from latest),
+      'total', (select coalesce(sum(w), 0) from latest),
       'pages', coalesce((select json_agg(p) from (
-        select page, count(*) as n from latest group by page order by 2 desc limit 8) p), '[]'::json))
+        select page, sum(w) as n from latest group by page order by 2 desc limit 8) p), '[]'::json))
   );
 end $$;
 revoke all on function public.admin_live(integer) from public, anon;

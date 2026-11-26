@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title data-i18n="meta.title">PortWatch VI: Does GTA VI run on PC yet?</title>
-  <meta name="description" content="Live tracker of every community effort to recompile, emulate or port the leaked Xbox Series build of GTA VI to PC, scored from groundwork to stable 30 FPS.">
+  <meta name="description" content="Live tracker of every community effort to recompile, emulate or port the leaked Xbox Series build of GTA VI to PC, scored from groundwork to a game you can play to the end.">
   <link rel="canonical" href="https://portwatch-vi.xyz/">
   <meta name="robots" content="max-image-preview:large">
   <meta property="og:site_name" content="PortWatch VI">
@@ -12,7 +12,7 @@
   <meta property="og:url" content="https://portwatch-vi.xyz/">
   <meta property="og:title" content="Does GTA VI run on PC yet?">
   <meta property="og:description" content="Every serious recompilation and emulation effort, scored on one ladder. Updated every 3 hours.">
-  <meta property="og:image" content="https://portwatch-vi.xyz/assets/img/social.jpg">
+  <meta property="og:image" content="https://portwatch-vi.xyz/assets/img/social-miami.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Does GTA VI run on PC yet? PortWatch VI, a live tracker of every PC port effort">
@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/img/hero.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/img/hero-miami.jpg" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="assets/js/theme.js"></script>
   <script type="module" src="assets/js/app.js"></script>
@@ -52,7 +52,6 @@
         <a href="#watchlist" data-i18n="nav.watchlist">Watchlist</a>
         <a href="#toolkit" data-i18n="nav.toolkit">Toolkit</a>
         <a href="#method" data-i18n="nav.scoring">Scoring</a>
-        <a href="#safety" class="nav-warn" data-i18n="nav.fakes">Fake downloads</a>
       </nav>
       <span class="nav-updated" id="nav-updated" data-i18n="common.loading">Loading…</span>
     </div>
@@ -146,34 +145,44 @@
                 <span data-i18n="hero.starGh">Star on GitHub</span>
                 <svg class="star" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .8l2.2 4.6 5 .7-3.6 3.5.9 5L8 12.2 3.5 14.6l.9-5L.8 6.1l5-.7z"/></svg>
               </a>
-              <!-- Discord has limited the server and its invites are paused (2026-11-24), so this is a sign, not a link.
-                   To restore: make it <a class="join-dc" href="https://discord.gg/744bYvNNzy" target="_blank" rel="noopener">
-                   (the permanent invite) and put back data-i18n="hero.joinDc" on the label. -->
-              <span class="join-dc is-paused" role="note" title="Discord has limited our server, so it isn't taking new members for now." data-i18n-attr="title:hero.dcPausedTitle">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                <span data-i18n="hero.dcPaused">Discord invites paused</span>
-              </span>
             </div>
           </div>
           <h1 data-i18n="hero.title">Does GTA VI run on&nbsp;PC&nbsp;yet?</h1>
           <p class="answer" id="answer" data-i18n="answer.notYet">Not yet.</p>
-          <p class="lede" data-i18n="hero.lede">Every serious attempt to recompile, emulate or port the leaked Xbox Series build to PC, scored on one ladder from groundwork to a stable 30&nbsp;FPS.</p>
+          <p class="lede" data-i18n="hero.lede">Every serious attempt to recompile, emulate or port the leaked Xbox Series build to PC, scored on one scale from groundwork to a game you can play to the end.</p>
         </div>
 
-        <aside class="countdown" id="countdown" aria-live="polite">
-          <p class="cd-label"><span class="cd-pulse" aria-hidden="true"></span><span id="cd-title" data-i18n="cd.drop">Executable drop</span></p>
-          <div class="cd-digits" id="cd-digits">
-            <div><span id="cd-d">--</span><small data-i18n="cd.days">days</small></div>
-            <i>:</i>
-            <div><span id="cd-h">--</span><small data-i18n="cd.hours">hours</small></div>
-            <i>:</i>
-            <div><span id="cd-m">--</span><small data-i18n="cd.min">min</small></div>
-            <i>:</i>
-            <div><span id="cd-s">--</span><small data-i18n="cd.sec">sec</small></div>
-          </div>
-          <p class="cd-status" id="cd-status"></p>
-          <p class="cd-foot" id="cd-foot"></p>
-        </aside>
+        <div class="hero-side">
+          <aside class="countdown" id="countdown" aria-live="polite">
+            <p class="cd-label"><span class="cd-pulse" aria-hidden="true"></span><span id="cd-title" data-i18n="cd.drop">Executable drop</span></p>
+            <div class="cd-digits" id="cd-digits">
+              <div><span id="cd-d">--</span><small data-i18n="cd.days">days</small></div>
+              <i>:</i>
+              <div><span id="cd-h">--</span><small data-i18n="cd.hours">hours</small></div>
+              <i>:</i>
+              <div><span id="cd-m">--</span><small data-i18n="cd.min">min</small></div>
+              <i>:</i>
+              <div><span id="cd-s">--</span><small data-i18n="cd.sec">sec</small></div>
+            </div>
+            <p class="cd-status" id="cd-status"></p>
+            <p class="cd-foot" id="cd-foot"></p>
+          </aside>
+
+          <!-- The owner's pinned message, from data/pinned.json (edited in the private dashboard). Hidden when empty. -->
+          <aside class="pinned" id="pinned" aria-labelledby="pin-label" hidden>
+            <p class="pin-label" id="pin-label">
+              <svg class="pin-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 9V4h1a1 1 0 0 0 0-2H7a1 1 0 0 0 0 2h1v5a3 3 0 0 1-3 3v2h5.97v7l1 1 1-1v-7H19v-2a3 3 0 0 1-3-3z"/></svg>
+              <span data-i18n="pin.label">Pinned</span>
+            </p>
+            <div class="pin-msg">
+              <span class="pin-avatar"><b aria-hidden="true">4</b></span>
+              <div class="pin-bubble">
+                <p class="pin-head"><b class="pin-name">4lwayz</b><span class="pin-badge" data-i18n="pin.badge">Creator</span><time class="pin-time"></time></p>
+                <p class="pin-text"></p>
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
       <p class="art-credit" id="art-credit"></p>
     </section>
@@ -240,13 +249,11 @@
         <div>
           <p class="kicker" data-i18n="race.kicker">Leaderboard</p>
           <h2 id="race-title" data-i18n="race.title">The race</h2>
-          <p class="sub" data-i18n="race.sub">The efforts with real code behind them, ranked by how close each is to running the game. Scores come from each project's public README, commits and issues. Self-reported claims are labelled.</p>
+          <p class="sub" data-i18n="race.sub">The efforts with public code, ranked by how close each is to running the game. Scores come from each project's public README, commits and issues. Self-reported claims are labelled. Private builds are listed below the race, without a rank.</p>
         </div>
         <div class="controls">
-          <div class="chips" role="group" aria-label="Filter efforts" data-i18n-attr="aria-label:race.filterLabel">
+          <div class="chips" id="race-chips" role="group" aria-label="Filter efforts" data-i18n-attr="aria-label:race.filterLabel">
             <button class="chip is-on" data-filter="all" data-i18n="race.all">All</button>
-            <button class="chip" data-filter="gta" data-i18n="race.gta">GTA VI-specific</button>
-            <button class="chip" data-filter="generic" data-i18n="race.generic">Any-game layers</button>
           </div>
           <label class="sort"><span data-i18n="race.sort">Sort</span>
             <select id="sort">
@@ -258,6 +265,11 @@
         </div>
       </div>
       <ol class="race" id="race-list"></ol>
+      <div class="private-builds" id="private-builds" hidden>
+        <h3 class="pb-title"><span class="pb-lock" aria-hidden="true"></span><span data-i18n="private.title">Private builds · not ranked</span></h3>
+        <p class="sub" data-i18n="private.sub">These have no public code, so nobody outside the group can check or run them. Each one names the public project it builds on, and that project keeps its place in the race.</p>
+        <ul class="pb-list" id="private-list"></ul>
+      </div>
     </section>
 
     <section class="wrap section" id="news" aria-labelledby="news-title">
@@ -280,12 +292,15 @@
     <section class="wrap section" id="watchlist" aria-labelledby="watch-title">
       <div class="section-head">
         <div>
-          <p class="kicker" data-i18n="watch.kicker">Early or stalled</p>
+          <p class="kicker" data-i18n="watch.kicker">Further back</p>
           <h2 id="watch-title" data-i18n="watch.title">Watchlist</h2>
-          <p class="sub" data-i18n="watch.sub">Real but early projects: scaffolding, research probes or a different route. They move up to the race when they ship something you can measure.</p>
+          <p class="sub" data-i18n="watch.sub">Projects further back: early, stalled or taking a different route. They move up to the race when they catch up with the leaders.</p>
         </div>
       </div>
-      <div class="watch card" id="watch-list" role="table" aria-label="Watchlist" data-i18n-attr="aria-label:watch.title"></div>
+      <details class="fold">
+        <summary class="more-link" id="watch-toggle"></summary>
+        <div class="watch card" id="watch-list" role="table" aria-label="Watchlist" data-i18n-attr="aria-label:watch.title"></div>
+      </details>
     </section>
 
     <section class="wrap section" id="toolkit" aria-labelledby="tool-title">
@@ -296,31 +311,10 @@
           <p class="sub" data-i18n="tools.sub">These won't run the game, but every port leans on them: archive explorers, texture codecs and format notes.</p>
         </div>
       </div>
-      <div class="tools" id="tools-list"></div>
-    </section>
-
-    <section class="wrap section" id="inbox" aria-labelledby="inbox-title">
-      <div class="section-head">
-        <div>
-          <p class="kicker" data-i18n="inbox.kicker">Spotted by the scout</p>
-          <h2 id="inbox-title" data-i18n="inbox.title">New candidates</h2>
-          <p class="sub" id="inbox-sub" data-i18n="inbox.sub">Every 3 hours the scout searches GitHub, GitLab, Hacker News, Bluesky, Mastodon, Lemmy and 4chan (/v/, /vg/) for new efforts. Repos with real code are listed here until they're reviewed. They are deliberately not linked, and copies of tracked projects are filtered out.</p>
-        </div>
-      </div>
-      <div class="inbox" id="inbox-list"></div>
-    </section>
-
-    <section class="wrap section" id="safety" aria-labelledby="safety-title">
-      <div class="safety card">
-        <div class="safety-head">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 1.5 21h21L12 2Zm0 6.2 1 7h-2l1-7Zm0 9.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z" fill="currentColor"/></svg>
-          <div>
-            <h2 id="safety-title" data-i18n="safety.title">There is no download</h2>
-            <p data-i18n="safety.body">No project on this page hosts the game, keys or an executable, and this site never links to any. Anything offering a ready-to-play GTA VI for PC this week is a scam.</p>
-          </div>
-        </div>
-        <ul class="flags" id="flag-list"></ul>
-      </div>
+      <details class="fold">
+        <summary class="more-link" id="tools-toggle"></summary>
+        <div class="tools" id="tools-list"></div>
+      </details>
     </section>
 
     <section class="wrap section" id="method" aria-labelledby="method-title">
@@ -328,7 +322,7 @@
         <div>
           <p class="kicker" data-i18n="method.kicker">Methodology</p>
           <h2 id="method-title" data-i18n="method.title">How the progress bar works</h2>
-          <p class="sub" data-i18n="method.sub">One ladder for every project. Groundwork fills the first 25%: the parts that can be built before the executable exists. After that, a project only moves by reaching real milestones in GTA VI itself.</p>
+          <p class="sub" data-i18n="method.sub">One scale for every project, in two parts. Getting in is a ladder to 50%: groundwork fills the first 10%, then each step needs the one before it, up to Playable. Playing well fills the rest: how far you can play, how right it looks, how fast it runs and how long it keeps running. 100% is the whole game, finished.</p>
         </div>
       </div>
       <div class="method">
@@ -336,7 +330,7 @@
         <div class="card gw-explain">
           <h3 data-i18n="method.gwTitle">Groundwork, weighted</h3>
           <ul id="gw-explain"></ul>
-          <p class="fine" data-i18n="method.fine1">Past "In-game", the last 30 points split between frame rate (average FPS ÷ 30) and stability (from crashes often up to stable). Partial milestones, such as a menu that renders but is broken, count half.</p>
+          <p class="fine" data-i18n="method.fine1">Partial steps, such as a menu that renders but is broken, count half. The four tracks only count once a build is Playable: you can't judge how well a game plays before you can play it.</p>
           <p class="fine" data-i18n="method.fine2">Maintain a project and think it's mis-scored? Open an issue with a link to your evidence.</p>
         </div>
       </div>

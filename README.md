@@ -52,13 +52,13 @@ Everything lives in `data/tracker.json`:
 - `efforts[]`: each effort has a `tier` (`tracked` puts it in the race, `watchlist` lists it below). Each also carries `groundwork` (four 0–1 values), `gta` (`loads`/`boots`/`menu`/`ingame` are 0, 0.5 or 1, plus `fps` and `stability`), and short `highlights` and `blockers`.
 - `exe`: drives the countdown. If the release time is announced, set `expectedAt` (ISO time) and `timeAnnounced: true`. When it drops, set `status: "released"` and `releasedAt`, and the countdown turns into a "time since release" clock.
 - `candidates[]`: move one into `efforts` to promote it, or into `ignored` to dismiss it.
-- `site.heroImage` / `site.heroCredit`: hero artwork (see below).
+- `site.heroImage`: the hero photo (see below). An optional `site.heroCredit` adds a credit line under it.
 
 Scoring is in `assets/js/scoring.js`, shared by the site and the scout. Groundwork fills 0–25%. After that, milestones sit at Exe runs 25, First frame 40, Main menu 55, In-game 70, 30 FPS 85 and Stable 100.
 
-## Hero artwork
+## Hero photo
 
-The hero shows an original sunset illustration until you add a photo. To use official GTA VI artwork, download a wallpaper or artwork image from Rockstar's official GTA VI site and save it as `assets/img/hero.jpg`, ideally about 2400px wide. The site finds it automatically and shows the credit line from `site.heroCredit`.
+The hero shows an original sunset illustration until the photo loads. The photo is `assets/img/hero-miami.jpg` (2400px wide): Brickell, Miami, at night, by Steele Rutherford on Unsplash, free to use under the Unsplash License without a credit line. `assets/img/social-miami.jpg` (1200×630) is the share card, made from the same photo. Give a replaced image a new filename: images are cached for 4 hours in browsers and for days by link previews. Don't use GTA VI artwork or footage there.
 
 ## Local preview
 
