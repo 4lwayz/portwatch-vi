@@ -772,7 +772,7 @@
       ],
       "approach": "Compatibility layer",
       "target": "GTA VI only",
-      "summary": "Belobug's VIctory fork runs on AMD Radeon; PortWatch saw its near-console open world and mission gameplay at about 4 fps. The owner now reports ray tracing working on AMD; the README still describes the ray-tracing path as failing.",
+      "summary": "Belobug's VIctory fork runs on AMD Radeon; PortWatch saw its near-console open world and mission gameplay at about 8 fps. The owner now reports ray tracing working on AMD; the README still describes the ray-tracing path as failing.",
       "highlights": [
         "Platform: AMD Radeon RX 9070 XT 16 GB, Ryzen 7 9800X3D, 64 GB RAM, Windows 11",
         "The open world looks close to the retail game: lit, with textures, people, vehicles, vegetation, water and sky",
@@ -780,7 +780,7 @@
         "Plays through missions and rarely crashes; built on VIctory's main and upstream pull requests"
       ],
       "blockers": [
-        "About 4 fps; its README reports 5-7 fps (less while driving) and calls that \"not playable yet\"",
+        "About 8 fps; its README reports 5-7 fps (less while driving) and calls that \"not playable yet\"",
         "Ray tracing is reported working on AMD; the README says enabling its ray-tracing path still ends in device removal",
         "Needs about 22 GB of RAM and more than 16 GB of video memory; tested on one AMD PC only, nothing on NVIDIA or Intel yet"
       ],
@@ -793,7 +793,7 @@
         "playable": 1,
         "story": 0.5,
         "render": 0.85,
-        "fps": 4,
+        "fps": 8,
         "stability": 0.7
       },
       "verification": "portwatch",
@@ -1272,10 +1272,10 @@
       "tier": "tracked",
       "approach": "Compatibility layer",
       "target": "GTA VI only",
-      "summary": "Private VIctory/XCL build, PortWatch-verified. Owner rates story halfway, rendering 0.75 and stability 0.85. It averages 25 fps on NVIDIA with 8 GB RAM and 16 GB VRAM; code is private.",
+      "summary": "Private VIctory/XCL build, PortWatch-verified. Owner rates story halfway, rendering 0.75 and stability 0.85. It averages 25 fps on NVIDIA with 8 GB RAM and 16 GB VRAM (not a typo); code is private.",
       "highlights": [
         "Owner ratings: half the story, rendering 0.75, stability 0.85",
-        "25 fps gameplay average, highest reported on the board (NVIDIA, 8 GB RAM, 16 GB VRAM)",
+        "25 fps gameplay average, highest reported on the board (NVIDIA, 8 GB RAM and 16 GB VRAM, not a typo)",
         "Close to the console with minor glitches; code remains private"
       ],
       "blockers": [
