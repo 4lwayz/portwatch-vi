@@ -3273,6 +3273,69 @@
       "claims": [],
       "readmeSha": "346fcf9a17a21b44b89f69d23d1b6a2b4d277e488d529e933b0b32a76dd57f44",
       "readmeChangedAt": "2026-11-25"
+    },
+    {
+      "id": "victory-linux",
+      "name": "VIctory Linux",
+      "repo": "aDefaultUser/VIctory-linux",
+      "branch": "main",
+      "proof": {
+        "label": "Linux guide: tested runs",
+        "url": "https://github.com/aDefaultUser/VIctory-linux/blob/8c07a31a76b9f0366251e195d8af7a305ffab594/docs/linux.md#latest-tested-runs"
+      },
+      "tier": "watchlist",
+      "gpu": [
+        "AMD"
+      ],
+      "approach": "Compatibility layer",
+      "target": "Unnamed Xbox Series title",
+      "summary": "VIctory fork for Wine and Proton. Its public guide reports the opening and first room of an unnamed Xbox Series title on one RX 9070 XT, with camera input. Rendering still varies. Unscored.",
+      "highlights": [
+        "Guide reports both Wine 11.22 and Proton Experimental 11.0, with patched vkd3d-proton, accepted camera input",
+        "Guide reports cached replays restored cutscene faces and the player's head and hair in the first room"
+      ],
+      "blockers": [
+        "Guide's first-room readings of about 22 to 30 FPS cover one RX 9070 XT on patched Proton",
+        "The public guide leaves the title unnamed, so the run remains unscored",
+        "Lighting and materials still vary between runs, and some launches or replays lose faces"
+      ],
+      "groundwork": {
+        "loader": 0,
+        "shaders": 0,
+        "graphics": 0,
+        "proven": 0
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 0,
+        "boots": 0,
+        "menu": 0,
+        "world": 0,
+        "playable": 0,
+        "story": 0,
+        "render": 0,
+        "fps": 0,
+        "stability": "unknown"
+      },
+      "basedOn": [
+        "marvis",
+        "victory-gta6"
+      ],
+      "verification": "self-reported",
+      "stats": {
+        "stars": 3,
+        "forks": 1,
+        "openIssues": 0,
+        "createdAt": "2026-11-25T06:18:31Z",
+        "pushedAt": "2026-11-27T09:14:35Z",
+        "commits7d": 100,
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-26",
+      "assessedBy": "manual",
+      "claims": [],
+      "readmeSha": "35c66598233ed0641f812913b37153476d1bf219753e65958c7c94671e5ca6b2"
     }
   ],
   "tools": [
