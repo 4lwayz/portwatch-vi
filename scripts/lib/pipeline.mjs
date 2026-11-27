@@ -33,6 +33,7 @@ export async function runScout(data, opts = {}) {
   const summary = { refreshed: 0, readmeChanged: 0, gone: 0, discovered: 0, newCandidates: 0, flagged: 0, assessed: 0, promoted: 0, errors: [], mentions: {} };
   const changes = (data.changes ||= []);
   const addChange = (kind, text) => changes.push({ date: today, kind, text });
+  const spotted = []; // new finds, announced after the candidate list is cut to MAX_CANDIDATES
   const prevScores = new Map(data.efforts.map((e) => [e.id, scoreEffort(e).score]));
   const prevLeader = overall(data.efforts).leader?.effort?.id;
   const errorOut = (where, err) => {
@@ -331,8 +332,7 @@ export async function runScout(data, opts = {}) {
         kind: sub.kind,
         status: 'new',
       });
-      addChange('new', `Scout spotted ${meta.fullName} (${sub.kind === 'tool' ? 'tool' : 'possible effort'}, substance ${sub.score}).`);
-      summary.newCandidates++;
+      spotted.push({ repo: meta.fullName, text: `Scout spotted ${meta.fullName} (${sub.kind === 'tool' ? 'tool' : 'possible effort'}, substance ${sub.score}).` });
     } catch (err) { errorOut(`classify ${f.full}`, err); }
   }
   // GitLab: projects that may have moved off GitHub (e.g. after a takedown).
@@ -354,8 +354,7 @@ export async function runScout(data, opts = {}) {
             continue;
           }
           data.candidates.push({ repo: `gitlab.com/${g.fullName}`, host: 'gitlab', name: g.name, description: g.description, stars: g.stars, createdAt: g.createdAt, pushedAt: g.pushedAt, sources: ['GitLab search'], links: [], foundAt: now.toISOString(), substance: sub.score, signals: sub.signals, kind: sub.kind, status: 'new' });
-          addChange('new', `Scout spotted gitlab.com/${g.fullName} (substance ${sub.score}).`);
-          summary.newCandidates++;
+          spotted.push({ repo: `gitlab.com/${g.fullName}`, text: `Scout spotted gitlab.com/${g.fullName} (substance ${sub.score}).` });
         }
       } catch (err) { errorOut(`GitLab "${q}"`, err); }
     }
@@ -419,6 +418,13 @@ export async function runScout(data, opts = {}) {
     .filter((c) => c.status !== 'rejected')
     .sort((a, b) => b.substance - a.substance)
     .slice(0, MAX_CANDIDATES);
+  // A find that the cut drops isn't remembered anywhere, so the next run finds it again. Announce a find
+  // only if it made the list, and only once while its line is still in the change feed.
+  for (const s of spotted) {
+    if (!data.candidates.some((c) => c.repo === s.repo) || changes.some((c) => c.text.startsWith(`Scout spotted ${s.repo} `))) continue;
+    addChange('new', s.text);
+    summary.newCandidates++;
+  }
 
   /* 4. Optional: Claude reviews changed READMEs and new candidates */
   if (assess) {
