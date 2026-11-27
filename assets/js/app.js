@@ -1,4 +1,4 @@
-import { MILESTONES, GROUNDWORK, STABILITY, TRACKS, scoreEffort, overall, ladderValue, byStars, isPrivateBuild, trackStep, stabilityKey } from './scoring.js';
+import { MILESTONES, GROUNDWORK, STABILITY, TRACKS, scoreEffort, overall, countsInHeadline, ladderValue, byStars, isPrivateBuild, trackStep, stabilityKey } from './scoring.js';
 import { getLiveViewers, trackView } from './backend.js';
 import { coverHtml, articlePath, newsTime, byNewest } from './news-shared.js';
 import { fillPinned } from './pinned.js';
@@ -192,7 +192,7 @@ function startCountdown(exe) {
 
 /* ---------- Overall ---------- */
 function renderOverall(data) {
-  const all = data.efforts.filter((e) => !e.nuked); // nuked efforts aren't shown anywhere
+  const all = data.efforts.filter(countsInHeadline); // nuked efforts are left out, unless their progress is kept
   const ov = overall(all);
   const leader = ov.leader?.effort;
   animateNumber($('#ov-score'), ov.score);

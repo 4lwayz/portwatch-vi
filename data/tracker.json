@@ -26,7 +26,7 @@
         "Belobug's GTA VI build has been taken off GitHub. The Belobug/VIctory-Belobug-AMD repository and the Belobug account behind it both stopped loading on Friday, and PortWatch has confirmed that a DMCA notice took them down.",
         "It was the build to beat: a fork of Marvis's VIctory for AMD Radeon cards, very playable at about 22 fps on average with no crashes, and among the furthest into the story on our board. It had over 4,000 stars and 1,200 forks, and at 91.3% it was the top-rated build we track.",
         "We don't know who sent the notice. GitHub publishes takedown notices in its public DMCA log, which so far only runs to 24 November, when a Take-Two notice hit Leonida and thousands of its forks. We'll update this article when Belobug's notice appears.",
-        "Belobug's card on our board is now marked as nuked: kept for the record, but no longer ranked or counted. VIctory-NVIDIA, at 90%, now leads both the race and our overall number. Don't go looking for copies of Belobug's code: forks of a taken-down repository can be removed too, and unofficial downloads often carry malware."
+        "Belobug's card on our board is now marked as nuked and no longer ranked, so VIctory-NVIDIA, at 90%, leads the race. The progress it made still counts: our overall number stays at 91.3%. Don't go looking for copies of Belobug's code: forks of a taken-down repository can be removed too, and unofficial downloads often carry malware."
       ],
       "sources": [
         {
@@ -936,8 +936,9 @@
       "repo": null,
       "nuked": {
         "at": "2026-11-27",
-        "note": "Repository and GitHub account taken down by a DMCA notice on Nov 27, confirmed by PortWatch.",
-        "show": true
+        "note": "Repository and GitHub account taken down by a DMCA notice on Nov 27, confirmed by PortWatch. Its progress still counts in our overall number.",
+        "show": true,
+        "keepScore": true
       },
       "basedOn": [
         "marvis"
@@ -8753,7 +8754,7 @@
     {
       "date": "2026-11-27",
       "kind": "down",
-      "text": "Belobug's repository and GitHub account were taken down by a DMCA notice, which PortWatch has confirmed. Its card is marked as nuked and no longer counts, so VIctory-NVIDIA (90%) now leads both the race and our overall number."
+      "text": "Belobug's repository and GitHub account were taken down by a DMCA notice, which PortWatch has confirmed. Its card is marked as nuked and no longer ranked, so VIctory-NVIDIA (90%) leads the race; Belobug's progress still counts, and our overall number stays at 91.3%."
     }
   ],
   "history": [
