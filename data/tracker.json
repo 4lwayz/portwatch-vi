@@ -816,6 +816,37 @@
   ],
   "efforts": [
     {
+      "id": "coolfox",
+      "name": "CoolFox",
+      "repo": "yemao2333/c-line",
+      "basedOn": ["marvis", "victory-gta6"],
+      "evidence": "Self-reported; ledger and scripts are public",
+      "byline": "Public ledger, one NVIDIA machine",
+      "tier": "watchlist",
+      "gpu": ["NVIDIA", "AMD"],
+      "approach": "HLE emulator",
+      "target": "GTA VI only",
+      "summary": "Build on VIctory's AMD branch. Reaches the open world with a lit scene and 4,180-4,200 draws per frame at about 4.1 fps on RTX 3060 Ti 8 GB. Frame time, draw count and memory are measured and the ledger is public; story and render quality are not assessed.",
+      "highlights": [
+        "In-world 240.2-246.3 ms/frame (4.06-4.16 fps), 101 world samples per rep, three reps",
+        "4,180-4,200 draws per frame with textures, traffic and lighting",
+        "Peak private memory 17.63-18.35 GB with tuned memory keys; 20.07-20.49 GB without them",
+        "No in-world crash inside any 600 s window, every window closed with leftover_procs = 0"
+      ],
+      "blockers": [
+        "About 4 fps; the platform ceiling is 50-55 us/draw on this hardware",
+        "Startup is unreliable: 6 of 12 launch attempts on 2026-11-28 exited in 1-5 s with host pipeline refused 0x80070057 or host view heap capped at 1000000",
+        "One NVIDIA machine only; nothing measured on AMD or Intel",
+        "Story progress and render quality not assessed"
+      ],
+      "provenOn": null,
+      "gta": {"loads": 1, "boots": 1, "menu": 1, "world": 1, "playable": 1, "story": 0, "render": 0, "fps": 4, "stability": 0.7},
+      "verification": "self-reported",
+      "stats": {},
+      "assessedAt": "2026-11-28",
+      "claims": []
+    },
+    {
       "id": "kelvaroq",
       "name": "Kelvaroq",
       "repo": "stellarr-studio/kelvaroq",
