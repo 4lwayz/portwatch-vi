@@ -826,13 +826,13 @@
       "gpu": ["NVIDIA", "AMD"],
       "approach": "HLE emulator",
       "target": "GTA VI only",
-      "summary": "An HLE build on VIctory's AMD branch, tuned against trustno1-coder/VIctory-NVIDIA: that upstream fork's 40 SETTINGS defaults were compared line by line with this build's launcher, and only the differences that survived three-rep measurement were kept. The build is a joint effort by DeepSeek and Doubao: DeepSeek writes the code changes, Doubao runs them and measures on the machine, and every request, result and number is left in the public ledger. What it runs on: 8 GB of VRAM, 32 GB of RAM, a 6-core/12-thread CPU, measured on GeForce RTX 3060 Ti 8 GB, Core i5-12400F (6 cores/12 threads), 32 GB of RAM at 1440p with the page file raised so the commit limit is 49.84 GB. It reaches the open world with a lit scene, 4,180-4,200 draws per frame and about 4.1 fps on that machine. Supported cards: GeForce RTX 20 and 30 series (DLSS), RTX 40 and 50 series (DLSS and DLSS frame generation), AMD cards through FSR 3. Upstream states about 8 GB of VRAM and 32 GB of RAM as its floor, 64 GB more comfortable; nothing below 8 GB of VRAM has been tried. Frame time, draw count and memory are measured per rep and the ledger is public; story and render quality are not assessed.",
+      "summary": "An HLE build on VIctory's AMD branch, tuned against trustno1-coder/VIctory-NVIDIA: that upstream fork's 40 SETTINGS defaults were compared line by line with this build's launcher, and only the differences that survived three-rep measurement were kept. The build is a joint effort by DeepSeek and Doubao: DeepSeek writes the code changes, Doubao runs them and measures on the machine, and every request, result and number is left in the public ledger. Its reference configuration is 8 GB of VRAM and 32 GB of system memory on a 6-core/12-thread CPU at 1440p — GeForce RTX 3060 Ti 8 GB, Core i5-12400F, 32 GB of RAM, with the page file raised so the commit limit is 49.84 GB. On that configuration it reaches the open world with a lit scene, 4,180-4,200 draws per frame and about 4.1 fps. Supported cards: GeForce RTX 20 and 30 series (DLSS), RTX 40 and 50 series (DLSS and DLSS frame generation), AMD cards through FSR 3. Upstream puts the floor at about 8 GB of VRAM and 32 GB of RAM, 64 GB more comfortable, and this build has not been measured below the reference configuration. Frame time, draw count and memory are measured per rep and the ledger is public; story and render quality are not assessed.",
       "highlights": [
         "Made by DeepSeek and Doubao together: DeepSeek writes the code changes, Doubao runs and measures them; both sides leave their notes in the public repo",
-        "Runs on 8 GB of VRAM, 32 GB of RAM and a 6-core/12-thread CPU — measured on RTX 3060 Ti 8 GB + i5-12400F + 32 GB of RAM at 1440p",
+        "Reference configuration, every figure below taken on it: GeForce RTX 3060 Ti 8 GB, Core i5-12400F (6 cores/12 threads), 32 GB of RAM, 1440p output",
         "Supported cards: NVIDIA GeForce RTX 20/30 series (DLSS), RTX 40/50 series (DLSS and DLSS frame generation), AMD cards through FSR 3",
-        "Upstream hardware floor (trustno1-coder/VIctory-NVIDIA docs): about 8 GB of VRAM, 32 GB of RAM enough, 64 GB more comfortable",
-        "Commit limit raised to 49.84 GB by the page file, which is what stopped the 0x8007000E out-of-memory crashes",
+        "Upstream hardware floor (trustno1-coder/VIctory-NVIDIA docs): about 8 GB of VRAM, 32 GB of RAM, 64 GB more comfortable",
+        "Commit limit raised to 49.84 GB by the page file, which is what ended the 0x8007000E out-of-memory failures",
         "Tuned against trustno1-coder/VIctory-NVIDIA: its 40 SETTINGS switches compared one by one with this build's launcher; 16 are absent here, 2 differ in value",
         "In-world 240.2-246.3 ms/frame (4.06-4.16 fps), 101 world samples per rep, three reps",
         "4,180-4,200 draws per frame with textures, traffic and lighting",
@@ -841,8 +841,8 @@
       ],
       "blockers": [
         "About 4 fps; the platform ceiling is 50-55 us/draw on this hardware, while the same upstream reaches about 20 fps on stronger cards",
-        "8 GB of VRAM is the tight edge: a frame is 4,300 draws, so the card's budget is spent on textures and frame time follows it",
-        "Nothing measured below 8 GB of VRAM or below 6 cores/12 threads, and nothing measured on AMD or Intel GPUs",
+        "8 GB of VRAM is the binding constraint: a frame is 4,300 draws, so the card's budget is spent on textures and frame time follows it",
+        "Nothing below the reference configuration has been measured: under 8 GB of VRAM, under 6 cores/12 threads, and AMD or Intel GPUs are untested",
         "Startup is unreliable: 6 of 12 launch attempts on 2026-11-28 exited in 1-5 s with host pipeline refused 0x80070057 or host view heap capped at 1000000",
         "Story progress and render quality not assessed"
       ],
