@@ -15,10 +15,14 @@ const CODES = LANGS.map((l) => l.code);
 let lang = 'en';
 let dict = {};
 let en = {};
+const dicts = new Map();
+const pending = new Map();
+const listeners = new Set();
 
 export const getLang = () => lang;
 // For dates and numbers. English keeps the browser's own locale (en-GB, en-US…), as before.
 export const locale = () => (lang === 'en' ? undefined : lang);
+export const onLangChange = (fn) => { listeners.add(fn); return () => listeners.delete(fn); };
 
 function savedLang() {
   try { const v = localStorage.getItem(KEY); return CODES.includes(v) ? v : null; } catch { return null; }
@@ -37,10 +41,24 @@ export function pickLang() {
   return 'en';
 }
 
-async function load(code) {
-  const res = await fetch(new URL(`../i18n/${code}.json`, import.meta.url), { cache: 'no-cache' });
-  if (!res.ok) throw new Error(`${code}.json: HTTP ${res.status}`);
-  return res.json();
+function load(code) {
+  if (dicts.has(code)) return Promise.resolve(dicts.get(code));
+  if (pending.has(code)) return pending.get(code);
+  const p = fetch(new URL(`../i18n/${code}.json`, import.meta.url), { cache: 'default' })
+    .then((res) => {
+      if (!res.ok) throw new Error(`${code}.json: HTTP ${res.status}`);
+      return res.json();
+    })
+    .then((data) => { dicts.set(code, data); return data; })
+    .finally(() => pending.delete(code));
+  pending.set(code, p);
+  return p;
+}
+
+function syncThemeLabels() {
+  if (typeof window.pwSetThemeLabels === 'function') {
+    window.pwSetThemeLabels({ system: t('theme.system'), light: t('theme.light'), dark: t('theme.dark') }, t('theme.label'));
+  }
 }
 
 // Never throws: if a language file can't load, the page stays in English.
@@ -55,10 +73,27 @@ export async function initI18n() {
   dict = lang === 'en' ? en : own;
   document.documentElement.lang = lang;
   if (lang !== 'en') applyStatic();
-  if (typeof window.pwSetThemeLabels === 'function') {
-    window.pwSetThemeLabels({ system: t('theme.system'), light: t('theme.light'), dark: t('theme.dark') }, t('theme.label'));
-  }
+  syncThemeLabels();
   mountPicker();
+  // Quietly prefetch the remaining small dictionaries so switching is instant.
+  setTimeout(() => CODES.forEach((c) => { if (!dicts.has(c)) load(c).catch(() => {}); }), 250);
+}
+
+export async function setLang(code) {
+  if (!CODES.includes(code)) return false;
+  try { localStorage.setItem(KEY, code); } catch { /* the choice lasts for this page only */ }
+  if (code === lang) return false;
+  const next = code === 'en' ? en : await load(code).catch(() => null);
+  if (!next) { location.reload(); return false; }
+  lang = code;
+  dict = next;
+  document.documentElement.lang = lang;
+  applyStatic();
+  syncThemeLabels();
+  updatePicker();
+  if (!listeners.size) { location.reload(); return true; }
+  for (const fn of listeners) fn(lang);
+  return true;
 }
 
 const fill = (s, vars) => (vars ? s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m)) : s);
@@ -93,7 +128,22 @@ export function applyStatic(root = document) {
 const GLOBE = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.8 8h12.4M8 1.6c1.8 1.9 2.6 4 2.6 6.4S9.8 12.5 8 14.4M8 1.6C6.2 3.5 5.4 5.6 5.4 8s.8 4.5 2.6 6.4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
 const escText = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-// Language menu in the nav bar, next to the theme menu and styled like it. Choosing a language saves it and reloads.
+function updatePicker() {
+  const wrap = document.querySelector('.lang-pick');
+  if (!wrap) return;
+  const cur = LANGS.find((l) => l.code === lang) || LANGS[0];
+  const label = `${t('lang.label')}: ${cur.name}`;
+  const btn = wrap.querySelector('.lang-btn');
+  btn.setAttribute('aria-label', label);
+  btn.title = label;
+  btn.querySelector('span').textContent = cur.short;
+  for (const b of wrap.querySelectorAll('[data-lang]')) {
+    b.setAttribute('aria-checked', String(b.dataset.lang === lang));
+  }
+  wrap.querySelector('.lang-note').textContent = t('lang.note');
+}
+
+// Language menu in the nav bar, next to the theme menu and styled like it. Choosing a language updates in-place.
 function mountPicker() {
   const nav = document.querySelector('.nav-inner');
   if (!nav || nav.querySelector('.lang-pick')) return;
@@ -121,9 +171,9 @@ function mountPicker() {
     const b = ev.target.closest('[data-lang]');
     if (!b) return;
     const code = b.dataset.lang;
-    try { localStorage.setItem(KEY, code); } catch { /* the choice lasts for this page only */ }
-    if (code === lang) { open(false); btn.focus(); return; }
-    location.reload();
+    open(false);
+    btn.focus();
+    setLang(code);
   });
   document.addEventListener('click', (ev) => { if (!wrap.contains(ev.target)) open(false); });
   wrap.addEventListener('keydown', (ev) => {
