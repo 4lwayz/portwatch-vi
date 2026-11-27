@@ -715,7 +715,7 @@
       "id": "2026-11-19-fake-downloads",
       "date": "2026-11-19",
       "category": "Security",
-      "title": "Every “GTA VI for PC” download is fake, and some empty your accounts",
+      "title": "Every \u201cGTA VI for PC\u201d download is fake, and some empty your accounts",
       "dek": "Security firms have tracked tens of thousands of GTA VI malware detections, and a ready-made scam kit is for sale on the dark web.",
       "body": [
         "There is no PC version of GTA VI. Rockstar hasn't announced one, and no community port can run the game yet. That hasn't stopped a wave of fake installers.",
@@ -736,7 +736,7 @@
         },
         {
           "outlet": "Digital Trends",
-          "title": "27,000 reasons not to download “GTA VI for PC”",
+          "title": "27,000 reasons not to download \u201cGTA VI for PC\u201d",
           "url": "https://www.digitaltrends.com/gaming/27000-reasons-not-to-download-gta-vi-for-pc/"
         }
       ],
@@ -751,13 +751,13 @@
       "id": "2026-11-18-take-two-dmca",
       "date": "2026-11-18",
       "category": "Takedown",
-      "title": "Take-Two hits GTA V ports on GitHub, saying “bring your own files” is no defence",
+      "title": "Take-Two hits GTA V ports on GitHub, saying \u201cbring your own files\u201d is no defence",
       "dek": "Four DMCA notices, filed the day before GTA VI launched, took down unofficial GTA V ports along with hundreds of forks.",
       "body": [
         "On Nov 18, the day before GTA VI launched, Take-Two sent GitHub four DMCA takedown notices aimed at unofficial GTA V ports. The targets included an iOS and macOS port, a multi-platform runtime, an Android port, and repositories linked to a browser-based version.",
         "Reports differ on the scale. One counted 349 disabled forks of a single port, while another headline put the total above 600 projects. GitHub didn't publish a final count.",
         "The argument matters more than the numbers. Three of the four projects shipped no game files and told users to supply their own copy. Take-Two's notices argue that this setup doesn't excuse helping people reproduce the game without permission.",
-        "Every GTA VI project on this tracker uses the same “use your own copy” disclaimer. Developers can contest a takedown with a counter-notice, which obliges GitHub to restore the code unless Take-Two sues, as it did over the re3 and reVC projects in 2021."
+        "Every GTA VI project on this tracker uses the same \u201cuse your own copy\u201d disclaimer. Developers can contest a takedown with a counter-notice, which obliges GitHub to restore the code unless Take-Two sues, as it did over the re3 and reVC projects in 2021."
       ],
       "sources": [
         {
@@ -949,7 +949,7 @@
         "Belobug/VIctory-Belobug-AMD"
       ],
       "link": "news/2026-11-27-belobug-dmca.html",
-      "byline": "Removed by GitHub · was public, based on VIctory",
+      "byline": "Removed by GitHub \u00b7 was public, based on VIctory",
       "proof": {
         "label": "Belo Top Dawg",
         "url": "https://www.reddit.com/r/FitGirlRepack/comments/1y67xnd/belo_top_dawg/"
@@ -1178,7 +1178,7 @@
       "related": [
         "avatarmanz/VIctory-7900XTX"
       ],
-      "byline": "Removed by GitHub · was public, based on VIctory",
+      "byline": "Removed by GitHub \u00b7 was public, based on VIctory",
       "proof": {
         "label": "Video on Reddit",
         "url": "https://www.reddit.com/r/FitGirlRepack/comments/1y5k8xu/actually_playable/"
@@ -1225,7 +1225,7 @@
       "repo": null,
       "basedOn": [],
       "evidence": "Rumble stream",
-      "byline": "Streamed on Rumble · code not public",
+      "byline": "Streamed on Rumble \u00b7 code not public",
       "proof": {
         "label": "Watch on Rumble",
         "url": "https://rumble.com/v7iv98i-gta6-modding-stream.html"
@@ -1269,7 +1269,7 @@
       "repo": null,
       "basedOn": [],
       "evidence": "Verified by PortWatch",
-      "byline": "Working in private · built on JoshuuDev's victory-amd",
+      "byline": "Working in private \u00b7 built on JoshuuDev's victory-amd",
       "proof": {
         "label": "Doomsday on X",
         "url": "https://x.com/Stu9ao"
@@ -1317,7 +1317,7 @@
         "marvis"
       ],
       "evidence": "Rumble stream",
-      "byline": "Streamed on Rumble · built on a VIctory fork (which one isn't known)",
+      "byline": "Streamed on Rumble \u00b7 built on a VIctory fork (which one isn't known)",
       "proof": {
         "label": "Watch on Rumble",
         "url": "https://rumble.com/v7iwggw-gta-6-mooding-pc.html"
@@ -1364,7 +1364,7 @@
         "victory-gta6"
       ],
       "evidence": "Confirmed by PortWatch",
-      "byline": "Working in private · built on hyphennn's victory-fork",
+      "byline": "Working in private \u00b7 built on hyphennn's victory-fork",
       "tier": "tracked",
       "summary": "A private build on hyphennn's victory-fork of VIctory. PortWatch confirmed a player moving around Lucia's prologue at about 3 fps; the owner now rates its story progress at 80%. Code is not public.",
       "highlights": [
@@ -1408,7 +1408,7 @@
       ],
       "evidence": "Live streams on Rumble",
       "link": "news/2026-11-24-omonkey-shaders-prison.html",
-      "byline": "Streamed on Rumble by Swaggely · built on hyphennn's victory-fork (formerly victory-gta6)",
+      "byline": "Streamed on Rumble by Swaggely \u00b7 built on hyphennn's victory-fork (formerly victory-gta6)",
       "tier": "tracked",
       "summary": "A developer who streams all his work live on Rumble, through Swaggely's channel. GTA VI's shaders have started loading properly, and a player moves slowly around the opening prison scene at about 5 fps. No public code.",
       "highlights": [
@@ -1454,7 +1454,7 @@
         "url": "https://v.redd.it/137k5pow5w3i1"
       },
       "link": "news/2026-11-24-cgbj-in-game.html",
-      "byline": "Private code · based on VIctory and XCL",
+      "byline": "Private code \u00b7 based on VIctory and XCL",
       "tier": "tracked",
       "approach": "Compatibility layer",
       "target": "GTA VI only",
@@ -2180,7 +2180,7 @@
       "claims": [
         {
           "milestone": "world",
-          "text": "- ✅ The game runs. GTA VI 1.0.2.1 (Xbox Series build) starts, plays its cutscenes and reaches the open world through VIctory, the copy in third party/victory ."
+          "text": "- \u2705 The game runs. GTA VI 1.0.2.1 (Xbox Series build) starts, plays its cutscenes and reaches the open world through VIctory, the copy in third party/victory ."
         }
       ],
       "readmeChangedAt": "2026-11-27"
@@ -3273,6 +3273,66 @@
       "claims": [],
       "readmeSha": "346fcf9a17a21b44b89f69d23d1b6a2b4d277e488d529e933b0b32a76dd57f44",
       "readmeChangedAt": "2026-11-25"
+    },
+    {
+      "id": "pink",
+      "name": "Pink",
+      "repo": "Kalpajit0406/Pink",
+      "branch": "main",
+      "tier": "watchlist",
+      "gpu": [
+        "NVIDIA"
+      ],
+      "approach": "Static recompilation",
+      "target": "GTA VI only",
+      "summary": "Snapshot of the Leonida continuation (ubiquitarianism/leonida), optimised for a 24 GB RAM / RTX 3050 6 GB machine. The retail exe runs the opening cutscene and the story load to its end, then crashes at world load when RAM and VRAM both fill. Active memory programme: accounting telemetry, Memory Governor, WDDM overcommit paging, budget enforcement, adaptive mip cap.",
+      "highlights": [
+        "Retail exe runs the opening cutscene and story load to its end on Windows (RTX 3050 6 GB, 24 GB RAM)",
+        "All 26,503 GTA VI shaders translated to SPIR-V and passed validation",
+        "Memory programme landed 27 Nov: accounting telemetry, Memory Governor with Series S presets, WDDM overcommit paging, budget enforcement, adaptive mip cap"
+      ],
+      "blockers": [
+        "No world frame verified yet \u2014 crashes at world load with RAM and VRAM both full (24/24 GB, 6/6 GB)",
+        "Title RAM and VRAM copies still duplicated; in-place heaps and GPU decompression not built",
+        "Snapshot created after the Nov 24 Take-Two DMCA swept Leonida's 3,007-fork network; a follow-up notice could name it"
+      ],
+      "groundwork": {
+        "loader": 0.8,
+        "shaders": 0.9,
+        "graphics": 0.6,
+        "proven": 0
+      },
+      "provenOn": null,
+      "gta": {
+        "loads": 1,
+        "boots": 1,
+        "menu": 0,
+        "world": 0,
+        "playable": 0,
+        "story": 0,
+        "render": 0,
+        "fps": 0,
+        "stability": "constant"
+      },
+      "basedOn": [
+        "leonida"
+      ],
+      "verification": "self-reported",
+      "stats": {
+        "stars": 2,
+        "forks": 0,
+        "openIssues": 0,
+        "createdAt": "2026-11-26T20:30:19Z",
+        "pushedAt": "2026-11-27T19:05:14Z",
+        "commits7d": 29,
+        "archived": false,
+        "missing": false
+      },
+      "assessedAt": "2026-11-28",
+      "assessedBy": "manual",
+      "claims": [],
+      "readmeSha": "934f75b7af574210db0de211e71a816ec4df015e46bc4ef933195f3f41251d71",
+      "readmeChangedAt": "2026-11-27"
     }
   ],
   "tools": [
@@ -3901,7 +3961,7 @@
     {
       "repo": "0v3rr/Tequesta",
       "name": "Tequesta",
-      "description": "Rust-based HLE compatibility layer and D3D12.X → D3D12 translation runtime for running Xbox Series x86-64 GTA VI natively on Windows, tuned for NVIDIA RTX hardware. Does not include any game file.",
+      "description": "Rust-based HLE compatibility layer and D3D12.X \u2192 D3D12 translation runtime for running Xbox Series x86-64 GTA VI natively on Windows, tuned for NVIDIA RTX hardware. Does not include any game file.",
       "language": "Rust",
       "stars": 3,
       "createdAt": "2026-11-26T23:47:22Z",
@@ -3973,7 +4033,7 @@
     {
       "repo": "mrbabayeen-Linux/mandy6",
       "name": "mandy6",
-      "description": "Bifurcación de pruebas (Leonida Continuation) — sin datos del juego; ver PRUEBAS-CASA.md",
+      "description": "Bifurcaci\u00f3n de pruebas (Leonida Continuation) \u2014 sin datos del juego; ver PRUEBAS-CASA.md",
       "language": "Python",
       "stars": 0,
       "createdAt": "2026-11-27T11:18:29Z",
@@ -4014,30 +4074,6 @@
         "13 technical terms",
         "status table",
         "100+ commits/7d"
-      ],
-      "kind": "effort",
-      "status": "new"
-    },
-    {
-      "repo": "Kalpajit0406/Pink",
-      "name": "Pink",
-      "description": "",
-      "language": "Python",
-      "stars": 0,
-      "createdAt": "2026-11-26T20:30:19Z",
-      "pushedAt": "2026-11-27T16:13:12Z",
-      "defaultBranch": "main",
-      "sources": [
-        "GitHub search"
-      ],
-      "links": [],
-      "foundAt": "2026-11-27T16:18:23.809Z",
-      "substance": 91,
-      "signals": [
-        "Python",
-        "24 technical terms",
-        "status table",
-        "17 commits/7d"
       ],
       "kind": "effort",
       "status": "new"
@@ -4141,7 +4177,7 @@
     {
       "repo": "HyperExtendedReality/strata",
       "name": "strata",
-      "description": "Clean-room Rust compatibility layer for unpacked x86-64 console software on Windows using No-API Vulkan 1.3+, direct RDNA2→SPIR-V 1.6 & Slang.",
+      "description": "Clean-room Rust compatibility layer for unpacked x86-64 console software on Windows using No-API Vulkan 1.3+, direct RDNA2\u2192SPIR-V 1.6 & Slang.",
       "language": "Rust",
       "stars": 1,
       "createdAt": "2026-11-26T17:36:59Z",
@@ -4190,7 +4226,7 @@
     {
       "repo": "ToLIManl/VIctory-Hydra",
       "name": "VIctory-Hydra",
-      "description": "Unified multi-fork VIctory D3D12 runtime & shader recompiler for GTA 6 Xbox Series recompilation — combining cool_fox, Neptune_VI, fxceless, Vice-Tay & community fixes for NVIDIA RTX / AMD.",
+      "description": "Unified multi-fork VIctory D3D12 runtime & shader recompiler for GTA 6 Xbox Series recompilation \u2014 combining cool_fox, Neptune_VI, fxceless, Vice-Tay & community fixes for NVIDIA RTX / AMD.",
       "language": "Rust",
       "stars": 23,
       "createdAt": "2026-11-27T12:19:26Z",
@@ -4238,23 +4274,23 @@
   "flagged": [
     {
       "id": "switch-emulator-network",
-      "pattern": "“GTA 6 Switch Version PC Emulator 2026” repositories",
+      "pattern": "\u201cGTA 6 Switch Version PC Emulator 2026\u201d repositories",
       "label": "30+ copies",
       "count": 33,
-      "reason": "Identical repos created within minutes of each other on Nov 19, each starred ~30 times by the other copies. They promote a “PC installer” download. Treat them as malware.",
+      "reason": "Identical repos created within minutes of each other on Nov 19, each starred ~30 times by the other copies. They promote a \u201cPC installer\u201d download. Treat them as malware.",
       "members": []
     },
     {
       "id": "fake-exe",
-      "pattern": "gamescarletmaster.exe or any “GTA VI PC installer”",
+      "pattern": "gamescarletmaster.exe or any \u201cGTA VI PC installer\u201d",
       "label": "Expect many",
       "count": null,
-      "reason": "Cyberleek says the executable is out, and fake “installers” are riding on that news; a scam kit built around one is reportedly for sale. Nothing plays GTA VI on PC yet, so a download that promises it is almost certainly malware. No project here hosts the game or an .exe.",
+      "reason": "Cyberleek says the executable is out, and fake \u201cinstallers\u201d are riding on that news; a scam kit built around one is reportedly for sale. Nothing plays GTA VI on PC yet, so a download that promises it is almost certainly malware. No project here hosts the game or an .exe.",
       "members": []
     },
     {
       "id": "pc-version-pages",
-      "pattern": "“GTA 6 PC Version” / “KytyPS5” landing pages",
+      "pattern": "\u201cGTA 6 PC Version\u201d / \u201cKytyPS5\u201d landing pages",
       "label": "Several",
       "count": null,
       "reason": "HTML-only repos promising a ready-to-play PC version. None contain working code.",
@@ -4262,10 +4298,10 @@
     },
     {
       "id": "ai-fakes",
-      "pattern": "Videos or posts of “GTA VI running on PC”",
+      "pattern": "Videos or posts of \u201cGTA VI running on PC\u201d",
       "label": "Viral",
       "count": null,
-      "reason": "No project has booted GTA VI on PC, so a clip that shows it playing isn't real. One viral clip's “specs” text gave itself away as language-model output.",
+      "reason": "No project has booted GTA VI on PC, so a clip that shows it playing isn't real. One viral clip's \u201cspecs\u201d text gave itself away as language-model output.",
       "members": []
     },
     {
@@ -8997,7 +9033,7 @@
       "via": "Google News"
     },
     {
-      "title": "Unofficial GTA 6 PC port shows multiplayer and proximity voice chat at 25–30 FPS",
+      "title": "Unofficial GTA 6 PC port shows multiplayer and proximity voice chat at 25\u201330 FPS",
       "outlet": "Notebookcheck",
       "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxONFhYMS1MQXdpU09RT25vMnk0Z084NWRxdm1fdDExNWhlUVFmZjBzbzVUWlg1b2k0dFItNzEwZm5fV0Z2aVpLNFB0ZHJaWnFzYmJ3bjA0a2VCWUU3ODRnRjdwMFhfLTBNc0puSHdBaTZsT19PVFBVeWs1cXdlYVBZUDIxNWxsc1J6VlBjSkQzR0dzNzBwai1ueUYzQm8zb2pTR0F2WDlXVkRVcDlBcDh3Y2hSZWVzWTVXLWd3TTVDZXM5dk0?oc=5",
       "date": "2026-11-27T10:04:00.000Z",
@@ -9011,14 +9047,14 @@
       "via": "Google News"
     },
     {
-      "title": "GTA 6: Thousands of recomp repositories taken down – but what did it achieve?",
+      "title": "GTA 6: Thousands of recomp repositories taken down \u2013 but what did it achieve?",
       "outlet": "Notebookcheck",
       "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNRm9mODRHdEhtcVNxQlVfcFpiUFVCTTE1RUpVQkY3RlIxSHR6aDZ5bFBLSWE2aHJrUmV6OERlNWRFMDdONWU4eDBYaTc5b0h6cDNMdVM0eFpyZGVYNENHalVIUEw2UzVaYVlMLUlZODFqVHpsQlpJeF9WRW1uX0NHV21GOEctS3ZlWnFZUkYwY09PMWNHZkNOZjFRZGQyREN5dnZ0ZkgtVS1uNC1Yd2JScXZzc3ZmWGltZ3c?oc=5",
       "date": "2026-11-27T09:31:00.000Z",
       "via": "Google News"
     },
     {
-      "title": "‘GTA 6’ Is Already One Of The Best-Selling Games Ever, Says Report",
+      "title": "\u2018GTA 6\u2019 Is Already One Of The Best-Selling Games Ever, Says Report",
       "outlet": "Forbes",
       "link": "https://www.forbes.com/sites/paultassi/2026/11/27/gta-6-is-already-one-of-the-best-selling-games-ever-says-report/",
       "date": "2026-11-27T09:06:00.000Z",
