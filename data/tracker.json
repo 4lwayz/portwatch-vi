@@ -1164,7 +1164,7 @@
       "repo": null,
       "nuked": {
         "at": "2026-11-27",
-        "note": "Repository and GitHub account went offline on Nov 27; it isn't known whether GitHub removed them or the owner took them down. Its progress still counts in our overall number.",
+        "note": "Repository and GitHub account removed by GitHub on Nov 27 for a Terms of Service violation, as with Belobug, confirmed by PortWatch. Its progress still counts in our overall number.",
         "show": true,
         "keepScore": true
       },
@@ -1178,7 +1178,7 @@
       "related": [
         "avatarmanz/VIctory-7900XTX"
       ],
-      "byline": "Offline · was public, based on VIctory",
+      "byline": "Removed by GitHub · was public, based on VIctory",
       "proof": {
         "label": "Video on Reddit",
         "url": "https://www.reddit.com/r/FitGirlRepack/comments/1y5k8xu/actually_playable/"
@@ -1189,7 +1189,7 @@
       ],
       "approach": "Compatibility layer",
       "target": "GTA VI only",
-      "summary": "AvatarManz's VIctory fork for the AMD Radeon RX 7900 XTX, verified by PortWatch at about 16 fps on average, with sound. Its code and GitHub account went offline on 27 Nov; it isn't known whether GitHub removed them or its owner did.",
+      "summary": "AvatarManz's VIctory fork for the AMD Radeon RX 7900 XTX, verified by PortWatch at about 16 fps on average, with sound. Its code and GitHub account were removed by GitHub on 27 Nov for a Terms of Service violation, as Belobug's were, which PortWatch has confirmed.",
       "highlights": [
         "Platform: AMD Radeon RX 7900 XTX, Intel Core i9-12900K, 64 GB RAM, Windows 11",
         "About 16 fps on average in game, verified by PortWatch. Its README: 13-20 fps indoors in the prologue, 19-22 on the first boat mission, 30 in menus",
@@ -1197,7 +1197,7 @@
         "Brought victory-fork, DexNom and Belobug together on VIctory, history and credits kept; GPL-3.0-or-later"
       ],
       "blockers": [
-        "Code and GitHub account offline since 27 Nov; unknown whether GitHub removed them or its owner did",
+        "Code and GitHub account removed by GitHub on 27 Nov for a Terms of Service violation; nobody outside can test it",
         "Busy street chases drop to 6-10 fps, with single frames far longer; outdoors on foot runs at about 11-17 fps (its README)",
         "Used 40-46 GB of memory (64 GB of RAM recommended); tested on one PC only, not reproduced by others"
       ],
@@ -8543,7 +8543,7 @@
     {
       "date": "2026-11-27",
       "kind": "down",
-      "text": "AvatarManz's repository and GitHub account have gone offline too; it isn't known whether GitHub removed them or its owner took them down. Its card is marked as nuked and no longer ranked, but its progress (81.8%) still counts. DexNom (77.4%) is now #2 in the race behind VIctory-NVIDIA."
+      "text": "GitHub has removed AvatarManz's repository and account too, for violating its Terms of Service, which PortWatch has confirmed. Its card is marked as nuked and no longer ranked, but its progress (81.8%) still counts. DexNom (77.4%) is now #2 in the race behind VIctory-NVIDIA."
     },
     {
       "date": "2026-11-27",
