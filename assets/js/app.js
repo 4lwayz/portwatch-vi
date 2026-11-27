@@ -354,8 +354,10 @@ function renderRace() {
   const { data, filter, sort } = state;
   // Only public code is ranked; private builds get their own unranked list below the race.
   // Nuked efforts (taken offline) aren't shown (owner's call, 2026-11-25). They stay in tracker.json,
-  // where their repo names keep the scout from listing copies of them as new candidates.
-  let list = data.efforts.filter((e) => e.tier === 'tracked' && !e.nuked && !isPrivateBuild(e));
+  // where their repo names keep the scout from listing copies of them as new candidates. One with
+  // `nuked.show` (Belobug, 2026-11-27, owner's call) keeps its card: greyed, unranked, at the bottom.
+  const shownNuked = (e) => e.tier === 'tracked' && e.nuked?.show === true;
+  let list = data.efforts.filter((e) => (e.tier === 'tracked' && !e.nuked && !isPrivateBuild(e)) || shownNuked(e));
   // The AMD / NVIDIA chips keep the builds that have run on that brand of card (`gpu`).
   if (GPU_CLASS[filter]) list = list.filter((e) => Array.isArray(e.gpu) && e.gpu.includes(filter));
   const byScore = (a, b) => Number(!!a.nuked) - Number(!!b.nuked) || b._s.score - a._s.score || byStars(a, b);

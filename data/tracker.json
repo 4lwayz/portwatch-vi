@@ -16,6 +16,34 @@
   },
   "news": [
     {
+      "id": "2026-11-27-belobug-dmca",
+      "date": "2026-11-27",
+      "publishedAt": "2026-11-27T18:33:11Z",
+      "category": "Takedown",
+      "title": "Exclusive: Belobug's GTA VI build taken down by a DMCA notice",
+      "dek": "The repository and GitHub account behind the best-rated build on our board are gone. PortWatch has confirmed that a DMCA notice took them down.",
+      "body": [
+        "Belobug's GTA VI build has been taken off GitHub. The Belobug/VIctory-Belobug-AMD repository and the Belobug account behind it both stopped loading on Friday, and PortWatch has confirmed that a DMCA notice took them down.",
+        "It was the build to beat: a fork of Marvis's VIctory for AMD Radeon cards, very playable at about 22 fps on average with no crashes, and among the furthest into the story on our board. It had over 4,000 stars and 1,200 forks, and at 91.3% it was the top-rated build we track.",
+        "We don't know who sent the notice. GitHub publishes takedown notices in its public DMCA log, which so far only runs to 24 November, when a Take-Two notice hit Leonida and thousands of its forks. We'll update this article when Belobug's notice appears.",
+        "Belobug's card on our board is now marked as nuked: kept for the record, but no longer ranked or counted. VIctory-NVIDIA, at 90%, now leads both the race and our overall number. Don't go looking for copies of Belobug's code: forks of a taken-down repository can be removed too, and unofficial downloads often carry malware."
+      ],
+      "sources": [
+        {
+          "outlet": "GitHub",
+          "title": "GitHub's public log of DMCA takedown notices",
+          "url": "https://github.com/github/dmca"
+        },
+        {
+          "outlet": "PortWatch",
+          "title": "We've seen Belobug's AMD build, and it's way ahead",
+          "url": "https://portwatch-vi.xyz/news/2026-11-25-belobug-way-ahead.html"
+        }
+      ],
+      "image": null,
+      "by": "report"
+    },
+    {
       "id": "2026-11-26-multiplayer-running",
       "date": "2026-11-26",
       "publishedAt": "2026-11-26T22:42:00Z",
@@ -56,7 +84,7 @@
         "It's built for AMD Radeon, while ZETTROX's, the previous leader, is tuned for NVIDIA. Belobug runs it on a Radeon RX 9070 XT 16 GB with a Ryzen 7 9800X3D, 64 GB of RAM and Windows 11. It's a fork of Marvis's VIctory, following its main branch plus upstream pull requests, and its README says no code from hyphennn's victory-fork is in it. Belobug's own fixes include a stand-in for the game's ray-traced indirect light, which left leaves magenta and indoor scenes in coloured blocks, a fix for lines along every triangle on car paint, glass and skin, and a change that cut the GPU time of one heavy scene from 225 to about 80 milliseconds a frame.",
         "It isn't fast. The README puts it at 3 to 5 frames per second, about 3 while driving, and still calls it \"not playable yet\" for that reason. Parts of moving vehicles get left behind or stretched, distant trees aren't drawn, shade is flat, and it needs about 22 GB of RAM and more video memory than a 16 GB card has. It has run on one PC so far; nobody has tried it on NVIDIA or Intel.",
         "The code is public, as Belobug/VIctory-Belobug-AMD, under VIctory's GPL-3.0 licence, so others with AMD cards can try it. It contains no game files: you need your own copy of the game.",
-        "Update, 2026-11-27: Belobug's repository and GitHub account were taken down by a DMCA notice, which PortWatch has confirmed, so Belobug is now listed as a private build."
+        "Update, 2026-11-27: Belobug's repository and GitHub account were taken down by a DMCA notice, which PortWatch has confirmed. Its card on our board is now marked as nuked."
       ],
       "sources": [
         {
@@ -906,6 +934,11 @@
       "id": "belobug",
       "name": "Belobug",
       "repo": null,
+      "nuked": {
+        "at": "2026-11-27",
+        "note": "Repository and GitHub account taken down by a DMCA notice on Nov 27, confirmed by PortWatch.",
+        "show": true
+      },
       "basedOn": [
         "marvis"
       ],
@@ -913,8 +946,8 @@
       "related": [
         "Belobug/VIctory-Belobug-AMD"
       ],
-      "link": "news/2026-11-25-belobug-way-ahead.html",
-      "byline": "Private code · based on VIctory",
+      "link": "news/2026-11-27-belobug-dmca.html",
+      "byline": "Taken down by DMCA · was public, based on VIctory",
       "proof": {
         "label": "Belo Top Dawg",
         "url": "https://www.reddit.com/r/FitGirlRepack/comments/1y67xnd/belo_top_dawg/"
@@ -8720,7 +8753,7 @@
     {
       "date": "2026-11-27",
       "kind": "down",
-      "text": "Belobug's repository and GitHub account were taken down by a DMCA notice, which PortWatch has confirmed. Belobug moves to the private builds at 91.3%, still our overall leader, and VIctory-NVIDIA (90%) now leads the race."
+      "text": "Belobug's repository and GitHub account were taken down by a DMCA notice, which PortWatch has confirmed. Its card is marked as nuked and no longer counts, so VIctory-NVIDIA (90%) now leads both the race and our overall number."
     }
   ],
   "history": [
