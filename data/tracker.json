@@ -3152,21 +3152,25 @@
       "name": "VIctory Linux",
       "repo": "aDefaultUser/VIctory-linux",
       "branch": "main",
+      "proof": {
+        "label": "Linux guide: tested runs",
+        "url": "https://github.com/aDefaultUser/VIctory-linux/blob/8c07a31a76b9f0366251e195d8af7a305ffab594/docs/linux.md#latest-tested-runs"
+      },
       "tier": "watchlist",
       "gpu": [
         "AMD"
       ],
       "approach": "Compatibility layer",
       "target": "Unnamed Xbox Series title",
-      "summary": "VIctory fork for Wine and Proton. Its public guide reports player control in the opening of an unnamed Xbox Series title on one AMD PC. Cached replays restored faces and hair. Unscored.",
+      "summary": "VIctory fork for Wine and Proton. Its public guide reports the opening and first room of an unnamed Xbox Series title on one RX 9070 XT, with camera input. Rendering still varies. Unscored.",
       "highlights": [
-        "Opening reaches player control on Wine 11.22 and Proton Experimental 11.0 with a patched vkd3d-proton",
-        "Replays with a prior graphics pipeline cache restored faces and hair in the tested opening"
+        "Guide reports both Wine 11.22 and Proton Experimental 11.0, with patched vkd3d-proton, accepted camera input",
+        "Guide reports cached replays restored cutscene faces and the player's head and hair in the first room"
       ],
       "blockers": [
-        "Performance in the first playable room awaits a published benchmark",
+        "Guide's first-room readings of about 22 to 30 FPS cover one RX 9070 XT on patched Proton",
         "The public guide leaves the title unnamed, so the run remains unscored",
-        "Testing covers the opening on one RX 9070 XT. Cold launches can still lose faces"
+        "Lighting and materials still vary between runs, and some launches or replays lose faces"
       ],
       "groundwork": {
         "loader": 0,
@@ -3192,11 +3196,11 @@
       ],
       "verification": "self-reported",
       "stats": {
-        "stars": 2,
-        "forks": 0,
+        "stars": 3,
+        "forks": 1,
         "openIssues": 0,
         "createdAt": "2026-11-25T06:18:31Z",
-        "pushedAt": "2026-11-25T23:22:28Z",
+        "pushedAt": "2026-11-27T09:14:35Z",
         "commits7d": 100,
         "archived": false,
         "missing": false
