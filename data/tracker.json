@@ -875,7 +875,7 @@
         "world": 1,
         "playable": 1,
         "story": 0.8,
-        "render": 0.7,
+        "render": 0.75,
         "fps": 20,
         "stability": 1
       },
@@ -8676,7 +8676,7 @@
     {
       "date": "2026-11-27",
       "kind": "new",
-      "text": "VIctory-NVIDIA joins the race at #2 with 89.4%: trustno1-coder's NVIDIA fork of VIctory on foxhound, with DLSS and frame generation, rated about as playable as the leaders at 20 fps without crashes. AvatarManz (81.8%) is now #3."
+      "text": "VIctory-NVIDIA joins the race at #2 with 90%:trustno1-coder's NVIDIA fork of VIctory on foxhound, with DLSS and frame generation, rated about as playable as the leaders at 20 fps without crashes. AvatarManz (81.8%) is now #3."
     }
   ],
   "history": [
