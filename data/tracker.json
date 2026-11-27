@@ -856,10 +856,10 @@
       ],
       "approach": "Compatibility layer",
       "target": "GTA VI only",
-      "summary": "An NVIDIA fork of VIctory, now on readmet3xt-lab's foxhound, with DLSS, frame generation and an in-game settings menu. The owner rates it about as playable as the leaders: 20 fps, no crashes, some stutter, no ray tracing by default.",
+      "summary": "An NVIDIA fork of VIctory, now on readmet3xt-lab's foxhound, with DLSS, frame generation and an in-game settings menu. PortWatch has verified it: about as playable as the leaders, 20 fps, no crashes, some stutter, no ray tracing by default.",
       "highlights": [
         "Platform in its README: GeForce RTX 5070 12 GB, Ryzen 7 9800X3D, 64 GB RAM, Windows 11",
-        "About 20 fps without crashes (owner's rating); its README measures 26-30 fps in the opening at 1440p with DLSS",
+        "20 fps without crashes, verified by PortWatch; its README measures 26-30 fps in the opening at 1440p with DLSS",
         "DLSS upscaling and frame generation, 2x to 6x on RTX 50 cards, switched from an in-game F1 menu"
       ],
       "blockers": [
@@ -884,7 +884,7 @@
         "victory-gta6",
         "avatarmanz"
       ],
-      "verification": "self-reported",
+      "verification": "portwatch",
       "stats": {
         "stars": 560,
         "forks": 180,
