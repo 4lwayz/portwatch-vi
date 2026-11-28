@@ -875,6 +875,62 @@
       "readmeChangedAt": "2026-11-27"
     },
     {
+      "id": "mandy",
+      "name": "Leonida Continued",
+      "repo": "ProjectLeonida/mandy",
+      "branch": "main",
+      "tier": "tracked",
+      "gpu": [
+        "NVIDIA"
+      ],
+      "approach": "Static recompilation + compatibility layer",
+      "target": "GTA VI only",
+      "summary": "Continues NotRexed's Leonida with its history. Its README reports the open world playable on a second Direct3D 12 runtime grown from VIctory-NVIDIA; the original recompiled runtime isn't playable yet.",
+      "highlights": [
+        "README: a save loads into the open world; walking, driving, HUD, map, pause menu and sound work",
+        "Platform in its README: RTX 4060 Ti 16 GB, Ryzen 5 7600X, 32 GB RAM, Windows 11",
+        "Recompiled runtime: README reports all 26,503 shaders translated and validated, and a boot through story load"
+      ],
+      "blockers": [
+        "About 10 fps on main (12-13 on an unmerged branch); story progress and session length not measured",
+        "Ray-traced light is stood in for, volumetrics are left out and some indirect light is missing",
+        "The playable runtime comes from VIctory-NVIDIA; Take-Two's DMCA disabled the original Leonida repository's fork network"
+      ],
+      "provenOn": null,
+      "gta": {
+        "loads": 1,
+        "boots": 1,
+        "menu": 1,
+        "world": 1,
+        "playable": 1,
+        "story": 0,
+        "render": 0.5,
+        "fps": 10,
+        "stability": "unknown"
+      },
+      "basedOn": [
+        "victory-nvidia",
+        "marvis"
+      ],
+      "related": [
+        "ubiquitarianism/leonida"
+      ],
+      "verification": "self-reported",
+      "stats": {
+        "stars": 2834,
+        "forks": 617,
+        "openIssues": 1498,
+        "createdAt": "2026-11-23T23:54:39Z",
+        "pushedAt": "2026-11-28T00:21:45Z",
+        "archived": false,
+        "missing": false,
+        "commits7d": 100
+      },
+      "assessedAt": "2026-11-28",
+      "assessedBy": "claude",
+      "claims": []
+    },
+    {
       "id": "victory-nvidia",
       "name": "VIctory-NVIDIA",
       "repo": "trustno1-coder/VIctory-NVIDIA",
@@ -4065,30 +4121,6 @@
         "24 technical terms",
         "status table",
         "17 commits/7d"
-      ],
-      "kind": "effort",
-      "status": "new"
-    },
-    {
-      "repo": "ProjectLeonida/mandy",
-      "name": "mandy",
-      "description": "A continuation of Leonida, the Xbox > PC port interface for GTA VI",
-      "language": "Python",
-      "stars": 2642,
-      "createdAt": "2026-11-23T23:54:39Z",
-      "pushedAt": "2026-11-27T21:42:07Z",
-      "defaultBranch": "main",
-      "sources": [
-        "GitHub search"
-      ],
-      "links": [],
-      "foundAt": "2026-11-27T22:08:55.566Z",
-      "substance": 91,
-      "signals": [
-        "Python",
-        "24 technical terms",
-        "status table",
-        "100+ commits/7d"
       ],
       "kind": "effort",
       "status": "new"
@@ -8423,6 +8455,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-28",
+      "kind": "new",
+      "text": "Leonida Continued (ProjectLeonida/mandy) joins the race: its README reports the open world playable at a low frame rate (self-reported)."
+    },
     {
       "date": "2026-11-27",
       "kind": "new",
