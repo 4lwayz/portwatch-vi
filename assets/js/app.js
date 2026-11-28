@@ -127,6 +127,7 @@ function renderHeroArt(site) {
 const LIVE_REFRESH_MS = 5 * 60_000;
 function watchViewers() {
   const pill = $('#watching');
+  if (!pill) return; // the pill is commented out in index.html: nothing to fill, so don't ask /api/live
   let last = 0;
   const refresh = async () => {
     if (document.hidden) return;
