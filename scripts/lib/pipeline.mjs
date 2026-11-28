@@ -34,7 +34,9 @@ export async function runScout(data, opts = {}) {
   const changes = (data.changes ||= []);
   const addChange = (kind, text) => changes.push({ date: today, kind, text });
   const prevScores = new Map(data.efforts.map((e) => [e.id, scoreEffort(e).score]));
-  const prevLeader = overall(data.efforts).leader?.effort?.id;
+  // Leader before this run, by the same rule as the leader after it (unreachable repos left out). Otherwise an
+  // unreachable leader is "overtaken" again on every run.
+  const prevLeader = overall(data.efforts.filter((e) => !e.stats?.missing)).leader?.effort?.id;
   const errorOut = (where, err) => {
     summary.errors.push(`${where}: ${err.message}`);
     log(`  ! ${where}: ${err.message}`);
