@@ -28,7 +28,7 @@ export function makeGitHub({ token } = {}) {
     // 404 = deleted/private, 451 = blocked (DMCA). Both mean "gone".
     if (res.status === 404 || res.status === 451 || res.status === 409) return { status: res.status, data: null };
     if (!res.ok) throw new Error(`GitHub ${res.status} for ${path}`);
-    return { status: res.status, data: raw ? await res.text() : await res.json() };
+    return { status: res.status, data: raw ? await res.text() : await res.json(), link: res.headers.get('link') || '' };
   }
 
   const toMeta = (d) => ({
@@ -57,11 +57,15 @@ export function makeGitHub({ token } = {}) {
       const r = await req(`/repos/${full}`);
       return r.data ? toMeta(r.data) : { missing: true, status: r.status };
     },
+    // One commit per page, so the last page's number in the Link header is the count, however large.
+    // (A full page of 100 used to be the most this could report.) Still one request per repo.
     async commitsSince(full, branch, sinceIso) {
-      const q = new URLSearchParams({ since: sinceIso, per_page: '100' });
+      const q = new URLSearchParams({ since: sinceIso, per_page: '1' });
       if (branch) q.set('sha', branch);
       const r = await req(`/repos/${full}/commits?${q}`);
-      return Array.isArray(r.data) ? r.data.length : null;
+      if (!Array.isArray(r.data)) return null;
+      const last = r.link.match(/[?&]page=(\d+)[^>]*>;\s*rel="last"/);
+      return last ? +last[1] : r.data.length;
     },
     async recentCommits(full, branch, n = 25) {
       const q = new URLSearchParams({ per_page: String(n) });
@@ -383,7 +387,7 @@ export function substance(meta, readme = '', commits7d = null) {
   if (hits.length >= 3) signals.push(`${hits.length} technical terms`);
   if (/✅|❌|🟡|\|\s*(status|state|progress)\s*\|/i.test(readme)) { score += 8; signals.push('status table'); }
   if (/(\d+\s*\/\s*\d+\s*(tests|checks|passing))|tests? passing|ctest|cargo test|pytest|unit tests/i.test(readme)) { score += 7; signals.push('tests'); }
-  if (commits7d != null) { score += Math.min(15, commits7d); if (commits7d) signals.push(`${commits7d >= 100 ? '100+' : commits7d} commits/7d`); }
+  if (commits7d != null) { score += Math.min(15, commits7d); if (commits7d) signals.push(`${commits7d} commits/7d`); }
   if (/(download|installer)/i.test(text) && hits.length < 3) score -= 25;
   if (/(ai hallucination|doesn'?t work|does not work|joke repo|meme)/i.test(text)) score -= 20;
   const blob = `${meta.name} ${meta.description} ${readme}`;

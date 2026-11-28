@@ -575,7 +575,7 @@ function effortCard(e, rank, open, overallRank = null) {
         ${hasRepo(e) ? `<span class="stat-i" title="${esc(t('effort.stars'))}">${ICON.star}${fmtK(st.stars)}</span>
         <span class="stat-i" title="${esc(t('effort.forks'))}">${ICON.fork}${fmtK(st.forks)}</span>
         <span class="stat-i" title="${esc(t('effort.issues'))}">${ICON.issue}${fmtK(st.openIssues)}</span>
-        ${st.commits7d != null ? `<span class="stat-i" title="${esc(t('effort.commitsTitle'))}">${ICON.commit}${esc(t('effort.commits', { n: st.commits7d >= 100 ? '100+' : st.commits7d }))}</span>` : ''}
+        ${st.commits7d != null ? `<span class="stat-i" title="${esc(t('effort.commitsTitle'))}">${ICON.commit}${esc(t('effort.commits', { n: fmtK(st.commits7d) }))}</span>` : ''}
         <span class="stat-i" title="${esc(t('effort.lastPush'))}">${ICON.clock}${esc(t('effort.pushed', { ago: ago(st.pushedAt) }))}</span>` : ''}
         <span class="spacer"></span>
         <span class="w-muted" title="${esc(t('effort.reviewedTitle'))}">${esc(e.assessedBy === 'claude' ? t('effort.byClaude') : t('effort.reviewed'))} ${esc(e.assessedAt || '')}</span>
